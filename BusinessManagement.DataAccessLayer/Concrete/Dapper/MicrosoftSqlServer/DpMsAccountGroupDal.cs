@@ -1,0 +1,45 @@
+﻿using BusinessManagement.DataAccessLayer.Abstract;
+using BusinessManagement.Entities.DatabaseModels;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.Data;
+
+namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
+{
+    public class DpMsAccountGroupDal : IAccountGroupDal
+    {
+        private readonly IDbConnection _db;
+
+        public DpMsAccountGroupDal(IConfiguration configuration)
+        {
+            _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        }
+
+        public List<AccountGroup> GetAll()
+        {
+            var sql = "SELECT AccountGroupId, AccountGroupName, AccountGroupCode"
+                + " FROM AccountGroup";
+            return _db.Query<AccountGroup>(sql).ToList();
+        }
+
+        public AccountGroup GetByAccountGroupCode(string accountGroupCode)
+        {
+            var sql = "SELECT AccountGroupId, AccountGroupName, AccountGroupCode"
+                + " FROM AccountGroup"
+                + " WHERE AccountGroupCode = @AccountGroupCode";
+            return _db.Query<AccountGroup>(sql, new
+            {
+                @AccountGroupCode = accountGroupCode,
+            }).SingleOrDefault();
+        }
+
+        public AccountGroup GetById(short id)
+        {
+            var sql = "SELECT AccountGroupId, AccountGroupName, AccountGroupCode"
+                + " FROM AccountGroup"
+                + " WHERE AccountGroupId = @AccountGroupId";
+            return _db.Query<AccountGroup>(sql, new { @AccountGroupId = id }).SingleOrDefault();
+        }
+    }
+}

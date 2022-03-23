@@ -7,8 +7,8 @@ namespace BusinessManagement.DataAccessLayer.Abstract
         SectionGroup Add(SectionGroup sectionGroup);
         void Delete(long id);
         List<SectionGroup> GetByBusinessId(int businessId);
+        SectionGroup GetByBusinessIdAndSectionGroupName(int businessId, string sectionGroupName);
         SectionGroup GetById(long id);
-        SectionGroup GetIfAlreadyExist(int businessId, string sectionGroupName);
         void Update(SectionGroup sectionGroup);
     }
 }

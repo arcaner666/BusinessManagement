@@ -40,15 +40,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
             return _db.Query<SectionGroup>(sql, new { @BusinessId = businessId }).ToList();
         }
 
-        public SectionGroup GetById(long id)
-        {
-            var sql = "SELECT SectionGroupId, BusinessId, BranchId, SectionGroupName, CreatedAt, UpdatedAt"
-                + " FROM SectionGroup"
-                + " WHERE SectionGroupId = @SectionGroupId";
-            return _db.Query<SectionGroup>(sql, new { @SectionGroupId = id }).SingleOrDefault();
-        }
-
-        public SectionGroup GetIfAlreadyExist(int businessId, string sectionGroupName)
+        public SectionGroup GetByBusinessIdAndSectionGroupName(int businessId, string sectionGroupName)
         {
             var sql = "SELECT SectionGroupId, BusinessId, BranchId, SectionGroupName, CreatedAt, UpdatedAt"
                 + " FROM SectionGroup"
@@ -58,6 +50,14 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
                 @BusinessId = businessId,
                 @SectionGroupName = sectionGroupName,
             }).SingleOrDefault();
+        }
+
+        public SectionGroup GetById(long id)
+        {
+            var sql = "SELECT SectionGroupId, BusinessId, BranchId, SectionGroupName, CreatedAt, UpdatedAt"
+                + " FROM SectionGroup"
+                + " WHERE SectionGroupId = @SectionGroupId";
+            return _db.Query<SectionGroup>(sql, new { @SectionGroupId = id }).SingleOrDefault();
         }
 
         public void Update(SectionGroup sectionGroup)

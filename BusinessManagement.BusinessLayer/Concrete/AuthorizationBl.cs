@@ -8,32 +8,41 @@ namespace BusinessManagement.BusinessLayer.Concrete
 {
     public class AuthorizationBl : IAuthorizationBl
     {
+        private readonly IAccountBl _accountBl;
         private readonly IAccountGroupBl _accountGroupBl;
         private readonly IBranchBl _branchBl;
         private readonly IBusinessBl _businessBl;
         private readonly ICurrencyBl _currencyBl;
         private readonly IFullAddressBl _fullAddressBl;
+        private readonly IManagerBl _managerBl;
         private readonly IOperationClaimBl _operationClaimBl;
+        private readonly ISectionGroupBl _sectionGroupBl;
         private readonly ISystemUserBl _systemUserBl;
         private readonly ISystemUserClaimBl _systemUserClaimBl;
 
         public AuthorizationBl(
+            IAccountBl accountBl,
             IAccountGroupBl accountGroupBl,
             IBranchBl branchBl,
             IBusinessBl businessBl,
             ICurrencyBl currencyBl,
             IFullAddressBl fullAddressBl,
+            IManagerBl managerBl,
             IOperationClaimBl operationClaimBl,
+            ISectionGroupBl sectionGroupBl,
             ISystemUserBl systemUserBl,
             ISystemUserClaimBl systemUserClaimBl
         )
         {
+            _accountBl = accountBl;
             _accountGroupBl = accountGroupBl;
             _branchBl = branchBl;
             _businessBl = businessBl;
             _currencyBl = currencyBl;
             _fullAddressBl = fullAddressBl;
+            _managerBl = managerBl;
             _operationClaimBl = operationClaimBl;
+            _sectionGroupBl = sectionGroupBl;
             _systemUserBl = systemUserBl;
             _systemUserClaimBl = systemUserClaimBl;
         }
@@ -45,6 +54,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
             SystemUserDto systemUserDto = new()
             {
                 Phone = managerExtDto.Phone,
+                Role = "Manager",
             };
             var addSystemUserResult = _systemUserBl.Add(systemUserDto);
             if (!addSystemUserResult.Success) return addSystemUserResult;
@@ -58,8 +68,6 @@ namespace BusinessManagement.BusinessLayer.Concrete
             {
                 SystemUserId = addSystemUserResult.Data.SystemUserId,
                 OperationClaimId = getOperationClaimResult.Data.OperationClaimId,
-                CreatedAt = DateTimeOffset.Now,
-                UpdatedAt = DateTimeOffset.Now,
             };
             var addSystemUserClaimResult = _systemUserClaimBl.Add(systemUserClaimDto);
             if (!addSystemUserClaimResult.Success) return addSystemUserClaimResult;
@@ -69,8 +77,6 @@ namespace BusinessManagement.BusinessLayer.Concrete
             {
                 OwnerSystemUserId = addSystemUserResult.Data.SystemUserId,
                 BusinessName = managerExtDto.BusinessName,
-                CreatedAt = DateTimeOffset.Now,
-                UpdatedAt = DateTimeOffset.Now,
             };
             var addBusinessResult = _businessBl.Add(businessDto);
             if (!addBusinessResult.Success) return addBusinessResult;
@@ -80,6 +86,8 @@ namespace BusinessManagement.BusinessLayer.Concrete
             {
                 CityId = managerExtDto.CityId,
                 DistrictId = managerExtDto.DistrictId,
+                AddressTitle = "Merkez",
+                PostalCode = 0,
                 AddressText = managerExtDto.AddressText,
             };
             var addFullAddressResult = _fullAddressBl.Add(fullAddressDto);
@@ -93,8 +101,6 @@ namespace BusinessManagement.BusinessLayer.Concrete
                 BranchOrder = 1,
                 BranchName = "Merkez",
                 BranchCode = "000001",
-                CreatedAt = DateTimeOffset.Now,
-                UpdatedAt = DateTimeOffset.Now,
             };
             var addBranchResult = _branchBl.Add(branchDto);
             if (!addBranchResult.Success) return addBranchResult;
@@ -113,33 +119,41 @@ namespace BusinessManagement.BusinessLayer.Concrete
             if (!getCurrencyResult.Success) return getCurrencyResult;
 
             // İşletmenin kasa hesabı oluşturulur.
-            Account getAccountResult = _accountDal.GetIfAlreadyExist(addBusinessResult.BusinessId, "10000000100000001");
-            if (getAccountResult != null)
+            AccountDto accountDto = new()
             {
-                return BadRequest(new ErrorResult(Messages.AccountAlreadyExists));
-            }
-
-            Account addAccountResult = new()
-            {
-                BusinessId = addBusinessResult.BusinessId,
-                BranchId = addBranchResult.BranchId,
-                AccountGroupId = getAccountGroupResult.AccountGroupId,
-                CurrencyId = getCurrencyResult.CurrencyId,
+                BusinessId = addBusinessResult.Data.BusinessId,
+                BranchId = addBranchResult.Data.BranchId,
+                AccountGroupId = getAccountGroupResult.Data.AccountGroupId,
+                CurrencyId = getCurrencyResult.Data.CurrencyId,
                 AccountOrder = 1,
                 AccountName = "TL Kasası",
                 AccountCode = "10000000100000001",
-                TaxOffice = "",
-                TaxNumber = 0,
-                IdentityNumber = 0,
-                DebitBalance = 0,
-                CreditBalance = 0,
-                Balance = 0,
                 Limit = 0,
                 StandartMaturity = 0,
-                CreatedAt = DateTimeOffset.Now,
-                UpdatedAt = DateTimeOffset.Now,
             };
-            _accountDal.Add(addAccountResult);
+            var addAccountResult = _accountBl.Add(accountDto);
+            if (!addAccountResult.Success) return addAccountResult;
+
+            // Yeni bir yönetici eklenir.
+            ManagerDto managerDto = new()
+            {
+                BusinessId = addBusinessResult.Data.BusinessId,
+                BranchId = addBranchResult.Data.BranchId,
+                NameSurname = managerExtDto.NameSurname,
+                Phone = managerExtDto.Phone,
+            };
+            var addManagerResult = _managerBl.Add(managerDto);
+            if (!addManagerResult.Success) return addManagerResult;
+
+            // Yeni site grubu eklenir.
+            SectionGroupDto sectionGroupDto = new()
+            {
+                BusinessId = addBusinessResult.Data.BusinessId,
+                BranchId = addBranchResult.Data.BranchId,
+                SectionGroupName = "Genel",
+            };
+            var addSectionGroupResult = _sectionGroupBl.Add(sectionGroupDto);
+            if (!addSectionGroupResult.Success) return addSectionGroupResult;
 
             return new SuccessResult(Messages.AuthorizationSectionManagerRegistered);
         }

@@ -35,7 +35,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
                 Phone = systemUserDto.Phone,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Role = "Manager",
+                Role = systemUserDto.Role,
                 BusinessId = 0,
                 BranchId = 0,
                 Blocked = false,

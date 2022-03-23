@@ -29,9 +29,9 @@ namespace BusinessManagement.BusinessLayer.Concrete
             {
                 BusinessId = branchDto.BusinessId,
                 FullAddressId = branchDto.FullAddressId,
-                BranchOrder = 1,
-                BranchName = "Merkez",
-                BranchCode = "000001",
+                BranchOrder = branchDto.BranchOrder,
+                BranchName = branchDto.BranchName,
+                BranchCode = branchDto.BranchCode,
                 CreatedAt = DateTimeOffset.Now,
                 UpdatedAt = DateTimeOffset.Now,
             };

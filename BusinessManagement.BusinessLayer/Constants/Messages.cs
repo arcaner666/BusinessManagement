@@ -151,8 +151,8 @@
         #endregion
 
         #region Manager
+        public const string ManagerAdded = "ManagerAdded";
         public const string ManagerAlreadyExists = "ManagerAlreadyExists";
-        public const string ManagerExtAdded = "ManagerExtAdded";
         public const string ManagerExtsListedByBusinessId = "ManagerExtsListedByBusinessId";
         public const string ManagersNotFound = "ManagersNotFound";
         #endregion

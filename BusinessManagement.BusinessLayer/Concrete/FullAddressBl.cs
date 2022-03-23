@@ -29,8 +29,8 @@ namespace BusinessManagement.BusinessLayer.Concrete
             {
                 CityId = fullAddressDto.CityId,
                 DistrictId = fullAddressDto.DistrictId,
-                AddressTitle = "Merkez",
-                PostalCode = 0,
+                AddressTitle = fullAddressDto.AddressTitle,
+                PostalCode = fullAddressDto.PostalCode,
                 AddressText = fullAddressDto.AddressText,
                 CreatedAt = DateTimeOffset.Now,
                 UpdatedAt = DateTimeOffset.Now,

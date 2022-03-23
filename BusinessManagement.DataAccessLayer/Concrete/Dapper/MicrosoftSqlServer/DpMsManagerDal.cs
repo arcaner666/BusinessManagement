@@ -25,6 +25,18 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
             return manager;
         }
 
+        public Manager GetByBusinessIdAndPhone(int businessId, string phone)
+        {
+            var sql = "SELECT ManagerId, BusinessId, BranchId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt"
+                + " FROM Manager"
+                + " WHERE BusinessId = @BusinessId AND Phone = @Phone";
+            return _db.Query<Manager>(sql, new
+            {
+                @BusinessId = businessId,
+                @Phone = phone,
+            }).SingleOrDefault();
+        }
+
         public List<Manager> GetExtsByBusinessId(int businessId)
         {
             var sql = "SELECT ManagerId, BusinessId, BranchId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt"
@@ -42,18 +54,6 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
                     return manager;
                 }, new { @BusinessId = businessId },
                 splitOn: "BusinessId,BranchId,FullAddressId").ToList();
-        }
-
-        public Manager GetIfAlreadyExist(int businessId, string phone)
-        {
-            var sql = "SELECT ManagerId, BusinessId, BranchId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt"
-                + " FROM Manager"
-                + " WHERE BusinessId = @BusinessId AND Phone = @Phone";
-            return _db.Query<Manager>(sql, new
-            {
-                @BusinessId = businessId,
-                @Phone = phone,
-            }).SingleOrDefault();
         }
     }
 }

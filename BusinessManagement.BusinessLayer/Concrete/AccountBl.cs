@@ -31,17 +31,17 @@ namespace BusinessManagement.BusinessLayer.Concrete
                 BranchId = accountDto.BranchId,
                 AccountGroupId = accountDto.AccountGroupId,
                 CurrencyId = accountDto.CurrencyId,
-                AccountOrder = 1,
-                AccountName = "TL Kasası",
-                AccountCode = "10000000100000001",
+                AccountOrder = accountDto.AccountOrder,
+                AccountName = accountDto.AccountName,
+                AccountCode = accountDto.AccountCode,
                 TaxOffice = "",
                 TaxNumber = 0,
                 IdentityNumber = 0,
                 DebitBalance = 0,
                 CreditBalance = 0,
                 Balance = 0,
-                Limit = 0,
-                StandartMaturity = 0,
+                Limit = accountDto.Limit,
+                StandartMaturity = accountDto.StandartMaturity,
                 CreatedAt = DateTimeOffset.Now,
                 UpdatedAt = DateTimeOffset.Now,
             };
@@ -56,12 +56,21 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             AccountDto accountDto = new()
             {
-                AccountId = account.AccountId,
                 BusinessId = account.BusinessId,
-                FullAddressId = account.FullAddressId,
+                BranchId = account.BranchId,
+                AccountGroupId = account.AccountGroupId,
+                CurrencyId = account.CurrencyId,
                 AccountOrder = account.AccountOrder,
                 AccountName = account.AccountName,
                 AccountCode = account.AccountCode,
+                TaxOffice = account.TaxOffice,
+                TaxNumber = account.TaxNumber,
+                IdentityNumber = account.IdentityNumber,
+                DebitBalance = account.DebitBalance,
+                CreditBalance = account.CreditBalance,
+                Balance = account.Balance,
+                Limit = account.Limit,
+                StandartMaturity = account.StandartMaturity,
                 CreatedAt = account.CreatedAt,
                 UpdatedAt = account.UpdatedAt,
             };
@@ -69,9 +78,9 @@ namespace BusinessManagement.BusinessLayer.Concrete
             return accountDto;
         }
 
-        private List<AccountDto> FillDtos(List<Account> accountes)
+        private List<AccountDto> FillDtos(List<Account> accounts)
         {
-            List<AccountDto> accountDtos = accountes.Select(account => FillDto(account)).ToList();
+            List<AccountDto> accountDtos = accounts.Select(account => FillDto(account)).ToList();
 
             return accountDtos;
         }

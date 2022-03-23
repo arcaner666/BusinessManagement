@@ -43,7 +43,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
 
             return new SuccessDataResult<ManagerDto>(addManagerDto, Messages.ManagerAdded);
         }
-        
+
         private ManagerDto FillDto(Manager manager)
         {
             ManagerDto managerDto = new()
@@ -70,6 +70,38 @@ namespace BusinessManagement.BusinessLayer.Concrete
             List<ManagerDto> managerDtos = managers.Select(manager => FillDto(manager)).ToList();
 
             return managerDtos;
+        }
+
+        private ManagerExtDto FillExtDto(Manager manager)
+        {
+            ManagerExtDto managerExtDto = new()
+            {
+                ManagerId = manager.ManagerId,
+                BusinessId = manager.BusinessId,
+                BranchId = manager.BranchId,
+                NameSurname = manager.NameSurname,
+                Email = manager.Email,
+                Phone = manager.Phone,
+                DateOfBirth = manager.DateOfBirth,
+                Gender = manager.Gender,
+                Notes = manager.Notes,
+                AvatarUrl = manager.AvatarUrl,
+                CreatedAt = manager.CreatedAt,
+                UpdatedAt = manager.UpdatedAt,
+
+                BusinessName = manager.Business.BusinessName,
+                CityId = manager.Branch.FullAddress.CityId,
+                DistrictId = manager.Branch.FullAddress.DistrictId,
+                AddressText = manager.Branch.FullAddress.AddressText,
+            };
+            return managerExtDto;
+        }
+
+        private List<ManagerExtDto> FillExtDtos(List<Manager> managers)
+        {
+            List<ManagerExtDto> managerExtDtos = managers.Select(manager => FillExtDto(manager)).ToList();
+
+            return managerExtDtos;
         }
     }
 }

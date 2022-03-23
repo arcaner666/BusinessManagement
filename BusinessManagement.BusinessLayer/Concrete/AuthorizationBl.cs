@@ -6,7 +6,6 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.BusinessLayer.Utilities.Security.Hashing;
 using BusinessManagement.BusinessLayer.Utilities.Security.JWT;
 using BusinessManagement.Entities.DTOs;
-using System.Security.Claims;
 
 namespace BusinessManagement.BusinessLayer.Concrete
 {

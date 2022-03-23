@@ -12,7 +12,7 @@ namespace BusinessManagement.DataAccessLayer.Abstract
         Branch GetByBusinessIdAndBranchOrderOrBranchCode(int businessId, int branchOrder, string branchCode);
         Branch GetByBusinessIdAndMaxBranchOrder(int businessId);
         Branch GetById(long id);
-        Branch GetExtById(int id);
+        Branch GetExtById(long id);
         List<Branch> GetExtsByBusinessId(int businessId);
         void Update(Branch branch);
     }

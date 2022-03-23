@@ -52,11 +52,12 @@ namespace BusinessManagement.BusinessLayer.Concrete
 
             return new SuccessDataResult<AccountDto>(addAccountDto, Messages.AccountAdded);
         }
-        
+
         private AccountDto FillDto(Account account)
         {
             AccountDto accountDto = new()
             {
+                AccountId = account.AccountId,
                 BusinessId = account.BusinessId,
                 BranchId = account.BranchId,
                 AccountGroupId = account.AccountGroupId,
@@ -84,6 +85,43 @@ namespace BusinessManagement.BusinessLayer.Concrete
             List<AccountDto> accountDtos = accounts.Select(account => FillDto(account)).ToList();
 
             return accountDtos;
+        }
+
+        private AccountExtDto FillExtDto(Account account)
+        {
+            AccountExtDto accountExtDto = new()
+            {
+                AccountId = account.AccountId,
+                BusinessId = account.BusinessId,
+                BranchId = account.BranchId,
+                AccountGroupId = account.AccountGroupId,
+                CurrencyId = account.CurrencyId,
+                AccountOrder = account.AccountOrder,
+                AccountName = account.AccountName,
+                AccountCode = account.AccountCode,
+                TaxOffice = account.TaxOffice,
+                TaxNumber = account.TaxNumber,
+                IdentityNumber = account.IdentityNumber,
+                DebitBalance = account.DebitBalance,
+                CreditBalance = account.CreditBalance,
+                Balance = account.Balance,
+                Limit = account.Limit,
+                StandartMaturity = account.StandartMaturity,
+                CreatedAt = account.CreatedAt,
+                UpdatedAt = account.UpdatedAt,
+
+                BranchName = account.Branch.BranchName,
+                AccountGroupName = account.AccountGroup.AccountGroupName,
+                CurrencyName = account.Currency.CurrencyName,
+            };
+            return accountExtDto;
+        }
+
+        private List<AccountExtDto> FillExtDtos(List<Account> accounts)
+        {
+            List<AccountExtDto> accountExtDtos = accounts.Select(account => FillExtDto(account)).ToList();
+
+            return accountExtDtos;
         }
     }
 }

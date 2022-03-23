@@ -40,7 +40,47 @@ namespace BusinessManagement.BusinessLayer.Concrete
 
             return new SuccessDataResult<FullAddressDto>(addFullAddressDto, Messages.FullAddressAdded);
         }
-        
+
+        public IResult Delete(long id)
+        {
+            var getFullAddressResult = GetById(id);
+            if (!getFullAddressResult.Success)
+                return getFullAddressResult;
+
+            _fullAddressDal.Delete(id);
+
+            return new SuccessResult(Messages.FullAddressDeleted);
+        }
+
+        public IDataResult<FullAddressDto> GetById(long id)
+        {
+            FullAddress getFullAddress = _fullAddressDal.GetById(id);
+            if (getFullAddress == null)
+                return new ErrorDataResult<FullAddressDto>(Messages.FullAddressNotFound);
+
+            FullAddressDto getFullAddressDto = FillDto(getFullAddress);
+
+            return new SuccessDataResult<FullAddressDto>(getFullAddressDto, Messages.FullAddressListedById);
+        }
+
+        public IResult Update(FullAddressDto fullAddressDto)
+        {
+            FullAddress getFullAddress = _fullAddressDal.GetById(fullAddressDto.FullAddressId);
+            if (getFullAddress == null)
+                return new ErrorDataResult<FullAddressDto>(Messages.FullAddressNotFound);
+
+            getFullAddress.CityId = fullAddressDto.CityId;
+            getFullAddress.DistrictId = fullAddressDto.DistrictId;
+            getFullAddress.AddressTitle = fullAddressDto.AddressTitle;
+            getFullAddress.PostalCode = fullAddressDto.PostalCode;
+            getFullAddress.AddressText = fullAddressDto.AddressText;
+            getFullAddress.UpdatedAt = DateTimeOffset.Now;
+
+            _fullAddressDal.Update(getFullAddress);
+
+            return new SuccessResult(Messages.FullAddressUpdated);
+        }
+
         private FullAddressDto FillDto(FullAddress fullAddress)
         {
             FullAddressDto fullAddressDto = new()

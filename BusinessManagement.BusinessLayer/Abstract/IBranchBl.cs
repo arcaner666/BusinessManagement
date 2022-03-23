@@ -6,5 +6,12 @@ namespace BusinessManagement.BusinessLayer.Abstract
     public interface IBranchBl
     {
         IDataResult<BranchDto> Add(BranchDto branchDto);
+        IResult AddExt(BranchExtDto branchExtDto);
+        IResult DeleteExt(long id);
+        IDataResult<BranchCodeDto> GenerateBranchCode(int businessId);
+        IDataResult<List<BranchDto>> GetByBusinessId(int businessId);
+        IDataResult<BranchDto> GetById(long id);
+        IDataResult<BranchExtDto> GetExtById(long id);
+        IResult UpdateExt(BranchExtDto branchExtDto);
     }
 }

@@ -71,14 +71,16 @@
         public const string BranchDeleted = "BranchDeleted";
         public const string BranchesNotFound = "BranchesNotFound";
         public const string BranchExtAdded = "BranchExtAdded";
+        public const string BranchExtDeleted = "BranchExtDeleted";
         public const string BranchExtListedById = "BranchExtListedById";
         public const string BranchExtsListedByBusinessId = "BranchExtsListedByBusinessId";
         public const string BranchExtUpdated = "BranchExtUpdated";
         public const string BranchListedByBranchCode = "BranchListedByBranchCode";
         public const string BranchListedById = "BranchListedById";
+        public const string BranchNotFound = "BranchNotFound";
         public const string BranchOrderAndCodeGenerated = "BranchOrderAndCodeGenerated";
         public const string BranchsListedByAccountId = "BranchsListedByAccountId";
-        public const string BranchNotFound = "BranchNotFound";
+        public const string BranchUpdated = "BranchUpdated";
         #endregion
 
         #region Business
@@ -147,7 +149,10 @@
         #region FullAddress
         public const string FullAddressAdded = "FullAddressAdded";
         public const string FullAddressAlreadyExists = "FullAddressAlreadyExists";
+        public const string FullAddressDeleted = "FullAddressDeleted";
+        public const string FullAddressListedById = "FullAddressListedById";
         public const string FullAddressNotFound = "FullAddressNotFound";
+        public const string FullAddressUpdated = "FullAddressUpdated";
         #endregion
 
         #region Manager

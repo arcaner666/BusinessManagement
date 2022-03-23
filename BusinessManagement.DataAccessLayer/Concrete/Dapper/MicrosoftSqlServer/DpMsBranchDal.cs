@@ -91,7 +91,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
             return _db.Query<Branch>(sql, new { @BranchId = id }).SingleOrDefault();
         }
 
-        public Branch GetExtById(int id)
+        public Branch GetExtById(long id)
         {
             var sql = "SELECT b.BranchId, b.BusinessId, b.FullAddressId, b.BranchOrder, b.BranchName, b.BranchCode, b.CreatedAt, b.UpdatedAt, fa.FullAddressId, fa.CityId, fa.DistrictId, fa.AddressTitle, fa.PostalCode, fa.AddressText, fa.CreatedAt, fa.UpdatedAt"
                 + " FROM Branch b"

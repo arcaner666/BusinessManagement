@@ -38,6 +38,17 @@ namespace BusinessManagement.BusinessLayer.Concrete
             return new SuccessDataResult<SystemUserClaimDto>(addSystemUserClaimDto, Messages.SystemUserAdded);
         }
 
+        public IDataResult<List<SystemUserClaimExtDto>> GetExtsBySystemUserId(long systemUserId)
+        {
+            List<SystemUserClaim> getSystemUserClaims = _systemUserClaimDal.GetExtsBySystemUserId(systemUserId);
+            if (getSystemUserClaims.Count == 0)
+                return new ErrorDataResult<List<SystemUserClaimExtDto>>(Messages.SystemUserClaimsNotFound);
+
+            List<SystemUserClaimExtDto> getSystemUserClaimExtDtos = FillExtDtos(getSystemUserClaims);
+
+            return new SuccessDataResult<List<SystemUserClaimExtDto>>(getSystemUserClaimExtDtos, Messages.SystemUserExtsListedBySystemUserId);
+        }
+
         private SystemUserClaimDto FillDto(SystemUserClaim systemUserClaim)
         {
             SystemUserClaimDto systemUserClaimDto = new()
@@ -57,6 +68,29 @@ namespace BusinessManagement.BusinessLayer.Concrete
             List<SystemUserClaimDto> systemUserClaimDtos = systemUserClaims.Select(systemUserClaim => FillDto(systemUserClaim)).ToList();
 
             return systemUserClaimDtos;
+        }
+
+        private SystemUserClaimExtDto FillExtDto(SystemUserClaim systemUserClaim)
+        {
+            SystemUserClaimExtDto systemUserClaimExtDto = new()
+            {
+                SystemUserClaimId = systemUserClaim.SystemUserClaimId,
+                SystemUserId = systemUserClaim.SystemUserId,
+                OperationClaimId = systemUserClaim.OperationClaimId,
+                CreatedAt = systemUserClaim.CreatedAt,
+                UpdatedAt = systemUserClaim.UpdatedAt,
+
+                OperationClaimName = systemUserClaim.OperationClaim.OperationClaimName,
+            };
+
+            return systemUserClaimExtDto;
+        }
+
+        private List<SystemUserClaimExtDto> FillExtDtos(List<SystemUserClaim> systemUserClaims)
+        {
+            List<SystemUserClaimExtDto> systemUserClaimExtDtos = systemUserClaims.Select(systemUserClaim => FillExtDto(systemUserClaim)).ToList();
+
+            return systemUserClaimExtDtos;
         }
     }
 }

@@ -3,6 +3,7 @@ using Autofac.Extras.DynamicProxy;
 using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Concrete;
 using BusinessManagement.BusinessLayer.Utilities.Interceptors;
+using BusinessManagement.BusinessLayer.Utilities.Security.JWT;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 using Castle.DynamicProxy;
@@ -38,6 +39,8 @@ namespace BusinessManagement.BusinessLayer.DependencyResolvers.Autofac
 
             builder.RegisterType<FullAddressBl>().As<IFullAddressBl>().SingleInstance();
             builder.RegisterType<DpMsFullAddressDal>().As<IFullAddressDal>().SingleInstance();
+
+            builder.RegisterType<JwtHelper>().As<ITokenService>();
 
             builder.RegisterType<ManagerBl>().As<IManagerBl>().SingleInstance();
             builder.RegisterType<DpMsManagerDal>().As<IManagerDal>().SingleInstance();

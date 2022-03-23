@@ -47,9 +47,42 @@ namespace BusinessManagement.BusinessLayer.Concrete
 
             SystemUserDto addSystemUserDto = FillDto(addSystemUser);
 
-            return new SuccessDataResult<SystemUserDto>(addSystemUserDto);
+            return new SuccessDataResult<SystemUserDto>(addSystemUserDto, Messages.SystemUserAdded);
         }
-        
+
+        public IDataResult<SystemUserDto> GetByEmail(string email)
+        {
+            SystemUser getSystemUser = _systemUserDal.GetByEmail(email);
+            if (getSystemUser == null)
+                return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
+
+            SystemUserDto getSystemUserDto = FillDto(getSystemUser);
+
+            return new SuccessDataResult<SystemUserDto>(getSystemUserDto, Messages.SystemUserListedByEmail);
+        }
+
+        public IDataResult<SystemUserDto> GetById(long id)
+        {
+            SystemUser getSystemUser = _systemUserDal.GetById(id);
+            if (getSystemUser == null)
+                return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
+
+            SystemUserDto getSystemUserDto = FillDto(getSystemUser);
+
+            return new SuccessDataResult<SystemUserDto>(getSystemUserDto, Messages.SystemUserListedById);
+        }
+
+        public IDataResult<SystemUserDto> GetByPhone(string phone)
+        {
+            SystemUser getSystemUser = _systemUserDal.GetByPhone(phone);
+            if (getSystemUser == null)
+                return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
+
+            SystemUserDto getSystemUserDto = FillDto(getSystemUser);
+
+            return new SuccessDataResult<SystemUserDto>(getSystemUserDto, Messages.SystemUserListedByPhone);
+        }
+
         public IResult Update(SystemUserDto systemUserDto)
         {
             SystemUser getSystemUser = _systemUserDal.GetById(systemUserDto.SystemUserId);
@@ -60,7 +93,9 @@ namespace BusinessManagement.BusinessLayer.Concrete
             getSystemUser.Role = systemUserDto.Role;
             getSystemUser.BusinessId = systemUserDto.BusinessId;
             getSystemUser.BranchId = systemUserDto.BranchId;
-            getSystemUser.Blocked = false;
+            getSystemUser.Blocked = systemUserDto.Blocked;
+            getSystemUser.RefreshToken = systemUserDto.RefreshToken;
+            getSystemUser.RefreshTokenExpiryTime = systemUserDto.RefreshTokenExpiryTime;
             getSystemUser.UpdatedAt = DateTimeOffset.Now;
             _systemUserDal.Update(getSystemUser);
 

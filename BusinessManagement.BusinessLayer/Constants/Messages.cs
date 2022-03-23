@@ -197,7 +197,10 @@
         #region SystemUser
         public const string SystemUserAdded = "SystemUserAdded";
         public const string SystemUserAlreadyExists = "SystemUserAlreadyExists";
+        public const string SystemUserExtsListedBySystemUserId = "SystemUserExtsListedBySystemUserId";
+        public const string SystemUserListedByEmail = "SystemUserListedByEmail";
         public const string SystemUserListedById = "SystemUserListedById";
+        public const string SystemUserListedByPhone = "SystemUserListedByPhone";
         public const string SystemUserNotFound = "SystemUserNotFound";
         public const string SystemUserUpdated = "SystemUserUpdated";
         #endregion

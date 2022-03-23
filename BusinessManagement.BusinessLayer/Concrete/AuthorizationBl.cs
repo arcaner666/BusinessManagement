@@ -1,8 +1,12 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
+using BusinessManagement.BusinessLayer.Extensions;
 using BusinessManagement.BusinessLayer.Utilities.Results;
+using BusinessManagement.BusinessLayer.Utilities.Security.Hashing;
+using BusinessManagement.BusinessLayer.Utilities.Security.JWT;
 using BusinessManagement.Entities.DTOs;
+using System.Security.Claims;
 
 namespace BusinessManagement.BusinessLayer.Concrete
 {
@@ -19,6 +23,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         private readonly ISectionGroupBl _sectionGroupBl;
         private readonly ISystemUserBl _systemUserBl;
         private readonly ISystemUserClaimBl _systemUserClaimBl;
+        private readonly ITokenService _tokenHelper;
 
         public AuthorizationBl(
             IAccountBl accountBl,
@@ -31,7 +36,8 @@ namespace BusinessManagement.BusinessLayer.Concrete
             IOperationClaimBl operationClaimBl,
             ISectionGroupBl sectionGroupBl,
             ISystemUserBl systemUserBl,
-            ISystemUserClaimBl systemUserClaimBl
+            ISystemUserClaimBl systemUserClaimBl,
+            ITokenService tokenHelper
         )
         {
             _accountBl = accountBl;
@@ -45,6 +51,80 @@ namespace BusinessManagement.BusinessLayer.Concrete
             _sectionGroupBl = sectionGroupBl;
             _systemUserBl = systemUserBl;
             _systemUserClaimBl = systemUserClaimBl;
+            _tokenHelper = tokenHelper;
+        }
+
+        public IResult LoginWithEmail(AuthorizationDto authorizationDto)
+        {
+            // Veri tabanında gönderilen e-posta adresine sahip biri var mı kontrol eder.
+            var getSystemUserResult = _systemUserBl.GetByEmail(authorizationDto.Email);
+            if (!getSystemUserResult.Success) return getSystemUserResult;
+
+            // Varsa giriş yapmaya çalışır.
+            var loginResult = Login(authorizationDto, getSystemUserResult.Data);
+
+            return loginResult;
+        }
+
+        public IResult LoginWithPhone(AuthorizationDto authorizationDto)
+        {
+            // Veri tabanında gönderilen telefon numarasına sahip biri var mı kontrol eder.
+            var getSystemUserResult = _systemUserBl.GetByPhone(authorizationDto.Phone);
+            if (!getSystemUserResult.Success) return getSystemUserResult;
+
+            // Varsa giriş yapmaya çalışır.
+            var loginResult = Login(authorizationDto, getSystemUserResult.Data);
+
+            return loginResult;
+        }
+
+        public IResult Logout(long systemUserId)
+        {
+            var getSystemUserResult = _systemUserBl.GetById(systemUserId);
+            if (!getSystemUserResult.Success)
+                return getSystemUserResult;
+
+            getSystemUserResult.Data.RefreshToken = "";
+            getSystemUserResult.Data.RefreshTokenExpiryTime = DateTime.Now;
+            var updateSystemUserResult = _systemUserBl.Update(getSystemUserResult.Data);
+            if (!updateSystemUserResult.Success)
+                return updateSystemUserResult;
+
+            return new SuccessResult(Messages.AuthorizationLoggedOut);
+        }
+
+        public IResult RefreshAccessToken(AuthorizationDto authorizationDto)
+        {
+            var getClaimsPrincipalResult = _tokenHelper.GetPrincipalFromExpiredToken(authorizationDto.AccessToken);
+            if (!getClaimsPrincipalResult.Success)
+                return getClaimsPrincipalResult;
+
+            List<string> claimRoles = getClaimsPrincipalResult.Data.ClaimRoles();
+            List<SystemUserClaimExtDto> systemUserClaimExtDtos = new();
+            claimRoles.ForEach(role => systemUserClaimExtDtos.Add(
+                new SystemUserClaimExtDto
+                {
+                    OperationClaimName = role
+                }
+            ));
+
+            long systemUserId = Convert.ToInt32(getClaimsPrincipalResult.Data.ClaimSystemUserId().FirstOrDefault());
+            var getSystemUserResult = _systemUserBl.GetById(systemUserId);
+            if (!getSystemUserResult.Success)
+                return getSystemUserResult;
+            if (getSystemUserResult.Data.RefreshToken != authorizationDto.RefreshToken)
+                return new ErrorResult(Messages.AuthorizationTokenInvalid);
+            if (getSystemUserResult.Data.RefreshTokenExpiryTime <= DateTime.Now)
+                return new ErrorResult(Messages.AuthorizationTokenExpired);
+
+            string newAccessToken = _tokenHelper.GenerateAccessToken(getSystemUserResult.Data.SystemUserId, systemUserClaimExtDtos);
+
+            AuthorizationDto authorizationResponse = new()
+            {
+                AccessToken = newAccessToken,
+            };
+
+            return new SuccessDataResult<AuthorizationDto>(authorizationResponse, Messages.AuthorizationTokensRefreshed);
         }
 
         [TransactionScopeAspect]
@@ -108,7 +188,8 @@ namespace BusinessManagement.BusinessLayer.Concrete
             // Kullanıcı kaydındaki işletme ve şube id'leri güncellenir.
             addSystemUserResult.Data.BusinessId = addBusinessResult.Data.BusinessId;
             addSystemUserResult.Data.BranchId = addBranchResult.Data.BranchId;
-            _systemUserBl.Update(addSystemUserResult.Data);
+            var updateSystemUserResult = _systemUserBl.Update(addSystemUserResult.Data);
+            if (!updateSystemUserResult.Success) return updateSystemUserResult;
 
             // Kasanın hesap grubunun id'si getirilir.
             var getAccountGroupResult = _accountGroupBl.GetByAccountGroupCode("100");
@@ -156,6 +237,47 @@ namespace BusinessManagement.BusinessLayer.Concrete
             if (!addSectionGroupResult.Success) return addSectionGroupResult;
 
             return new SuccessResult(Messages.AuthorizationSectionManagerRegistered);
+        }
+
+        private IResult Login(AuthorizationDto authorizationDto, SystemUserDto systemUserDto)
+        {
+            // Şifre kontrol edilir.
+            if (!HashingHelper.VerifyPasswordHash(authorizationDto.Password, systemUserDto.PasswordHash, systemUserDto.PasswordSalt))
+                return new ErrorDataResult<AuthorizationDto>(Messages.AuthorizationWrongPassword);
+
+            // Giriş yapan kullanıcının yetkileri getirilir.
+            var getSystemUserClaimExtResult = _systemUserClaimBl.GetExtsBySystemUserId(systemUserDto.SystemUserId);
+            if (!getSystemUserClaimExtResult.Success)
+                return getSystemUserClaimExtResult;
+
+            // Giriş yapan kullanıcı için access token ve refresh token üretilir.
+            string accessToken = _tokenHelper.GenerateAccessToken(systemUserDto.SystemUserId, getSystemUserClaimExtResult.Data);
+            string refreshToken = _tokenHelper.GenerateRefreshToken();
+
+            // Arayüzden gönderilen bilgilere göre üretilen tokenlar veri tabanına kaydedilir.
+            systemUserDto.RefreshToken = refreshToken;
+            systemUserDto.RefreshTokenExpiryTime = DateTime.Now.AddHours(authorizationDto.RefreshTokenDuration);
+            systemUserDto.UpdatedAt = DateTimeOffset.Now;
+            var updateSystemUserResult = _systemUserBl.Update(systemUserDto);
+            if (!updateSystemUserResult.Success) return updateSystemUserResult;
+
+            AuthorizationDto authorizationDtoResponse = new()
+            {
+                SystemUserId = systemUserDto.SystemUserId,
+                Email = systemUserDto.Email,
+                Phone = systemUserDto.Phone,
+                Role = systemUserDto.Role,
+                BusinessId = systemUserDto.BusinessId,
+                BranchId = systemUserDto.BranchId,
+                Blocked = systemUserDto.Blocked,
+                RefreshToken = systemUserDto.RefreshToken,
+                RefreshTokenExpiryTime = systemUserDto.RefreshTokenExpiryTime,
+                CreatedAt = systemUserDto.CreatedAt,
+                UpdatedAt = systemUserDto.UpdatedAt,
+                AccessToken = accessToken,
+            };
+
+            return new SuccessDataResult<AuthorizationDto>(authorizationDtoResponse, Messages.AuthorizationLoggedIn);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Constants;
+﻿using BusinessManagement.BusinessLayer.Abstract;
+using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
@@ -6,7 +7,7 @@ using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.BusinessLayer.Concrete
 {
-    public class AccountGroupBl
+    public class AccountGroupBl : IAccountGroupBl
     {
         private readonly IAccountGroupDal _accountGroupDal;
 
@@ -20,6 +21,8 @@ namespace BusinessManagement.BusinessLayer.Concrete
         public IDataResult<List<AccountGroupDto>> GetAll()
         {
             List<AccountGroup> getAccountGroups = _accountGroupDal.GetAll();
+            if (getAccountGroups.Count == 0)
+                return new ErrorDataResult<List<AccountGroupDto>>(Messages.AccountGroupsNotFound);
 
             List<AccountGroupDto> getAccountGroupDtos = FillDtos(getAccountGroups);
 
@@ -30,9 +33,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             AccountGroup getAccountGroup = _accountGroupDal.GetByAccountGroupCode(accountGroupCode);
             if (getAccountGroup == null)
-            {
                 return new ErrorDataResult<AccountGroupDto>(Messages.AccountGroupNotFound);
-            }
 
             AccountGroupDto getAccountGroupDto = FillDto(getAccountGroup);
 
@@ -43,9 +44,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             AccountGroup getAccountGroup = _accountGroupDal.GetById(id);
             if (getAccountGroup == null)
-            {
                 return new ErrorDataResult<AccountGroupDto>(Messages.AccountGroupNotFound);
-            }
 
             AccountGroupDto getAccountGroupDto = FillDto(getAccountGroup);
 

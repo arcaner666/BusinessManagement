@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Constants;
+﻿using BusinessManagement.BusinessLayer.Abstract;
+using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
@@ -6,7 +7,7 @@ using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.BusinessLayer.Concrete
 {
-    public class FullAddressBl
+    public class FullAddressBl : IFullAddressBl
     {
         private readonly IFullAddressDal _fullAddressDal;
 
@@ -21,9 +22,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             FullAddress getFullAddress = _fullAddressDal.GetByAddressText(fullAddressDto.AddressText);
             if (getFullAddress != null)
-            {
                 return new ErrorDataResult<FullAddressDto>(Messages.FullAddressAlreadyExists);
-            }
 
             FullAddress addFullAddress = new()
             {

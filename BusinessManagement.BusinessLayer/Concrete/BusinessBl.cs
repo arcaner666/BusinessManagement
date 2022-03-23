@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Constants;
+﻿using BusinessManagement.BusinessLayer.Abstract;
+using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
@@ -6,7 +7,7 @@ using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.BusinessLayer.Concrete
 {
-    public class BusinessBl
+    public class BusinessBl : IBusinessBl
     {
         private readonly IBusinessDal _businessDal;
 
@@ -21,9 +22,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             Business getBusiness = _businessDal.GetByBusinessName(businessDto.BusinessName);
             if (getBusiness != null)
-            {
                 return new ErrorDataResult<BusinessDto>(Messages.BusinessAlreadyExists);
-            }
 
             Business addBusiness = new()
             {

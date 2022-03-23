@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Constants;
+﻿using BusinessManagement.BusinessLayer.Abstract;
+using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
@@ -6,7 +7,7 @@ using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.BusinessLayer.Concrete
 {
-    public class CurrencyBl
+    public class CurrencyBl : ICurrencyBl
     {
         private readonly ICurrencyDal _currencyDal;
 
@@ -20,6 +21,8 @@ namespace BusinessManagement.BusinessLayer.Concrete
         public IDataResult<List<CurrencyDto>> GetAll()
         {
             List<Currency> getCurrencies = _currencyDal.GetAll();
+            if (getCurrencies.Count == 0)
+                return new ErrorDataResult<List<CurrencyDto>>(Messages.CurrenciesNotFound);
 
             List<CurrencyDto> getCurrencyDtos = FillDtos(getCurrencies);
 
@@ -30,9 +33,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             Currency getCurrency = _currencyDal.GetByCurrencyName(currencyName);
             if (getCurrency == null)
-            {
                 return new ErrorDataResult<CurrencyDto>(Messages.CurrencyNotFound);
-            }
 
             CurrencyDto getCurrencyDto = FillDto(getCurrency);
 

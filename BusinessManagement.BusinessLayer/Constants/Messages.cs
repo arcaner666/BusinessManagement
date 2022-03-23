@@ -161,6 +161,7 @@
         public const string OperationClaimListedByOperationClaimName = "OperationClaimListedByOperationClaimName";
         public const string OperationClaimNotFound = "OperationClaimNotFound";
         public const string OperationClaimsListed = "OperationClaimsListed";
+        public const string OperationClaimsNotFound = "OperationClaimsNotFound";
         #endregion
 
         #region HouseOwner

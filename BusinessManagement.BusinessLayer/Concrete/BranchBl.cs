@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Constants;
+﻿using BusinessManagement.BusinessLayer.Abstract;
+using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
@@ -6,7 +7,7 @@ using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.BusinessLayer.Concrete
 {
-    public class BranchBl
+    public class BranchBl : IBranchBl
     {
         private readonly IBranchDal _branchDal;
 
@@ -21,9 +22,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             Branch getBranch = _branchDal.GetByBusinessIdAndBranchOrderOrBranchCode(branchDto.BusinessId, branchDto.BranchOrder, branchDto.BranchCode);
             if (getBranch != null)
-            {
                 return new ErrorDataResult<BranchDto>(Messages.BranchAlreadyExists);
-            }
 
             Branch addBranch = new()
             {

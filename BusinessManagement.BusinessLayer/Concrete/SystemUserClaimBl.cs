@@ -22,9 +22,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             SystemUserClaim getSystemUserClaim = _systemUserClaimDal.GetBySystemUserIdAndOperationClaimId(systemUserClaimDto.SystemUserId, systemUserClaimDto.OperationClaimId);
             if (getSystemUserClaim != null)
-            {
                 return new ErrorDataResult<SystemUserClaimDto>(Messages.SystemUserClaimAlreadyExists);
-            }
 
             SystemUserClaim addSystemUserClaim = new()
             {

@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Constants;
+﻿using BusinessManagement.BusinessLayer.Abstract;
+using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
@@ -6,7 +7,7 @@ using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.BusinessLayer.Concrete
 {
-    public class SectionGroupBl
+    public class SectionGroupBl : ISectionGroupBl
     {
         private readonly ISectionGroupDal _sectionGroupDal;
 
@@ -21,9 +22,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             SectionGroup getSectionGroup = _sectionGroupDal.GetByBusinessIdAndSectionGroupName(sectionGroupDto.BusinessId, sectionGroupDto.SectionGroupName);
             if (getSectionGroup != null)
-            {
                 return new ErrorDataResult<SectionGroupDto>(Messages.SectionGroupAlreadyExists);
-            }
 
             SectionGroup addSectionGroup = new()
             {

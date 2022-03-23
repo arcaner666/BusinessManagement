@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Constants;
+﻿using BusinessManagement.BusinessLayer.Abstract;
+using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
@@ -6,7 +7,7 @@ using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.BusinessLayer.Concrete
 {
-    public class OperationClaimBl
+    public class OperationClaimBl : IOperationClaimBl
     {
         private readonly IOperationClaimDal _operationClaimDal;
 
@@ -20,6 +21,8 @@ namespace BusinessManagement.BusinessLayer.Concrete
         public IDataResult<List<OperationClaimDto>> GetAll()
         {
             List<OperationClaim> getOperationClaims = _operationClaimDal.GetAll();
+            if (getOperationClaims.Count == 0)
+                return new ErrorDataResult<List<OperationClaimDto>>(Messages.OperationClaimsNotFound);
 
             List<OperationClaimDto> getOperationClaimDtos = FillDtos(getOperationClaims);
 
@@ -30,9 +33,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             OperationClaim getOperationClaim = _operationClaimDal.GetByOperationClaimName(operationClaimName);
             if (getOperationClaim == null)
-            {
                 return new ErrorDataResult<OperationClaimDto>(Messages.OperationClaimNotFound);
-            }
 
             OperationClaimDto getOperationClaimDto = FillDto(getOperationClaim);
 

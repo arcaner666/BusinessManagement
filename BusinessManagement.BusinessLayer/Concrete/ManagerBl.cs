@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Constants;
+﻿using BusinessManagement.BusinessLayer.Abstract;
+using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
@@ -6,7 +7,7 @@ using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.BusinessLayer.Concrete
 {
-    public class ManagerBl
+    public class ManagerBl : IManagerBl
     {
         private readonly IManagerDal _managerDal;
 
@@ -21,9 +22,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             Manager getManager = _managerDal.GetByBusinessIdAndPhone(managerDto.BusinessId, managerDto.Phone);
             if (getManager != null)
-            {
                 return new ErrorDataResult<ManagerDto>(Messages.ManagerAlreadyExists);
-            }
 
             Manager addManager = new()
             {

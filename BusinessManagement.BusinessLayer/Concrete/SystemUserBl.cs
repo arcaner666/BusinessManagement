@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Constants;
+﻿using BusinessManagement.BusinessLayer.Abstract;
+using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.BusinessLayer.Utilities.Security.Hashing;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -7,7 +8,7 @@ using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.BusinessLayer.Concrete
 {
-    public class SystemUserBl
+    public class SystemUserBl : ISystemUserBl
     {
         private readonly ISystemUserDal _systemUserDal;
 
@@ -22,9 +23,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             SystemUser getSystemUser = _systemUserDal.GetByPhone(systemUserDto.Phone);
             if (getSystemUser != null)
-            {
                 return new ErrorDataResult<SystemUserDto>(Messages.SystemUserAlreadyExists);
-            }
 
             // Şu aşamada, kayıt olan kullanıcıya SMS ile şifre gönderilemediği için şifre 123456 yapıldı.
             HashingHelper.CreatePasswordHash("123456", out byte[] passwordHash, out byte[] passwordSalt);
@@ -55,9 +54,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
         {
             SystemUser getSystemUser = _systemUserDal.GetById(systemUserDto.SystemUserId);
             if (getSystemUser == null)
-            {
                 return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
-            }
 
             getSystemUser.Email = systemUserDto.Email;
             getSystemUser.Role = systemUserDto.Role;

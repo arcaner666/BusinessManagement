@@ -34,39 +34,56 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<Section> GetAll()
         {
-            var sql = "SELECT SectionId, SectionGroupId, BusinessId, BranchId, ManagerId, FullAddressId, SectionName, SectionCode, CreatedAt, UpdatedAt"
-                + " FROM Section";
+            var sql = "SELECT * FROM Section";
             return _db.Query<Section>(sql).ToList();
         }
 
         public List<Section> GetByBusinessId(int businessId)
         {
-            var sql = "SELECT SectionId, SectionGroupId, BusinessId, BranchId, ManagerId, FullAddressId, SectionName, SectionCode, CreatedAt, UpdatedAt"
-                + " FROM Section"
+            var sql = "SELECT * FROM Section"
                 + " WHERE BusinessId = @BusinessId";
             return _db.Query<Section>(sql, new { @BusinessId = businessId }).ToList();
         }
 
         public Section GetById(int id)
         {
-            var sql = "SELECT SectionId, SectionGroupId, BusinessId, BranchId, ManagerId, FullAddressId, SectionName, SectionCode, CreatedAt, UpdatedAt"
-                + " FROM Section"
+            var sql = "SELECT * FROM Section"
                 + " WHERE SectionId = @SectionId";
             return _db.Query<Section>(sql, new { @SectionId = id }).SingleOrDefault();
         }
 
         public Section GetBySectionCode(string sectionCode)
         {
-            var sql = "SELECT SectionId, SectionGroupId, BusinessId, BranchId, ManagerId, FullAddressId, SectionName, SectionCode, CreatedAt, UpdatedAt"
-                + " FROM Section"
+            var sql = "SELECT * FROM Section"
                 + " WHERE SectionCode = @SectionCode";
             return _db.Query<Section>(sql, new { @SectionCode = sectionCode }).SingleOrDefault();
         }
 
+        public Section GetExtById(int id)
+        {
+            var sql = "SELECT * FROM Section s"
+                + " INNER JOIN SectionGroup sg ON s.SectionGroupId = sg.SectionGroupId"
+                + " INNER JOIN Manager m ON s.ManagerId = m.ManagerId"
+                + " INNER JOIN FullAddress fa ON s.FullAddressId = fa.FullAddressId"
+                + " INNER JOIN City c ON fa.CityId = c.CityId"
+                + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
+                + " WHERE s.SectionId = @SectionId;";
+            return _db.Query<Section, SectionGroup, Manager, FullAddress, City, District, Section>(sql,
+                (section, sectionGroup, manager, fullAddress, city, district) =>
+                {
+                    section.SectionGroup = sectionGroup;
+                    section.Manager = manager;
+                    section.FullAddress = fullAddress;
+                    section.FullAddress.City = city;
+                    section.FullAddress.District = district;
+                    return section;
+                }, new { @SectionId = id },
+                splitOn: "SectionGroupId,ManagerId,FullAddressId,CityId,DistrictId").SingleOrDefault();
+        }
+
         public List<Section> GetExtsByBusinessId(int businessId)
         {
-            var sql = "SELECT SectionId, SectionGroupId, BusinessId, BranchId, ManagerId, FullAddressId, SectionName, SectionCode, CreatedAt, UpdatedAt"
-                + " FROM Section s"
+            var sql = "SELECT * FROM Section s"
                 + " INNER JOIN SectionGroup sg ON s.SectionGroupId = sg.SectionGroupId"
                 + " INNER JOIN Manager m ON s.ManagerId = m.ManagerId"
                 + " INNER JOIN FullAddress fa ON s.FullAddressId = fa.FullAddressId"

@@ -178,14 +178,19 @@
         #endregion
         
         #region Section
+        public const string SectionAdded = "SectionAdded";
         public const string SectionAlreadyExists = "SectionAlreadyExists";
+        public const string SectionDeleted = "SectionDeleted";
         public const string SectionExtAdded = "SectionExtAdded";
         public const string SectionExtDeleted = "SectionExtDeleted";
+        public const string SectionExtListedById = "SectionExtListedById";
         public const string SectionExtsListedByBusinessId = "SectionExtsListedByBusinessId";
         public const string SectionExtUpdated = "SectionExtUpdated";
+        public const string SectionListedById = "SectionListedById";
         public const string SectionNotFound = "SectionNotFound";
         public const string SectionsListedByBusinessId = "SectionsListedByBusinessId";
         public const string SectionsNotFound = "SectionsNotFound";
+        public const string SectionUpdated = "SectionUpdated";
         #endregion
 
         #region SectionGroup

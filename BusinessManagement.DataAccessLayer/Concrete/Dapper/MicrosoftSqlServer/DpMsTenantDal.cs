@@ -34,24 +34,21 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Tenant GetById(long id)
         {
-            var sql = "SELECT TenantId, BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt"
-                + " FROM Tenant"
+            var sql = "SELECT * FROM Tenant"
                 + " WHERE TenantId = @TenantId";
             return _db.Query<Tenant>(sql, new { @TenantId = id }).SingleOrDefault();
         }
 
         public List<Tenant> GetExtsByBusinessId(int businessId)
         {
-            var sql = "SELECT TenantId, BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt"
-                + " FROM Tenant"
+            var sql = "SELECT * FROM Tenant"
                 + " WHERE BusinessId = @BusinessId";
             return _db.Query<Tenant>(sql, new { @BusinessId = businessId }).ToList();
         }
 
         public Tenant GetIfAlreadyExist(int businessId, long accountId)
         {
-            var sql = "SELECT TenantId, BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt"
-                + " FROM Tenant"
+            var sql = "SELECT * FROM Tenant"
                 + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
             return _db.Query<Tenant>(sql, new
             {

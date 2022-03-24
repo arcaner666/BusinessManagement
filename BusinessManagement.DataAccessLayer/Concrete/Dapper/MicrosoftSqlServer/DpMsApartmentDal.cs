@@ -34,32 +34,28 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Apartment GetByApartmentCode(string apartmentCode)
         {
-            var sql = "SELECT ApartmentId, SectionId, BusinessId, BranchId, ManagerId, ApartmentName, ApartmentCode, BlockNumber, CreatedAt, UpdatedAt"
-                + " FROM Apartment"
+            var sql = "SELECT * FROM Apartment"
                 + " WHERE ApartmentCode = @ApartmentCode";
             return _db.Query<Apartment>(sql, new { @ApartmentCode = apartmentCode }).SingleOrDefault();
         }
 
         public Apartment GetById(long id)
         {
-            var sql = "SELECT ApartmentId, SectionId, BusinessId, BranchId, ManagerId, ApartmentName, ApartmentCode, BlockNumber, CreatedAt, UpdatedAt"
-                + " FROM Apartment"
+            var sql = "SELECT * FROM Apartment"
                 + " WHERE ApartmentId = @ApartmentId";
             return _db.Query<Apartment>(sql, new { @ApartmentId = id }).SingleOrDefault();
         }
 
         public List<Apartment> GetBySectionId(int sectionId)
         {
-            var sql = "SELECT ApartmentId, SectionId, BusinessId, BranchId, ManagerId, ApartmentName, ApartmentCode, BlockNumber, CreatedAt, UpdatedAt"
-                + " FROM Apartment"
+            var sql = "SELECT * FROM Apartment"
                 + " WHERE SectionId = @SectionId";
             return _db.Query<Apartment>(sql, new { @SectionId = sectionId }).ToList();
         }
 
         public List<Apartment> GetExtsByBusinessId(int businessId)
         {
-            var sql = "SELECT ApartmentId, SectionId, BusinessId, BranchId, ManagerId, ApartmentName, ApartmentCode, BlockNumber, CreatedAt, UpdatedAt"
-                + " FROM Apartment a"
+            var sql = "SELECT * FROM Apartment a"
                 + " INNER JOIN Section s ON a.SectionId = s.SectionId"
                 + " INNER JOIN Manager m ON a.ManagerId = m.ManagerId"
                 + " INNER JOIN FullAddress fa ON s.FullAddressId = fa.FullAddressId"

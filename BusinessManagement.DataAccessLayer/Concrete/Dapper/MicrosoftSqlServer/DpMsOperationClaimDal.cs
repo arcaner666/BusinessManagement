@@ -18,15 +18,13 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<OperationClaim> GetAll()
         {
-            var sql = "SELECT OperationClaimId, OperationClaimName"
-                + " FROM OperationClaim";
+            var sql = "SELECT * FROM OperationClaim";
             return _db.Query<OperationClaim>(sql).ToList();
         }
 
         public OperationClaim GetByOperationClaimName(string operationClaimName)
         {
-            var sql = "SELECT OperationClaimId, OperationClaimName"
-                + " FROM OperationClaim"
+            var sql = "SELECT * FROM OperationClaim"
                 + " WHERE OperationClaimName = @OperationClaimName";
             return _db.Query<OperationClaim>(sql, new { @OperationClaimName = operationClaimName }).SingleOrDefault();
         }

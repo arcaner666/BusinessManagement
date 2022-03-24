@@ -34,16 +34,14 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Bank GetById(long id)
         {
-            var sql = "SELECT BankId, BusinessId, BranchId, AccountId, FullAddressId, BankName, BankBranchName, BankCode, BankBranchCode, BankAccountCode, Iban, OfficerName, CreatedAt, UpdatedAt"
-                + " FROM Bank"
+            var sql = "SELECT * FROM Bank"
                 + " WHERE BankId = @BankId";
             return _db.Query<Bank>(sql, new { @BankId = id }).SingleOrDefault();
         }
 
         public List<Bank> GetExtsByBusinessId(int businessId)
         {
-            var sql = "SELECT BankId, BusinessId, BranchId, AccountId, FullAddressId, BankName, BankBranchName, BankCode, BankBranchCode, BankAccountCode, Iban, OfficerName, CreatedAt, UpdatedAt"
-                + " FROM Bank b"
+            var sql = "SELECT * FROM Bank b"
                 + " INNER JOIN Branch br ON b.BranchId = br.BranchId"
                 + " INNER JOIN FullAddress fa ON b.FullAddressId = fa.FullAddressId"
                 + " INNER JOIN City c ON fa.CityId = c.CityId"
@@ -63,8 +61,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Bank GetIfAlreadyExist(int businessId, string iban)
         {
-            var sql = "SELECT BankId, BusinessId, BranchId, AccountId, FullAddressId, BankName, BankBranchName, BankCode, BankBranchCode, BankAccountCode, Iban, OfficerName, CreatedAt, UpdatedAt"
-                + " FROM Bank"
+            var sql = "SELECT * FROM Bank"
                 + " WHERE BusinessId = @BusinessId AND Iban = @Iban";
             return _db.Query<Bank>(sql, new
             {

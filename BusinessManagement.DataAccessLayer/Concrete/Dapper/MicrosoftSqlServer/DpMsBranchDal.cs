@@ -34,23 +34,20 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Branch GetByBranchCode(string branchCode)
         {
-            var sql = "SELECT BranchId, BusinessId, FullAddressId, BranchOrder, BranchName, BranchCode, CreatedAt, UpdatedAt"
-                + " FROM Branch"
+            var sql = "SELECT * FROM Branch"
                 + " WHERE BranchCode = @BranchCode";
             return _db.Query<Branch>(sql, new { @BranchCode = branchCode }).SingleOrDefault();
         }
 
         public List<Branch> GetByBusinessId(int businessId)
         {
-            var sql = "SELECT BranchId, BusinessId, FullAddressId, BranchOrder, BranchName, BranchCode, CreatedAt, UpdatedAt"
-                + " FROM Branch"
+            var sql = "SELECT * FROM Branch"
                 + " WHERE BusinessId = @BusinessId";
             return _db.Query<Branch>(sql, new { @BusinessId = businessId }).ToList();
         }
         public Branch GetByBusinessIdAndBranchName(int businessId, string branchName)
         {
-            var sql = "SELECT BranchId, BusinessId, FullAddressId, BranchOrder, BranchName, BranchCode, CreatedAt, UpdatedAt"
-                + " FROM Branch"
+            var sql = "SELECT * FROM Branch"
                 + " WHERE BusinessId = @BusinessId AND BranchName = @BranchName";
             return _db.Query<Branch>(sql, new
             {
@@ -61,8 +58,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Branch GetByBusinessIdAndBranchOrderOrBranchCode(int businessId, int branchOrder, string branchCode)
         {
-            var sql = "SELECT BranchId, BusinessId, FullAddressId, BranchOrder, BranchName, BranchCode, CreatedAt, UpdatedAt"
-                + " FROM Branch"
+            var sql = "SELECT * FROM Branch"
                 + " WHERE BusinessId = @BusinessId AND BranchOrder = @BranchOrder OR BusinessId = @BusinessId AND BranchCode = @BranchCode";
             return _db.Query<Branch>(sql, new
             {
@@ -74,8 +70,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Branch GetByBusinessIdAndMaxBranchOrder(int businessId)
         {
-            var sql = "SELECT BranchId, BusinessId, FullAddressId, BranchOrder, BranchName, BranchCode, CreatedAt, UpdatedAt"
-                + " FROM Branch"
+            var sql = "SELECT * FROM Branch"
                 + " WHERE BusinessId = @BusinessId AND BranchOrder = (SELECT MAX(BranchOrder) FROM Branch WHERE BusinessId = @BusinessId)";
             return _db.Query<Branch>(sql, new
             {
@@ -85,16 +80,14 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Branch GetById(long id)
         {
-            var sql = "SELECT BranchId, BusinessId, FullAddressId, BranchOrder, BranchName, BranchCode, CreatedAt, UpdatedAt"
-                + " FROM Branch"
+            var sql = "SELECT * FROM Branch"
                 + " WHERE BranchId = @BranchId";
             return _db.Query<Branch>(sql, new { @BranchId = id }).SingleOrDefault();
         }
 
         public Branch GetExtById(long id)
         {
-            var sql = "SELECT b.BranchId, b.BusinessId, b.FullAddressId, b.BranchOrder, b.BranchName, b.BranchCode, b.CreatedAt, b.UpdatedAt, fa.FullAddressId, fa.CityId, fa.DistrictId, fa.AddressTitle, fa.PostalCode, fa.AddressText, fa.CreatedAt, fa.UpdatedAt"
-                + " FROM Branch b"
+            var sql = "SELECT * FROM Branch b"
                 + " INNER JOIN FullAddress fa ON b.FullAddressId = fa.FullAddressId"
                 + " WHERE b.BranchId = @BranchId;";
             return _db.Query<Branch, FullAddress, Branch>(sql,
@@ -108,8 +101,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<Branch> GetExtsByBusinessId(int businessId)
         {
-            var sql = "SELECT b.BranchId, b.BusinessId, b.FullAddressId, b.BranchOrder, b.BranchName, b.BranchCode, b.CreatedAt, b.UpdatedAt"
-                + " FROM Branch b"
+            var sql = "SELECT * FROM Branch b"
                 + " INNER JOIN FullAddress fa ON b.FullAddressId = fa.FullAddressId"
                 + " INNER JOIN City c ON fa.CityId = c.CityId"
                 + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"

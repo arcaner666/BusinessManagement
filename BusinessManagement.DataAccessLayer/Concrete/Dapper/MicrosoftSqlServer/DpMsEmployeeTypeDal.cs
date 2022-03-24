@@ -18,8 +18,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<EmployeeType> GetAll()
         {
-            var sql = "SELECT EmployeeTypeId, EmployeeTypeName"
-                + " FROM EmployeeType";
+            var sql = "SELECT * FROM EmployeeType";
             return _db.Query<EmployeeType>(sql).ToList();
         }
     }

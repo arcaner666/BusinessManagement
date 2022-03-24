@@ -34,8 +34,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public SystemUserClaim GetBySystemUserIdAndOperationClaimId(long systemUserId, int operationClaimId)
         {
-            var sql = "SELECT SystemUserClaimId, SystemUserId, OperationClaimId, CreatedAt, UpdatedAt"
-                + " FROM SystemUserClaim"
+            var sql = "SELECT * FROM SystemUserClaim"
                 + " WHERE SystemUserId = @SystemUserId AND OperationClaimId = @OperationClaimId";
             return _db.Query<SystemUserClaim>(sql, new
             {
@@ -46,8 +45,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<SystemUserClaim> GetExtsBySystemUserId(long systemUserId)
         {
-            var sql = "SELECT suc.SystemUserClaimId, suc.SystemUserId, suc.OperationClaimId, suc.CreatedAt, suc.UpdatedAt, oc.OperationClaimId, oc.OperationClaimName"
-                + " FROM SystemUserClaim suc"
+            var sql = "SELECT * FROM SystemUserClaim suc"
                 + " INNER JOIN OperationClaim oc ON suc.OperationClaimId = oc.OperationClaimId"
                 + " WHERE suc.SystemUserId = @SystemUserId";
             return _db.Query<SystemUserClaim, OperationClaim, SystemUserClaim>(

@@ -34,24 +34,21 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public SystemUser GetByEmail(string email)
         {
-            var sql = "SELECT SystemUserId, Email, Phone, PasswordHash, PasswordSalt, Role, BusinessId, BranchId, Blocked, RefreshToken, RefreshTokenExpiryTime, CreatedAt, UpdatedAt"
-                + " FROM SystemUser"
+            var sql = "SELECT * FROM SystemUser"
                 + " WHERE Email = @Email";
             return _db.Query<SystemUser>(sql, new { @Email = email }).SingleOrDefault();
         }
 
         public SystemUser GetById(long id)
         {
-            var sql = "SELECT SystemUserId, Email, Phone, PasswordHash, PasswordSalt, Role, BusinessId, BranchId, Blocked, RefreshToken, RefreshTokenExpiryTime, CreatedAt, UpdatedAt"
-                + " FROM SystemUser"
+            var sql = "SELECT * FROM SystemUser"
                 + " WHERE SystemUserId = @SystemUserId";
             return _db.Query<SystemUser>(sql, new { @SystemUserId = id }).SingleOrDefault();
         }
 
         public SystemUser GetByPhone(string phone)
         {
-            var sql = "SELECT SystemUserId, Email, Phone, PasswordHash, PasswordSalt, Role, BusinessId, BranchId, Blocked, RefreshToken, RefreshTokenExpiryTime, CreatedAt, UpdatedAt"
-                + " FROM SystemUser"
+            var sql = "SELECT * FROM SystemUser"
                 + " WHERE Phone = @Phone";
             return _db.Query<SystemUser>(sql, new { @Phone = phone }).SingleOrDefault();
         }

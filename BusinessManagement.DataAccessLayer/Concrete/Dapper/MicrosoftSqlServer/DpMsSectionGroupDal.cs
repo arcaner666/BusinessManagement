@@ -34,16 +34,14 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<SectionGroup> GetByBusinessId(int businessId)
         {
-            var sql = "SELECT SectionGroupId, BusinessId, BranchId, SectionGroupName, CreatedAt, UpdatedAt"
-                + " FROM SectionGroup"
+            var sql = "SELECT * FROM SectionGroup"
                 + " WHERE BusinessId = @BusinessId";
             return _db.Query<SectionGroup>(sql, new { @BusinessId = businessId }).ToList();
         }
 
         public SectionGroup GetByBusinessIdAndSectionGroupName(int businessId, string sectionGroupName)
         {
-            var sql = "SELECT SectionGroupId, BusinessId, BranchId, SectionGroupName, CreatedAt, UpdatedAt"
-                + " FROM SectionGroup"
+            var sql = "SELECT * FROM SectionGroup"
                 + " WHERE BusinessId = @BusinessId AND SectionGroupName = @SectionGroupName";
             return _db.Query<SectionGroup>(sql, new
             {
@@ -54,8 +52,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public SectionGroup GetById(long id)
         {
-            var sql = "SELECT SectionGroupId, BusinessId, BranchId, SectionGroupName, CreatedAt, UpdatedAt"
-                + " FROM SectionGroup"
+            var sql = "SELECT * FROM SectionGroup"
                 + " WHERE SectionGroupId = @SectionGroupId";
             return _db.Query<SectionGroup>(sql, new { @SectionGroupId = id }).SingleOrDefault();
         }

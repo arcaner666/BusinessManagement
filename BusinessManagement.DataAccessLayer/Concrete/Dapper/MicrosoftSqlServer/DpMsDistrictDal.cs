@@ -18,15 +18,13 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<District> GetAll()
         {
-            var sql = "SELECT DistrictId, CityId, DistrictName"
-                + " FROM District";
+            var sql = "SELECT * FROM District";
             return _db.Query<District>(sql).ToList();
         }
 
         public List<District> GetByCityId(short cityId)
         {
-            var sql = "SELECT DistrictId, CityId, DistrictName"
-                + " FROM District"
+            var sql = "SELECT * FROM District"
                 + " WHERE CityId = @CityId";
             return _db.Query<District>(sql, new { @CityId = cityId }).ToList();
         }

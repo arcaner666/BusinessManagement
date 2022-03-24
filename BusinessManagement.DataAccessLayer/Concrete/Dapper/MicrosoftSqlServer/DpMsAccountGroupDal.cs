@@ -18,15 +18,13 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<AccountGroup> GetAll()
         {
-            var sql = "SELECT AccountGroupId, AccountGroupName, AccountGroupCode"
-                + " FROM AccountGroup";
+            var sql = "SELECT * FROM AccountGroup";
             return _db.Query<AccountGroup>(sql).ToList();
         }
 
         public AccountGroup GetByAccountGroupCode(string accountGroupCode)
         {
-            var sql = "SELECT AccountGroupId, AccountGroupName, AccountGroupCode"
-                + " FROM AccountGroup"
+            var sql = "SELECT * FROM AccountGroup"
                 + " WHERE AccountGroupCode = @AccountGroupCode";
             return _db.Query<AccountGroup>(sql, new
             {
@@ -36,8 +34,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public AccountGroup GetById(short id)
         {
-            var sql = "SELECT AccountGroupId, AccountGroupName, AccountGroupCode"
-                + " FROM AccountGroup"
+            var sql = "SELECT * FROM AccountGroup"
                 + " WHERE AccountGroupId = @AccountGroupId";
             return _db.Query<AccountGroup>(sql, new { @AccountGroupId = id }).SingleOrDefault();
         }

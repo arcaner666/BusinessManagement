@@ -34,24 +34,21 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Employee GetByAccountId(long accountId)
         {
-            var sql = "SELECT EmployeeId, BusinessId, BranchId, AccountId, EmployeeTypeId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, StillWorking, StartDate, QuitDate, CreatedAt, UpdatedAt"
-                + " FROM Employee"
+            var sql = "SELECT * FROM Employee"
                 + " WHERE AccountId = @AccountId";
             return _db.Query<Employee>(sql, new { @AccountId = accountId }).SingleOrDefault();
         }
 
         public Employee GetById(long id)
         {
-            var sql = "SELECT EmployeeId, BusinessId, BranchId, AccountId, EmployeeTypeId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, StillWorking, StartDate, QuitDate, CreatedAt, UpdatedAt"
-                + " FROM Employee"
+            var sql = "SELECT * FROM Employee"
                 + " WHERE EmployeeId = @EmployeeId";
             return _db.Query<Employee>(sql, new { @EmployeeId = id }).SingleOrDefault();
         }
 
         public List<Employee> GetExtsByBusinessId(int businessId)
         {
-            var sql = "SELECT EmployeeId, BusinessId, BranchId, AccountId, EmployeeTypeId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, StillWorking, StartDate, QuitDate, CreatedAt, UpdatedAt"
-                + " FROM Employee e"
+            var sql = "SELECT * FROM Employee e"
                 + " INNER JOIN EmployeeType et ON e.EmployeeTypeId = et.EmployeeTypeId"
                 + " WHERE e.BusinessId = @BusinessId";
             return _db.Query<Employee, EmployeeType, Employee>(sql,
@@ -65,8 +62,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Employee GetIfAlreadyExist(int businessId, long accountId)
         {
-            var sql = "SELECT EmployeeId, BusinessId, BranchId, AccountId, EmployeeTypeId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, StillWorking, StartDate, QuitDate, CreatedAt, UpdatedAt"
-                + " FROM Employee"
+            var sql = "SELECT * FROM Employee"
                 + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
             return _db.Query<Employee>(sql, new
             {

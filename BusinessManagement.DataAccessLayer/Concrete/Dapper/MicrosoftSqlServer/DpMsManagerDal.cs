@@ -27,8 +27,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Manager GetByBusinessIdAndPhone(int businessId, string phone)
         {
-            var sql = "SELECT ManagerId, BusinessId, BranchId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt"
-                + " FROM Manager"
+            var sql = "SELECT * FROM Manager"
                 + " WHERE BusinessId = @BusinessId AND Phone = @Phone";
             return _db.Query<Manager>(sql, new
             {
@@ -39,8 +38,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<Manager> GetExtsByBusinessId(int businessId)
         {
-            var sql = "SELECT ManagerId, BusinessId, BranchId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt"
-                + " FROM Manager m"
+            var sql = "SELECT * FROM Manager m"
                 + " INNER JOIN Business bu ON m.BusinessId = bu.BusinessId"
                 + " INNER JOIN Branch br ON m.BranchId = br.BranchId"
                 + " INNER JOIN FullAddress fa ON br.FullAddressId = fa.FullAddressId"

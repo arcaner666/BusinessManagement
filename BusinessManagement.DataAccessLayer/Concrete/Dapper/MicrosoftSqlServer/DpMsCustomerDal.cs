@@ -27,16 +27,14 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<Customer> GetByBusinessId(int businessId)
         {
-            var sql = "SELECT CustomerId, BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, AppointmentsMade, ProductsPurchased, LastPurchaseDate, CreatedAt, UpdatedAt"
-                + " FROM Customer"
+            var sql = "SELECT * FROM Customer"
                 + " WHERE BusinessId = @BusinessId";
             return _db.Query<Customer>(sql, new { @BusinessId = businessId }).ToList();
         }
 
         public Customer GetByBusinessIdAndSystemUserId(int businessId, long systemUserId)
         {
-            var sql = "SELECT CustomerId, BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, AppointmentsMade, ProductsPurchased, LastPurchaseDate, CreatedAt, UpdatedAt"
-                + " FROM Customer"
+            var sql = "SELECT * FROM Customer"
                 + " WHERE BusinessId = @BusinessId AND SystemUserId = @SystemUserId";
             return _db.Query<Customer>(sql, new
             {
@@ -47,16 +45,14 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Customer GetById(long id)
         {
-            var sql = "SELECT CustomerId, BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, AppointmentsMade, ProductsPurchased, LastPurchaseDate, CreatedAt, UpdatedAt"
-                + " FROM Customer"
+            var sql = "SELECT * FROM Customer"
                 + " WHERE CustomerId = @CustomerId";
             return _db.Query<Customer>(sql, new { @CustomerId = id }).SingleOrDefault();
         }
 
         public List<Customer> GetExtsByBusinessId(int businessId)
         {
-            var sql = "SELECT CustomerId, BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, AppointmentsMade, ProductsPurchased, LastPurchaseDate, CreatedAt, UpdatedAt"
-                + " FROM Customer"
+            var sql = "SELECT * FROM Customer"
                 + " WHERE BusinessId = @BusinessId";
             return _db.Query<Customer>(sql, new { @BusinessId = businessId }).ToList();
         }

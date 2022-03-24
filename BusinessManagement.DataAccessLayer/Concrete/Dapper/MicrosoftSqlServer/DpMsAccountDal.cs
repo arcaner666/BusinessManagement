@@ -34,16 +34,14 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<Account> GetByAccountGroupId(short accountGroupId)
         {
-            var sql = "SELECT AccountId, BusinessId, BranchId, AccountGroupId, CurrencyId, AccountOrder, AccountName, AccountCode, TaxOffice, TaxNumber, IdentityNumber, DebitBalance, CreditBalance, Balance, Limit, StandartMaturity, CreatedAt, UpdatedAt"
-                + " FROM Account"
+            var sql = "SELECT * FROM Account"
                 + " WHERE AccountGroupId = @AccountGroupId";
             return _db.Query<Account>(sql, new { @AccountGroupId = accountGroupId }).ToList();
         }
 
         public Account GetByBusinessIdAndAccountCode(int businessId, string accountCode)
         {
-            var sql = "SELECT AccountId, BusinessId, BranchId, AccountGroupId, CurrencyId, AccountOrder, AccountName, AccountCode, TaxOffice, TaxNumber, IdentityNumber, DebitBalance, CreditBalance, Balance, Limit, StandartMaturity, CreatedAt, UpdatedAt"
-                + " FROM Account"
+            var sql = "SELECT * FROM Account"
                 + " WHERE BusinessId = @BusinessId AND AccountCode = @AccountCode";
             return _db.Query<Account>(sql, new
             {
@@ -54,16 +52,14 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Account GetById(long id)
         {
-            var sql = "SELECT AccountId, BusinessId, BranchId, AccountGroupId, CurrencyId, AccountOrder, AccountName, AccountCode, TaxOffice, TaxNumber, IdentityNumber, DebitBalance, CreditBalance, Balance, Limit, StandartMaturity, CreatedAt, UpdatedAt"
-                + " FROM Account"
+            var sql = "SELECT * FROM Account"
                 + " WHERE AccountId = @AccountId";
             return _db.Query<Account>(sql, new { @AccountId = id }).SingleOrDefault();
         }
 
         public List<Account> GetExtsByBusinessId(int businessId)
         {
-            var sql = "SELECT AccountId, BusinessId, BranchId, AccountGroupId, CurrencyId, AccountOrder, AccountName, AccountCode, TaxOffice, TaxNumber, IdentityNumber, DebitBalance, CreditBalance, Balance, Limit, StandartMaturity, CreatedAt, UpdatedAt"
-                + " FROM Account a"
+            var sql = "SELECT * FROM Account a"
                 + " INNER JOIN Branch b ON a.BranchId = b.BranchId"
                 + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
                 + " INNER JOIN Currency c ON a.CurrencyId = c.CurrencyId"
@@ -81,8 +77,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<Account> GetExtsByBusinessIdAndAccountGroupCode(int businessId, string[] accountGroupCodes)
         {
-            var sql = "SELECT AccountId, BusinessId, BranchId, AccountGroupId, CurrencyId, AccountOrder, AccountName, AccountCode, TaxOffice, TaxNumber, IdentityNumber, DebitBalance, CreditBalance, Balance, Limit, StandartMaturity, CreatedAt, UpdatedAt"
-                + " FROM Account a"
+            var sql = "SELECT * FROM Account a"
                 + " INNER JOIN Branch b ON a.BranchId = b.BranchId"
                 + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
                 + " INNER JOIN Currency c ON a.CurrencyId = c.CurrencyId"
@@ -105,8 +100,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Account GetLastAccountOrderForAnAccountGroup(int businessId, long branchId, string accountGroupCode)
         {
-            var sql = "SELECT AccountId, BusinessId, BranchId, AccountGroupId, CurrencyId, AccountOrder, AccountName, AccountCode, TaxOffice, TaxNumber, IdentityNumber, DebitBalance, CreditBalance, Balance, Limit, StandartMaturity, CreatedAt, UpdatedAt"
-                + " FROM Account"
+            var sql = "SELECT * FROM Account"
                 + " WHERE BusinessId = @BusinessId"
                 + " AND BranchId = @BranchId"
                 + " AND AccountGroupId = (SELECT AccountGroupId FROM AccountGroup WHERE AccountGroupCode = @AccountGroupCode)"
@@ -121,8 +115,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Account GetMaxAccountOrderByBusinessIdAndBranchIdAndAccountGroupId(int businessId, long branchId, short accountGroupId)
         {
-            var sql = "SELECT AccountId, BusinessId, BranchId, AccountGroupId, CurrencyId, AccountOrder, AccountName, AccountCode, TaxOffice, TaxNumber, IdentityNumber, DebitBalance, CreditBalance, Balance, Limit, StandartMaturity, CreatedAt, UpdatedAt"
-                + " FROM Account"
+            var sql = "SELECT * FROM Account"
                 + " WHERE BusinessId = @BusinessId AND BranchId = @BranchId AND AccountGroupId = @AccountGroupId AND AccountOrder ="
                 + " (SELECT MAX(AccountOrder) FROM Account"
                 + " WHERE BusinessId = @BusinessId AND BranchId = @BranchId AND AccountGroupId = @AccountGroupId)";

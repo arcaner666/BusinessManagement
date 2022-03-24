@@ -18,8 +18,7 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<City> GetAll()
         {
-            var sql = "SELECT CityId, PlateCode, CityName"
-                + " FROM City";
+            var sql = "SELECT * FROM City";
             return _db.Query<City>(sql).ToList();
         }
     }

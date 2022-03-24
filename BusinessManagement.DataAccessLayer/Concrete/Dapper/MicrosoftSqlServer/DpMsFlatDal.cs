@@ -34,32 +34,28 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<Flat> GetByApartmentId(long apartmentId)
         {
-            var sql = "SELECT FlatId, SectionId, ApartmentId, BusinessId, BranchId, HouseOwnerId, TenantId, FlatCode, DoorNumber, CreatedAt, UpdatedAt"
-                + " FROM Flat"
+            var sql = "SELECT * FROM Flat"
                 + " WHERE ApartmentId = @ApartmentId";
             return _db.Query<Flat>(sql, new { @ApartmentId = apartmentId }).ToList();
         }
 
         public Flat GetByFlatCode(string flatCode)
         {
-            var sql = "SELECT FlatId, SectionId, ApartmentId, BusinessId, BranchId, HouseOwnerId, TenantId, FlatCode, DoorNumber, CreatedAt, UpdatedAt"
-                + " FROM Flat"
+            var sql = "SELECT * FROM Flat"
                 + " WHERE FlatCode = @FlatCode";
             return _db.Query<Flat>(sql, new { @FlatCode = flatCode }).SingleOrDefault();
         }
 
         public Flat GetById(long id)
         {
-            var sql = "SELECT FlatId, SectionId, ApartmentId, BusinessId, BranchId, HouseOwnerId, TenantId, FlatCode, DoorNumber, CreatedAt, UpdatedAt"
-                + " FROM Flat"
+            var sql = "SELECT * FROM Flat"
                 + " WHERE FlatId = @FlatId";
             return _db.Query<Flat>(sql, new { @FlatId = id }).SingleOrDefault();
         }
 
         public List<Flat> GetExtsByBusinessId(int businessId)
         {
-            var sql = "SELECT FlatId, SectionId, ApartmentId, BusinessId, BranchId, HouseOwnerId, TenantId, FlatCode, DoorNumber, CreatedAt, UpdatedAt"
-                + " FROM Flat f"
+            var sql = "SELECT * FROM Flat f"
                     + " INNER JOIN Section s ON f.SectionId = s.SectionId"
                     + " INNER JOIN Apartment a ON f.ApartmentId = a.ApartmentId"
                     + " LEFT JOIN HouseOwner o ON f.HouseOwnerId = o.HouseOwnerId"

@@ -10,6 +10,7 @@ namespace BusinessManagement.DataAccessLayer.Abstract
         List<Section> GetByBusinessId(int businessId);
         Section GetById(int id);
         Section GetBySectionCode(string sectionCode);
+        Section GetExtById(int id);
         List<Section> GetExtsByBusinessId(int businessId);
         void Update(Section section);
     }

@@ -27,24 +27,21 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public Business GetByBusinessName(string businessName)
         {
-            var sql = "SELECT BusinessId, OwnerSystemUserId, BusinessOrder, BusinessName, BusinessCode, CreatedAt, UpdatedAt"
-                + " FROM Business"
+            var sql = "SELECT * FROM Business"
                 + " WHERE BusinessName = @BusinessName";
             return _db.Query<Business>(sql, new { @BusinessName = businessName }).SingleOrDefault();
         }
 
         public Business GetById(int id)
         {
-            var sql = "SELECT BusinessId, OwnerSystemUserId, BusinessOrder, BusinessName, BusinessCode, CreatedAt, UpdatedAt"
-                + " FROM Business"
+            var sql = "SELECT * FROM Business"
                 + " WHERE BusinessId = @BusinessId";
             return _db.Query<Business>(sql, new { @BusinessId = id }).SingleOrDefault();
         }
 
         public Business GetByOwnerSystemUserId(long ownerSystemUserId)
         {
-            var sql = "SELECT BusinessId, OwnerSystemUserId, BusinessOrder, BusinessName, BusinessCode, CreatedAt, UpdatedAt"
-                + " FROM Business"
+            var sql = "SELECT * FROM Business"
                 + " WHERE OwnerSystemUserId = @OwnerSystemUserId";
             return _db.Query<Business>(sql, new { @OwnerSystemUserId = ownerSystemUserId }).SingleOrDefault();
         }        

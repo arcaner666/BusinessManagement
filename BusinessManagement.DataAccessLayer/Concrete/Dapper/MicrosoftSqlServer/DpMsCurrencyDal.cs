@@ -18,15 +18,13 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public List<Currency> GetAll()
         {
-            var sql = "SELECT CurrencyId, CurrencyName, CurrencySymbol"
-                + " FROM Currency";
+            var sql = "SELECT * FROM Currency";
             return _db.Query<Currency>(sql).ToList();
         }        
         
         public Currency GetByCurrencyName(string currencyName)
         {
-            var sql = "SELECT CurrencyId, CurrencyName, CurrencySymbol"
-                + " FROM Currency"
+            var sql = "SELECT * FROM Currency"
                 + " WHERE CurrencyName = @CurrencyName";
             return _db.Query<Currency>(sql, new { @CurrencyName = currencyName }).SingleOrDefault();
         }

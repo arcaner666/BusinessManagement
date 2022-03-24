@@ -34,24 +34,21 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public HouseOwner GetById(long id)
         {
-            var sql = "SELECT HouseOwnerId, BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt"
-                + " FROM HouseOwner"
+            var sql = "SELECT * FROM HouseOwner"
                 + " WHERE HouseOwnerId = @HouseOwnerId";
             return _db.Query<HouseOwner>(sql, new { @HouseOwnerId = id }).SingleOrDefault();
         }
 
         public List<HouseOwner> GetExtsByBusinessId(int businessId)
         {
-            var sql = "SELECT HouseOwnerId, BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt"
-                + " FROM HouseOwner"
+            var sql = "SELECT * FROM HouseOwner"
                 + " WHERE BusinessId = @BusinessId";
             return _db.Query<HouseOwner>(sql, new { @BusinessId = businessId } ).ToList();
         }
 
         public HouseOwner GetIfAlreadyExist(int businessId, long accountId)
         {
-            var sql = "SELECT HouseOwnerId, BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt"
-                + " FROM HouseOwner"
+            var sql = "SELECT * FROM HouseOwner"
                 + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
             return _db.Query<HouseOwner>(sql, new
             {

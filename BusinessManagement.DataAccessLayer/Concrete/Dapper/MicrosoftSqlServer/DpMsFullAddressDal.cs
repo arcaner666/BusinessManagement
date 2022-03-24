@@ -35,16 +35,14 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
 
         public FullAddress GetByAddressText(string addressText)
         {
-            var sql = "SELECT FullAddressId, CityId, DistrictId, AddressTitle, PostalCode, AddressText, CreatedAt, UpdatedAt"
-                + " FROM FullAddress"
+            var sql = "SELECT * FROM FullAddress"
                 + " WHERE AddressText = @AddressText";
             return _db.Query<FullAddress>(sql, new { @AddressText = addressText }).SingleOrDefault();
         }
 
         public FullAddress GetById(long id)
         {
-            var sql = "SELECT FullAddressId, CityId, DistrictId, AddressTitle, PostalCode, AddressText, CreatedAt, UpdatedAt"
-                + " FROM FullAddress"
+            var sql = "SELECT * FROM FullAddress"
                 + " WHERE FullAddressId = @FullAddressId";
             return _db.Query<FullAddress>(sql, new { @FullAddressId = id }).SingleOrDefault();
         }

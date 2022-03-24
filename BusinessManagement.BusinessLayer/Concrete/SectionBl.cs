@@ -93,10 +93,6 @@ namespace BusinessManagement.BusinessLayer.Concrete
 
         public IResult Delete(int id)
         {
-            var getSectionResult = GetById(id);
-            if (!getSectionResult.Success)
-                return getSectionResult;
-
             _sectionDal.Delete(id);
 
             return new SuccessResult(Messages.SectionDeleted);
@@ -105,13 +101,18 @@ namespace BusinessManagement.BusinessLayer.Concrete
         [TransactionScopeAspect]
         public IResult DeleteExt(int id)
         {
+            // Site getirilir. FullAddressId'ye ulaşmak için gereklidir.
+            var getSectionResult = GetById(id);
+            if (!getSectionResult.Success)
+                return getSectionResult;
+
             // Site silinir.
-            var deleteSectionResult = Delete(id);
+            var deleteSectionResult = Delete(getSectionResult.Data.SectionId);
             if (!deleteSectionResult.Success)
                 return deleteSectionResult;
 
             // Şubenin adresi silinir.
-            var deleteFullAddressResult = _fullAddressBl.Delete(id);
+            var deleteFullAddressResult = _fullAddressBl.Delete(getSectionResult.Data.FullAddressId);
             if (!deleteFullAddressResult.Success)
                 return deleteFullAddressResult;
 
@@ -157,6 +158,10 @@ namespace BusinessManagement.BusinessLayer.Concrete
             if (getSection == null)
                 return new ErrorDataResult<SectionDto>(Messages.SectionNotFound);
 
+            getSection.SectionId = sectionDto.SectionId;
+            getSection.SectionGroupId = sectionDto.SectionGroupId;
+            getSection.BranchId = sectionDto.BranchId;
+            getSection.ManagerId = sectionDto.ManagerId;
             getSection.SectionName = sectionDto.SectionName;
             getSection.UpdatedAt = DateTimeOffset.Now;
             _sectionDal.Update(getSection);
@@ -172,6 +177,7 @@ namespace BusinessManagement.BusinessLayer.Concrete
             {
                 FullAddressId = sectionExtDto.FullAddressId,
                 CityId = sectionExtDto.CityId,
+                AddressTitle = "Site Adresi",
                 DistrictId = sectionExtDto.DistrictId,
                 PostalCode = sectionExtDto.PostalCode,
                 AddressText = sectionExtDto.AddressText,

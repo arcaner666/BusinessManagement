@@ -3,6 +3,7 @@ using Autofac.Extras.DynamicProxy;
 using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Concrete;
 using BusinessManagement.BusinessLayer.Utilities.Interceptors;
+using BusinessManagement.BusinessLayer.Utilities.Security.Cryptography;
 using BusinessManagement.BusinessLayer.Utilities.Security.JWT;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -42,11 +43,16 @@ namespace BusinessManagement.BusinessLayer.DependencyResolvers.Autofac
 
             builder.RegisterType<JwtHelper>().As<ITokenService>();
 
+            builder.RegisterType<KeyService>().As<IKeyService>();
+
             builder.RegisterType<ManagerBl>().As<IManagerBl>().SingleInstance();
             builder.RegisterType<DpMsManagerDal>().As<IManagerDal>().SingleInstance();
 
             builder.RegisterType<OperationClaimBl>().As<IOperationClaimBl>().SingleInstance();
             builder.RegisterType<DpMsOperationClaimDal>().As<IOperationClaimDal>().SingleInstance();
+
+            builder.RegisterType<SectionBl>().As<ISectionBl>().SingleInstance();
+            builder.RegisterType<DpMsSectionDal>().As<ISectionDal>().SingleInstance();
 
             builder.RegisterType<SectionGroupBl>().As<ISectionGroupBl>().SingleInstance();
             builder.RegisterType<DpMsSectionGroupDal>().As<ISectionGroupDal>().SingleInstance();

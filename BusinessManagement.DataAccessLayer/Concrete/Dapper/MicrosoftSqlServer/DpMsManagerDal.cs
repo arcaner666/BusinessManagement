@@ -25,6 +25,13 @@ namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
             return manager;
         }
 
+        public List<Manager> GetByBusinessId(int businessId)
+        {
+            var sql = "SELECT * FROM Manager"
+                + " WHERE BusinessId = @BusinessId";
+            return _db.Query<Manager>(sql, new { @BusinessId = businessId }).ToList();
+        }
+
         public Manager GetByBusinessIdAndPhone(int businessId, string phone)
         {
             var sql = "SELECT * FROM Manager"

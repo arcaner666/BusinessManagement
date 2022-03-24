@@ -44,6 +44,17 @@ namespace BusinessManagement.BusinessLayer.Concrete
             return new SuccessDataResult<ManagerDto>(addManagerDto, Messages.ManagerAdded);
         }
 
+        public IDataResult<List<ManagerDto>> GetByBusinessId(int businessId)
+        {
+            List<Manager> managers = _managerDal.GetByBusinessId(businessId);
+            if (managers.Count == 0)
+                return new ErrorDataResult<List<ManagerDto>>(Messages.ManagersNotFound);
+
+            List<ManagerDto> managerDtos = FillDtos(managers);
+
+            return new SuccessDataResult<List<ManagerDto>>(managerDtos, Messages.ManagersListedByBusinessId);
+        }
+
         private ManagerDto FillDto(Manager manager)
         {
             ManagerDto managerDto = new()

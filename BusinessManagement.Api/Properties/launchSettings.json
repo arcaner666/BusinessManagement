@@ -9,26 +9,22 @@
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
+    // Kestrel (Self-Hosted) Launch Profile
+    "BusinessManagement.Api": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
       "launchBrowser": false,
       "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "BusinessManagement.Api": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
+    // IIS Express Launch Profile
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": false,
       "launchUrl": "swagger",
-
-      // JWT sisteminde önerilen ayar. Bunun yerine alltakini kullanabilir miyim emin değilim. DENE!!!
-      "applicationUrl": "http://localhost:5000",
-
-      // Orijinal hali
-      //"applicationUrl": "https://localhost:7158;http://localhost:5158",
-
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

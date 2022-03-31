@@ -5,123 +5,122 @@ using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 
-namespace BusinessManagement.BusinessLayer.Concrete
+namespace BusinessManagement.BusinessLayer.Concrete;
+
+public class AccountBl : IAccountBl
 {
-    public class AccountBl : IAccountBl
+    private readonly IAccountDal _accountDal;
+
+    public AccountBl(
+        IAccountDal accountDal
+    )
     {
-        private readonly IAccountDal _accountDal;
+        _accountDal = accountDal;
+    }
 
-        public AccountBl(
-            IAccountDal accountDal
-        )
+    public IDataResult<AccountDto> Add(AccountDto accountDto)
+    {
+        Account getAccount = _accountDal.GetByBusinessIdAndAccountCode(accountDto.BusinessId, accountDto.AccountCode);
+        if (getAccount != null)
         {
-            _accountDal = accountDal;
+            return new ErrorDataResult<AccountDto>(Messages.AccountAlreadyExists);
         }
 
-        public IDataResult<AccountDto> Add(AccountDto accountDto)
+        Account addAccount = new()
         {
-            Account getAccount = _accountDal.GetByBusinessIdAndAccountCode(accountDto.BusinessId, accountDto.AccountCode);
-            if (getAccount != null)
-            {
-                return new ErrorDataResult<AccountDto>(Messages.AccountAlreadyExists);
-            }
+            BusinessId = accountDto.BusinessId,
+            BranchId = accountDto.BranchId,
+            AccountGroupId = accountDto.AccountGroupId,
+            CurrencyId = accountDto.CurrencyId,
+            AccountOrder = accountDto.AccountOrder,
+            AccountName = accountDto.AccountName,
+            AccountCode = accountDto.AccountCode,
+            TaxOffice = "",
+            TaxNumber = 0,
+            IdentityNumber = 0,
+            DebitBalance = 0,
+            CreditBalance = 0,
+            Balance = 0,
+            Limit = accountDto.Limit,
+            StandartMaturity = accountDto.StandartMaturity,
+            CreatedAt = DateTimeOffset.Now,
+            UpdatedAt = DateTimeOffset.Now,
+        };
+        _accountDal.Add(addAccount);
 
-            Account addAccount = new()
-            {
-                BusinessId = accountDto.BusinessId,
-                BranchId = accountDto.BranchId,
-                AccountGroupId = accountDto.AccountGroupId,
-                CurrencyId = accountDto.CurrencyId,
-                AccountOrder = accountDto.AccountOrder,
-                AccountName = accountDto.AccountName,
-                AccountCode = accountDto.AccountCode,
-                TaxOffice = "",
-                TaxNumber = 0,
-                IdentityNumber = 0,
-                DebitBalance = 0,
-                CreditBalance = 0,
-                Balance = 0,
-                Limit = accountDto.Limit,
-                StandartMaturity = accountDto.StandartMaturity,
-                CreatedAt = DateTimeOffset.Now,
-                UpdatedAt = DateTimeOffset.Now,
-            };
-            _accountDal.Add(addAccount);
+        AccountDto addAccountDto = FillDto(addAccount);
 
-            AccountDto addAccountDto = FillDto(addAccount);
+        return new SuccessDataResult<AccountDto>(addAccountDto, Messages.AccountAdded);
+    }
 
-            return new SuccessDataResult<AccountDto>(addAccountDto, Messages.AccountAdded);
-        }
-
-        private AccountDto FillDto(Account account)
+    private AccountDto FillDto(Account account)
+    {
+        AccountDto accountDto = new()
         {
-            AccountDto accountDto = new()
-            {
-                AccountId = account.AccountId,
-                BusinessId = account.BusinessId,
-                BranchId = account.BranchId,
-                AccountGroupId = account.AccountGroupId,
-                CurrencyId = account.CurrencyId,
-                AccountOrder = account.AccountOrder,
-                AccountName = account.AccountName,
-                AccountCode = account.AccountCode,
-                TaxOffice = account.TaxOffice,
-                TaxNumber = account.TaxNumber,
-                IdentityNumber = account.IdentityNumber,
-                DebitBalance = account.DebitBalance,
-                CreditBalance = account.CreditBalance,
-                Balance = account.Balance,
-                Limit = account.Limit,
-                StandartMaturity = account.StandartMaturity,
-                CreatedAt = account.CreatedAt,
-                UpdatedAt = account.UpdatedAt,
-            };
+            AccountId = account.AccountId,
+            BusinessId = account.BusinessId,
+            BranchId = account.BranchId,
+            AccountGroupId = account.AccountGroupId,
+            CurrencyId = account.CurrencyId,
+            AccountOrder = account.AccountOrder,
+            AccountName = account.AccountName,
+            AccountCode = account.AccountCode,
+            TaxOffice = account.TaxOffice,
+            TaxNumber = account.TaxNumber,
+            IdentityNumber = account.IdentityNumber,
+            DebitBalance = account.DebitBalance,
+            CreditBalance = account.CreditBalance,
+            Balance = account.Balance,
+            Limit = account.Limit,
+            StandartMaturity = account.StandartMaturity,
+            CreatedAt = account.CreatedAt,
+            UpdatedAt = account.UpdatedAt,
+        };
 
-            return accountDto;
-        }
+        return accountDto;
+    }
 
-        private List<AccountDto> FillDtos(List<Account> accounts)
+    private List<AccountDto> FillDtos(List<Account> accounts)
+    {
+        List<AccountDto> accountDtos = accounts.Select(account => FillDto(account)).ToList();
+
+        return accountDtos;
+    }
+
+    private AccountExtDto FillExtDto(Account account)
+    {
+        AccountExtDto accountExtDto = new()
         {
-            List<AccountDto> accountDtos = accounts.Select(account => FillDto(account)).ToList();
+            AccountId = account.AccountId,
+            BusinessId = account.BusinessId,
+            BranchId = account.BranchId,
+            AccountGroupId = account.AccountGroupId,
+            CurrencyId = account.CurrencyId,
+            AccountOrder = account.AccountOrder,
+            AccountName = account.AccountName,
+            AccountCode = account.AccountCode,
+            TaxOffice = account.TaxOffice,
+            TaxNumber = account.TaxNumber,
+            IdentityNumber = account.IdentityNumber,
+            DebitBalance = account.DebitBalance,
+            CreditBalance = account.CreditBalance,
+            Balance = account.Balance,
+            Limit = account.Limit,
+            StandartMaturity = account.StandartMaturity,
+            CreatedAt = account.CreatedAt,
+            UpdatedAt = account.UpdatedAt,
 
-            return accountDtos;
-        }
+            BranchName = account.Branch.BranchName,
+            AccountGroupName = account.AccountGroup.AccountGroupName,
+            CurrencyName = account.Currency.CurrencyName,
+        };
+        return accountExtDto;
+    }
 
-        private AccountExtDto FillExtDto(Account account)
-        {
-            AccountExtDto accountExtDto = new()
-            {
-                AccountId = account.AccountId,
-                BusinessId = account.BusinessId,
-                BranchId = account.BranchId,
-                AccountGroupId = account.AccountGroupId,
-                CurrencyId = account.CurrencyId,
-                AccountOrder = account.AccountOrder,
-                AccountName = account.AccountName,
-                AccountCode = account.AccountCode,
-                TaxOffice = account.TaxOffice,
-                TaxNumber = account.TaxNumber,
-                IdentityNumber = account.IdentityNumber,
-                DebitBalance = account.DebitBalance,
-                CreditBalance = account.CreditBalance,
-                Balance = account.Balance,
-                Limit = account.Limit,
-                StandartMaturity = account.StandartMaturity,
-                CreatedAt = account.CreatedAt,
-                UpdatedAt = account.UpdatedAt,
+    private List<AccountExtDto> FillExtDtos(List<Account> accounts)
+    {
+        List<AccountExtDto> accountExtDtos = accounts.Select(account => FillExtDto(account)).ToList();
 
-                BranchName = account.Branch.BranchName,
-                AccountGroupName = account.AccountGroup.AccountGroupName,
-                CurrencyName = account.Currency.CurrencyName,
-            };
-            return accountExtDto;
-        }
-
-        private List<AccountExtDto> FillExtDtos(List<Account> accounts)
-        {
-            List<AccountExtDto> accountExtDtos = accounts.Select(account => FillExtDto(account)).ToList();
-
-            return accountExtDtos;
-        }
+        return accountExtDtos;
     }
 }

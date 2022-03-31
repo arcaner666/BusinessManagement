@@ -1,8 +1,7 @@
-﻿namespace BusinessManagement.Entities.DTOs
+﻿namespace BusinessManagement.Entities.DTOs;
+
+public class AccountCodeDto
 {
-    public class AccountCodeDto
-    {
-        public int AccountOrder { get; set; }
-        public string AccountCode { get; set; }
-    }
+    public int AccountOrder { get; set; }
+    public string AccountCode { get; set; }
 }

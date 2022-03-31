@@ -12,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacModule()));
 
-// Servisler eklenir.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -47,21 +46,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 //    o.MemoryBufferThreshold = fileTransferOptions.UploadLimit;
 //});
 
-// ALTTAKİ KOD .NET 5'DE ÇALIŞIYORDU. KULLANACAĞIN ZAMAN .NET 6'YA GÖRE DÜZENLEMELİSİN!!!!!!!!!!!!!!!!
-// .NET Core Web API varsayılan olarak Controller'lardan arayüze cevap modellerini camelCase olarak gönderiyor. 
-// Bunu arayüzde modellerde camelCase notasyonu kullanmaya başladığım için kapattım.
-// Eğer ilerde arayüzde PascalCase kullanmam gerekirse aşağıdaki kod bunu sağlıyor.
-//services.AddMvc(setupAction => {
-//    setupAction.EnableEndpointRouting = false;
-//}).AddJsonOptions(jsonOptions =>
-//{
-//    jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
-//}).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
-// Uygulama derlenir.
 var app = builder.Build();
 
-// Http istekleri sırasıyla alttaki işlemlerden geçer.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -87,5 +73,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Uygulama çalıştırılır.
 app.Run();

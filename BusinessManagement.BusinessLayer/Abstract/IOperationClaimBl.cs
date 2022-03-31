@@ -1,11 +1,10 @@
 ﻿using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.Entities.DTOs;
 
-namespace BusinessManagement.BusinessLayer.Abstract
+namespace BusinessManagement.BusinessLayer.Abstract;
+
+public interface IOperationClaimBl
 {
-    public interface IOperationClaimBl
-    {
-        IDataResult<List<OperationClaimDto>> GetAll();
-        IDataResult<OperationClaimDto> GetByOperationClaimName(string operationClaimName);
-    }
+    IDataResult<List<OperationClaimDto>> GetAll();
+    IDataResult<OperationClaimDto> GetByOperationClaimName(string operationClaimName);
 }

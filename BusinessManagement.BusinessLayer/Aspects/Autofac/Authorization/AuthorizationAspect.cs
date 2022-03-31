@@ -4,30 +4,29 @@ using BusinessManagement.BusinessLayer.Utilities.Interceptors;
 using Castle.DynamicProxy;
 using Microsoft.AspNetCore.Http;
 
-namespace BusinessManagement.BusinessLayer.Aspects.Autofac.Authorization
+namespace BusinessManagement.BusinessLayer.Aspects.Autofac.Authorization;
+
+public class AuthorizationAspect : MethodInterception
 {
-    public class AuthorizationAspect : MethodInterception
+    private readonly string[] _roles;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public AuthorizationAspect(string roles, IHttpContextAccessor httpContextAccessor)
     {
-        private readonly string[] _roles;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        _roles = roles.Split(',');
+        _httpContextAccessor = httpContextAccessor;
+    }
 
-        public AuthorizationAspect(string roles, IHttpContextAccessor httpContextAccessor)
+    protected override void OnBefore(IInvocation invocation)
+    {
+        var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
+        foreach (var role in _roles)
         {
-            _roles = roles.Split(',');
-            _httpContextAccessor = httpContextAccessor;
-        }
-
-        protected override void OnBefore(IInvocation invocation)
-        {
-            var roleClaims = _httpContextAccessor.HttpContext.User.ClaimRoles();
-            foreach (var role in _roles)
+            if (roleClaims.Contains(role))
             {
-                if (roleClaims.Contains(role))
-                {
-                    return;
-                }
+                return;
             }
-            throw new Exception(Messages.AuthorizationDenied);
         }
+        throw new Exception(Messages.AuthorizationDenied);
     }
 }

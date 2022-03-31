@@ -5,92 +5,91 @@ using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 
-namespace BusinessManagement.BusinessLayer.Concrete
+namespace BusinessManagement.BusinessLayer.Concrete;
+
+public class SystemUserClaimBl : ISystemUserClaimBl
 {
-    public class SystemUserClaimBl : ISystemUserClaimBl
+    private readonly ISystemUserClaimDal _systemUserClaimDal;
+
+    public SystemUserClaimBl(
+        ISystemUserClaimDal systemUserClaimDal
+    )
     {
-        private readonly ISystemUserClaimDal _systemUserClaimDal;
+        _systemUserClaimDal = systemUserClaimDal;
+    }
 
-        public SystemUserClaimBl(
-            ISystemUserClaimDal systemUserClaimDal
-        )
+    public IDataResult<SystemUserClaimDto> Add(SystemUserClaimDto systemUserClaimDto)
+    {
+        SystemUserClaim getSystemUserClaim = _systemUserClaimDal.GetBySystemUserIdAndOperationClaimId(systemUserClaimDto.SystemUserId, systemUserClaimDto.OperationClaimId);
+        if (getSystemUserClaim != null)
+            return new ErrorDataResult<SystemUserClaimDto>(Messages.SystemUserClaimAlreadyExists);
+
+        SystemUserClaim addSystemUserClaim = new()
         {
-            _systemUserClaimDal = systemUserClaimDal;
-        }
+            SystemUserId = systemUserClaimDto.SystemUserId,
+            OperationClaimId = systemUserClaimDto.OperationClaimId,
+            CreatedAt = DateTimeOffset.Now,
+            UpdatedAt = DateTimeOffset.Now,
+        };
+        _systemUserClaimDal.Add(addSystemUserClaim);
 
-        public IDataResult<SystemUserClaimDto> Add(SystemUserClaimDto systemUserClaimDto)
+        SystemUserClaimDto addSystemUserClaimDto = FillDto(addSystemUserClaim);
+
+        return new SuccessDataResult<SystemUserClaimDto>(addSystemUserClaimDto, Messages.SystemUserAdded);
+    }
+
+    public IDataResult<List<SystemUserClaimExtDto>> GetExtsBySystemUserId(long systemUserId)
+    {
+        List<SystemUserClaim> getSystemUserClaims = _systemUserClaimDal.GetExtsBySystemUserId(systemUserId);
+        if (getSystemUserClaims.Count == 0)
+            return new ErrorDataResult<List<SystemUserClaimExtDto>>(Messages.SystemUserClaimsNotFound);
+
+        List<SystemUserClaimExtDto> getSystemUserClaimExtDtos = FillExtDtos(getSystemUserClaims);
+
+        return new SuccessDataResult<List<SystemUserClaimExtDto>>(getSystemUserClaimExtDtos, Messages.SystemUserExtsListedBySystemUserId);
+    }
+
+    private SystemUserClaimDto FillDto(SystemUserClaim systemUserClaim)
+    {
+        SystemUserClaimDto systemUserClaimDto = new()
         {
-            SystemUserClaim getSystemUserClaim = _systemUserClaimDal.GetBySystemUserIdAndOperationClaimId(systemUserClaimDto.SystemUserId, systemUserClaimDto.OperationClaimId);
-            if (getSystemUserClaim != null)
-                return new ErrorDataResult<SystemUserClaimDto>(Messages.SystemUserClaimAlreadyExists);
+            SystemUserClaimId = systemUserClaim.SystemUserClaimId,
+            SystemUserId = systemUserClaim.SystemUserId,
+            OperationClaimId = systemUserClaim.OperationClaimId,
+            CreatedAt = systemUserClaim.CreatedAt,
+            UpdatedAt = systemUserClaim.UpdatedAt,
+        };
 
-            SystemUserClaim addSystemUserClaim = new()
-            {
-                SystemUserId = systemUserClaimDto.SystemUserId,
-                OperationClaimId = systemUserClaimDto.OperationClaimId,
-                CreatedAt = DateTimeOffset.Now,
-                UpdatedAt = DateTimeOffset.Now,
-            };
-            _systemUserClaimDal.Add(addSystemUserClaim);
+        return systemUserClaimDto;
+    }
 
-            SystemUserClaimDto addSystemUserClaimDto = FillDto(addSystemUserClaim);
+    private List<SystemUserClaimDto> FillDtos(List<SystemUserClaim> systemUserClaims)
+    {
+        List<SystemUserClaimDto> systemUserClaimDtos = systemUserClaims.Select(systemUserClaim => FillDto(systemUserClaim)).ToList();
 
-            return new SuccessDataResult<SystemUserClaimDto>(addSystemUserClaimDto, Messages.SystemUserAdded);
-        }
+        return systemUserClaimDtos;
+    }
 
-        public IDataResult<List<SystemUserClaimExtDto>> GetExtsBySystemUserId(long systemUserId)
+    private SystemUserClaimExtDto FillExtDto(SystemUserClaim systemUserClaim)
+    {
+        SystemUserClaimExtDto systemUserClaimExtDto = new()
         {
-            List<SystemUserClaim> getSystemUserClaims = _systemUserClaimDal.GetExtsBySystemUserId(systemUserId);
-            if (getSystemUserClaims.Count == 0)
-                return new ErrorDataResult<List<SystemUserClaimExtDto>>(Messages.SystemUserClaimsNotFound);
+            SystemUserClaimId = systemUserClaim.SystemUserClaimId,
+            SystemUserId = systemUserClaim.SystemUserId,
+            OperationClaimId = systemUserClaim.OperationClaimId,
+            CreatedAt = systemUserClaim.CreatedAt,
+            UpdatedAt = systemUserClaim.UpdatedAt,
 
-            List<SystemUserClaimExtDto> getSystemUserClaimExtDtos = FillExtDtos(getSystemUserClaims);
+            OperationClaimName = systemUserClaim.OperationClaim.OperationClaimName,
+        };
 
-            return new SuccessDataResult<List<SystemUserClaimExtDto>>(getSystemUserClaimExtDtos, Messages.SystemUserExtsListedBySystemUserId);
-        }
+        return systemUserClaimExtDto;
+    }
 
-        private SystemUserClaimDto FillDto(SystemUserClaim systemUserClaim)
-        {
-            SystemUserClaimDto systemUserClaimDto = new()
-            {
-                SystemUserClaimId = systemUserClaim.SystemUserClaimId,
-                SystemUserId = systemUserClaim.SystemUserId,
-                OperationClaimId = systemUserClaim.OperationClaimId,
-                CreatedAt = systemUserClaim.CreatedAt,
-                UpdatedAt = systemUserClaim.UpdatedAt,
-            };
+    private List<SystemUserClaimExtDto> FillExtDtos(List<SystemUserClaim> systemUserClaims)
+    {
+        List<SystemUserClaimExtDto> systemUserClaimExtDtos = systemUserClaims.Select(systemUserClaim => FillExtDto(systemUserClaim)).ToList();
 
-            return systemUserClaimDto;
-        }
-
-        private List<SystemUserClaimDto> FillDtos(List<SystemUserClaim> systemUserClaims)
-        {
-            List<SystemUserClaimDto> systemUserClaimDtos = systemUserClaims.Select(systemUserClaim => FillDto(systemUserClaim)).ToList();
-
-            return systemUserClaimDtos;
-        }
-
-        private SystemUserClaimExtDto FillExtDto(SystemUserClaim systemUserClaim)
-        {
-            SystemUserClaimExtDto systemUserClaimExtDto = new()
-            {
-                SystemUserClaimId = systemUserClaim.SystemUserClaimId,
-                SystemUserId = systemUserClaim.SystemUserId,
-                OperationClaimId = systemUserClaim.OperationClaimId,
-                CreatedAt = systemUserClaim.CreatedAt,
-                UpdatedAt = systemUserClaim.UpdatedAt,
-
-                OperationClaimName = systemUserClaim.OperationClaim.OperationClaimName,
-            };
-
-            return systemUserClaimExtDto;
-        }
-
-        private List<SystemUserClaimExtDto> FillExtDtos(List<SystemUserClaim> systemUserClaims)
-        {
-            List<SystemUserClaimExtDto> systemUserClaimExtDtos = systemUserClaims.Select(systemUserClaim => FillExtDto(systemUserClaim)).ToList();
-
-            return systemUserClaimExtDtos;
-        }
+        return systemUserClaimExtDtos;
     }
 }

@@ -5,38 +5,37 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
-namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer
+namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
+
+public class DpMsAccountGroupDal : IAccountGroupDal
 {
-    public class DpMsAccountGroupDal : IAccountGroupDal
+    private readonly IDbConnection _db;
+
+    public DpMsAccountGroupDal(IConfiguration configuration)
     {
-        private readonly IDbConnection _db;
+        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+    }
 
-        public DpMsAccountGroupDal(IConfiguration configuration)
-        {
-            _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
-        }
+    public List<AccountGroup> GetAll()
+    {
+        var sql = "SELECT * FROM AccountGroup";
+        return _db.Query<AccountGroup>(sql).ToList();
+    }
 
-        public List<AccountGroup> GetAll()
+    public AccountGroup GetByAccountGroupCode(string accountGroupCode)
+    {
+        var sql = "SELECT * FROM AccountGroup"
+            + " WHERE AccountGroupCode = @AccountGroupCode";
+        return _db.Query<AccountGroup>(sql, new
         {
-            var sql = "SELECT * FROM AccountGroup";
-            return _db.Query<AccountGroup>(sql).ToList();
-        }
+            @AccountGroupCode = accountGroupCode,
+        }).SingleOrDefault();
+    }
 
-        public AccountGroup GetByAccountGroupCode(string accountGroupCode)
-        {
-            var sql = "SELECT * FROM AccountGroup"
-                + " WHERE AccountGroupCode = @AccountGroupCode";
-            return _db.Query<AccountGroup>(sql, new
-            {
-                @AccountGroupCode = accountGroupCode,
-            }).SingleOrDefault();
-        }
-
-        public AccountGroup GetById(short id)
-        {
-            var sql = "SELECT * FROM AccountGroup"
-                + " WHERE AccountGroupId = @AccountGroupId";
-            return _db.Query<AccountGroup>(sql, new { @AccountGroupId = id }).SingleOrDefault();
-        }
+    public AccountGroup GetById(short id)
+    {
+        var sql = "SELECT * FROM AccountGroup"
+            + " WHERE AccountGroupId = @AccountGroupId";
+        return _db.Query<AccountGroup>(sql, new { @AccountGroupId = id }).SingleOrDefault();
     }
 }

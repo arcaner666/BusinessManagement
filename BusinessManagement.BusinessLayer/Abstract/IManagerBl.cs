@@ -1,11 +1,10 @@
 ﻿using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.Entities.DTOs;
 
-namespace BusinessManagement.BusinessLayer.Abstract
+namespace BusinessManagement.BusinessLayer.Abstract;
+
+public interface IManagerBl
 {
-    public interface IManagerBl
-    {
-        IDataResult<ManagerDto> Add(ManagerDto managerDto);
-        IDataResult<List<ManagerDto>> GetByBusinessId(int businessId);
-    }
+    IDataResult<ManagerDto> Add(ManagerDto managerDto);
+    IDataResult<List<ManagerDto>> GetByBusinessId(int businessId);
 }

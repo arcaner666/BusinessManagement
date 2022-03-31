@@ -5,58 +5,57 @@ using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 
-namespace BusinessManagement.BusinessLayer.Concrete
+namespace BusinessManagement.BusinessLayer.Concrete;
+
+public class DistrictBl : IDistrictBl
 {
-    public class DistrictBl : IDistrictBl
+    private readonly IDistrictDal _districtDal;
+
+    public DistrictBl(
+        IDistrictDal districtDal
+    )
     {
-        private readonly IDistrictDal _districtDal;
+        _districtDal = districtDal;
+    }
 
-        public DistrictBl(
-            IDistrictDal districtDal
-        )
+    public IDataResult<List<DistrictDto>> GetAll()
+    {
+        List<District> getDistricts = _districtDal.GetAll();
+        if (getDistricts.Count == 0)
+            return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
+
+        List<DistrictDto> getDistrictDtos = FillDtos(getDistricts);
+
+        return new SuccessDataResult<List<DistrictDto>>(getDistrictDtos, Messages.DistrictsListed);
+    }
+
+    public IDataResult<List<DistrictDto>> GetByCityId(short cityId)
+    {
+        List<District> getDistricts = _districtDal.GetByCityId(cityId);
+        if (getDistricts.Count == 0) 
+            return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
+
+        List<DistrictDto> getDistrictDtos = FillDtos(getDistricts);
+
+        return new SuccessDataResult<List<DistrictDto>>(getDistrictDtos, Messages.DistrictsListedByCityId);
+    }
+
+    private DistrictDto FillDto(District district)
+    {
+        DistrictDto districtDto = new()
         {
-            _districtDal = districtDal;
-        }
+            DistrictId = district.DistrictId,
+            CityId = district.CityId,
+            DistrictName = district.DistrictName,
+        };
 
-        public IDataResult<List<DistrictDto>> GetAll()
-        {
-            List<District> getDistricts = _districtDal.GetAll();
-            if (getDistricts.Count == 0)
-                return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
+        return districtDto;
+    }
 
-            List<DistrictDto> getDistrictDtos = FillDtos(getDistricts);
+    private List<DistrictDto> FillDtos(List<District> districts)
+    {
+        List<DistrictDto> districtDtos = districts.Select(district => FillDto(district)).ToList();
 
-            return new SuccessDataResult<List<DistrictDto>>(getDistrictDtos, Messages.DistrictsListed);
-        }
-
-        public IDataResult<List<DistrictDto>> GetByCityId(short cityId)
-        {
-            List<District> getDistricts = _districtDal.GetByCityId(cityId);
-            if (getDistricts.Count == 0) 
-                return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
-
-            List<DistrictDto> getDistrictDtos = FillDtos(getDistricts);
-
-            return new SuccessDataResult<List<DistrictDto>>(getDistrictDtos, Messages.DistrictsListedByCityId);
-        }
-
-        private DistrictDto FillDto(District district)
-        {
-            DistrictDto districtDto = new()
-            {
-                DistrictId = district.DistrictId,
-                CityId = district.CityId,
-                DistrictName = district.DistrictName,
-            };
-
-            return districtDto;
-        }
-
-        private List<DistrictDto> FillDtos(List<District> districts)
-        {
-            List<DistrictDto> districtDtos = districts.Select(district => FillDto(district)).ToList();
-
-            return districtDtos;
-        }
+        return districtDtos;
     }
 }

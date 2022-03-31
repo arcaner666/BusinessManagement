@@ -1,10 +1,9 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
 
-namespace BusinessManagement.DataAccessLayer.Abstract
+namespace BusinessManagement.DataAccessLayer.Abstract;
+
+public interface IOperationClaimDal
 {
-    public interface IOperationClaimDal
-    {
-        List<OperationClaim> GetAll();
-        OperationClaim GetByOperationClaimName(string operationClaimName);
-    }
+    List<OperationClaim> GetAll();
+    OperationClaim GetByOperationClaimName(string operationClaimName);
 }

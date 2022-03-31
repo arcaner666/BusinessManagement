@@ -1,7 +1,6 @@
-﻿namespace BusinessManagement.Entities.ConfigurationModels
+﻿namespace BusinessManagement.Entities.ConfigurationModels;
+
+public class FileTransferOptions
 {
-    public class FileTransferOptions
-    {
-        public int UploadLimit { get; set; }
-    }
+    public int UploadLimit { get; set; }
 }

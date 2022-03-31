@@ -1,15 +1,14 @@
 ﻿using Castle.DynamicProxy;
 
-namespace BusinessManagement.BusinessLayer.Utilities.Interceptors
+namespace BusinessManagement.BusinessLayer.Utilities.Interceptors;
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+public abstract class MethodInterceptionBaseAttribute : Attribute, IInterceptor
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    public abstract class MethodInterceptionBaseAttribute : Attribute, IInterceptor
+    public int Priority { get; set; }
+
+    public virtual void Intercept(IInvocation invocation)
     {
-        public int Priority { get; set; }
 
-        public virtual void Intercept(IInvocation invocation)
-        {
-
-        }
     }
 }

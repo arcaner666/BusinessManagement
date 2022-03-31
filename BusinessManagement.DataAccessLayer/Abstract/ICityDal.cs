@@ -1,9 +1,8 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
 
-namespace BusinessManagement.DataAccessLayer.Abstract
+namespace BusinessManagement.DataAccessLayer.Abstract;
+
+public interface ICityDal
 {
-    public interface ICityDal
-    {
-        List<City> GetAll();
-    }
+    List<City> GetAll();
 }

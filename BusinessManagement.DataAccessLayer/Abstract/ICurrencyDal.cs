@@ -1,10 +1,9 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
 
-namespace BusinessManagement.DataAccessLayer.Abstract
+namespace BusinessManagement.DataAccessLayer.Abstract;
+
+public interface ICurrencyDal
 {
-    public interface ICurrencyDal
-    {
-        List<Currency> GetAll();
-        Currency GetByCurrencyName(string currencyName);
-    }
+    List<Currency> GetAll();
+    Currency GetByCurrencyName(string currencyName);
 }

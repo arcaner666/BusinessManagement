@@ -1,8 +1,7 @@
-﻿namespace BusinessManagement.Entities.DTOs
+﻿namespace BusinessManagement.Entities.DTOs;
+
+public class OperationClaimDto
 {
-    public class OperationClaimDto
-    {
-        public int OperationClaimId { get; set; }
-        public string OperationClaimName { get; set; }
-    }
+    public int OperationClaimId { get; set; }
+    public string OperationClaimName { get; set; }
 }

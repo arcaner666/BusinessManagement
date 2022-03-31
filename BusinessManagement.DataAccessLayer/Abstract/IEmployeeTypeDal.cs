@@ -1,9 +1,8 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
 
-namespace BusinessManagement.DataAccessLayer.Abstract
+namespace BusinessManagement.DataAccessLayer.Abstract;
+
+public interface IEmployeeTypeDal
 {
-    public interface IEmployeeTypeDal
-    {
-        List<EmployeeType> GetAll();
-    }
+    List<EmployeeType> GetAll();
 }

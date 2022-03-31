@@ -5,57 +5,56 @@ using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 
-namespace BusinessManagement.BusinessLayer.Concrete
+namespace BusinessManagement.BusinessLayer.Concrete;
+
+public class OperationClaimBl : IOperationClaimBl
 {
-    public class OperationClaimBl : IOperationClaimBl
+    private readonly IOperationClaimDal _operationClaimDal;
+
+    public OperationClaimBl(
+        IOperationClaimDal operationClaimDal
+    )
     {
-        private readonly IOperationClaimDal _operationClaimDal;
+        _operationClaimDal = operationClaimDal;
+    }
 
-        public OperationClaimBl(
-            IOperationClaimDal operationClaimDal
-        )
+    public IDataResult<List<OperationClaimDto>> GetAll()
+    {
+        List<OperationClaim> getOperationClaims = _operationClaimDal.GetAll();
+        if (getOperationClaims.Count == 0)
+            return new ErrorDataResult<List<OperationClaimDto>>(Messages.OperationClaimsNotFound);
+
+        List<OperationClaimDto> getOperationClaimDtos = FillDtos(getOperationClaims);
+
+        return new SuccessDataResult<List<OperationClaimDto>>(getOperationClaimDtos, Messages.OperationClaimsListed);
+    }
+
+    public IDataResult<OperationClaimDto> GetByOperationClaimName(string operationClaimName)
+    {
+        OperationClaim getOperationClaim = _operationClaimDal.GetByOperationClaimName(operationClaimName);
+        if (getOperationClaim == null)
+            return new ErrorDataResult<OperationClaimDto>(Messages.OperationClaimNotFound);
+
+        OperationClaimDto getOperationClaimDto = FillDto(getOperationClaim);
+
+        return new SuccessDataResult<OperationClaimDto>(getOperationClaimDto, Messages.OperationClaimListedByOperationClaimName);
+    }
+
+    private OperationClaimDto FillDto(OperationClaim operationClaim)
+    {
+        OperationClaimDto operationClaimDto = new()
         {
-            _operationClaimDal = operationClaimDal;
-        }
+            OperationClaimId = operationClaim.OperationClaimId,
+            OperationClaimName = operationClaim.OperationClaimName,
+        };
 
-        public IDataResult<List<OperationClaimDto>> GetAll()
-        {
-            List<OperationClaim> getOperationClaims = _operationClaimDal.GetAll();
-            if (getOperationClaims.Count == 0)
-                return new ErrorDataResult<List<OperationClaimDto>>(Messages.OperationClaimsNotFound);
+        return operationClaimDto;
+    }
 
-            List<OperationClaimDto> getOperationClaimDtos = FillDtos(getOperationClaims);
+    private List<OperationClaimDto> FillDtos(List<OperationClaim> operationClaims)
+    {
+        List<OperationClaimDto> operationClaimDtos = operationClaims.Select(operationClaim => FillDto(operationClaim)).ToList();
 
-            return new SuccessDataResult<List<OperationClaimDto>>(getOperationClaimDtos, Messages.OperationClaimsListed);
-        }
-
-        public IDataResult<OperationClaimDto> GetByOperationClaimName(string operationClaimName)
-        {
-            OperationClaim getOperationClaim = _operationClaimDal.GetByOperationClaimName(operationClaimName);
-            if (getOperationClaim == null)
-                return new ErrorDataResult<OperationClaimDto>(Messages.OperationClaimNotFound);
-
-            OperationClaimDto getOperationClaimDto = FillDto(getOperationClaim);
-
-            return new SuccessDataResult<OperationClaimDto>(getOperationClaimDto, Messages.OperationClaimListedByOperationClaimName);
-        }
-
-        private OperationClaimDto FillDto(OperationClaim operationClaim)
-        {
-            OperationClaimDto operationClaimDto = new()
-            {
-                OperationClaimId = operationClaim.OperationClaimId,
-                OperationClaimName = operationClaim.OperationClaimName,
-            };
-
-            return operationClaimDto;
-        }
-
-        private List<OperationClaimDto> FillDtos(List<OperationClaim> operationClaims)
-        {
-            List<OperationClaimDto> operationClaimDtos = operationClaims.Select(operationClaim => FillDto(operationClaim)).ToList();
-
-            return operationClaimDtos;
-        }
+        return operationClaimDtos;
     }
 }

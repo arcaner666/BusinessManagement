@@ -1,8 +1,7 @@
-﻿namespace BusinessManagement.BusinessLayer.Utilities.Results
+﻿namespace BusinessManagement.BusinessLayer.Utilities.Results;
+
+public interface IResult
 {
-    public interface IResult
-    {
-        bool Success { get; }
-        string Message { get; }
-    }
+    bool Success { get; }
+    string Message { get; }
 }

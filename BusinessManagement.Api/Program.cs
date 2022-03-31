@@ -1,10 +1,8 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using BusinessManagement.Api.Extensions;
 using BusinessManagement.BusinessLayer.DependencyResolvers.Autofac;
-using BusinessManagement.BusinessLayer.Utilities.Security.Encryption;
-using BusinessManagement.BusinessLayer.Utilities.Security.JWT;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,28 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacModule()));
 
+builder.Services.ConfigureCors(); 
+builder.Services.ConfigureIISIntegration();
+builder.Services.ConfigureJwt(builder.Configuration);
+
+// Servisleri ekler bu sebeple servisler bu kodun üstünde ayarlanmalıdır.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// Cross Origin Resource Sharing ayarları
-builder.Services.AddCors();
-
-// JWT ayarları
-var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidIssuer = tokenOptions.Issuer,
-        ValidAudience = tokenOptions.Audience,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
-    };
-});
 
 // ALTTAKİ KOD .NET 5'DE ÇALIŞIYORDU. KULLANACAĞIN ZAMAN .NET 6'YA GÖRE DÜZENLEMELİSİN!!!!!!!!!!!!!!!!
 // Bunu şimdilik dosya yüklemeyi kullanmadığım için kapattım.
@@ -49,12 +32,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+    app.UseDeveloperExceptionPage();
+else 
+    app.UseHsts();
 
 app.UseHttpsRedirection();
 
@@ -66,6 +46,16 @@ app.UseHttpsRedirection();
 //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources/Images")),
 //    RequestPath = new PathString("/Resources/Images")
 //});
+
+// ŞİMDİLİK CODEMAZE KİTABINA GÖRE ÜSTTEKİ YERİNE BUNU KULLANACAĞIM.
+app.UseStaticFiles();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions 
+{
+    ForwardedHeaders = ForwardedHeaders.All
+});
+
+app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
 

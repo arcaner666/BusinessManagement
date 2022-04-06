@@ -85,6 +85,10 @@ public class ApartmentBl : IApartmentBl
 
     public IResult Delete(int id)
     {
+        var getApartmentResult = GetById(id);
+        if (getApartmentResult is null)
+            return new ErrorResult(Messages.ApartmentNotFound);
+
         _apartmentDal.Delete(id);
 
         return new SuccessResult(Messages.ApartmentDeleted);
@@ -105,13 +109,10 @@ public class ApartmentBl : IApartmentBl
         //    _flatDal.Delete(flat.FlatId);
         //}
 
-        //// Apartman silinir.
-        //Apartment getApartmentResult = _apartmentDal.GetById(apartmentDto.ApartmentId);
-        //if (getApartmentResult == null)
-        //{
-        //    return BadRequest(new ErrorResult(Messages.ApartmentNotFound));
-        //}
-        //_apartmentDal.Delete(apartmentDto.ApartmentId);
+        // Apartman silinir.
+        var deleteSectionResult = Delete(id);
+        if (!deleteSectionResult.Success)
+            return deleteSectionResult;
 
         return new SuccessResult(Messages.ApartmentExtDeleted);
     }
@@ -138,15 +139,15 @@ public class ApartmentBl : IApartmentBl
         return new SuccessDataResult<List<ApartmentDto>>(searchedApartmentDtos, Messages.ApartmentsListedBySectionId);
     }
 
-    public IDataResult<ApartmentExtDto> GetExtsById(long id)
+    public IDataResult<ApartmentExtDto> GetExtById(long id)
     {
-        List<Apartment> searchedApartments = _apartmentDal.GetExtsById(id);
-        if (searchedApartments.Count == 0)
-            return new ErrorDataResult<List<ApartmentExtDto>>(Messages.ApartmentsNotFound);
+        Apartment searchedApartment = _apartmentDal.GetExtById(id);
+        if (searchedApartment is null)
+            return new ErrorDataResult<ApartmentExtDto>(Messages.ApartmentNotFound);
 
-        List<ApartmentExtDto> searchedApartmentExtDtos = FillExtDtos(searchedApartments);
+        ApartmentExtDto searchedApartmentExtDto = FillExtDto(searchedApartment);
 
-        return new SuccessDataResult<List<ApartmentExtDto>>(searchedApartmentExtDtos, Messages.ApartmentExtsListedByBusinessId);
+        return new SuccessDataResult<ApartmentExtDto>(searchedApartmentExtDto, Messages.ApartmentExtListedById);
     }
 
     public IDataResult<List<ApartmentExtDto>> GetExtsByBusinessId(int businessId)
@@ -166,7 +167,6 @@ public class ApartmentBl : IApartmentBl
         if (searchedApartment is null)
             return new ErrorDataResult<ApartmentDto>(Messages.ApartmentNotFound);
 
-        searchedApartment.SectionId = apartmentDto.SectionId;
         searchedApartment.BranchId = apartmentDto.BranchId;
         searchedApartment.ManagerId = apartmentDto.ManagerId;
         searchedApartment.ApartmentName = apartmentDto.ApartmentName;
@@ -175,6 +175,23 @@ public class ApartmentBl : IApartmentBl
         _apartmentDal.Update(searchedApartment);
 
         return new SuccessResult(Messages.ApartmentUpdated);
+    }
+
+    public IResult UpdateExt(ApartmentExtDto apartmentExtDto)
+    {
+        ApartmentDto apartmentDto = new()
+        {
+            ApartmentId = apartmentExtDto.ApartmentId,
+            BranchId = apartmentExtDto.BranchId,
+            ManagerId = apartmentExtDto.ManagerId,
+            ApartmentName = apartmentExtDto.ApartmentName,
+            BlockNumber = apartmentExtDto.BlockNumber,
+        };
+        var updateApartmentResult = Update(apartmentDto);
+        if (!updateApartmentResult.Success)
+            return updateApartmentResult;
+
+        return new SuccessResult(Messages.ApartmentExtUpdated);
     }
 
     private ApartmentDto FillDto(Apartment apartment)

@@ -58,7 +58,7 @@ public class DpMsApartmentDal : IApartmentDal
         var sql = "SELECT * FROM Apartment a"
             + " INNER JOIN Section s ON a.SectionId = s.SectionId"
             + " INNER JOIN Manager m ON a.ManagerId = m.ManagerId"
-            + " WHERE a.BusinessId = @BusinessId";
+            + " WHERE a.ApartmentId = @ApartmentId";
         return _db.Query<Apartment, Section, Manager, Apartment>(sql,
             (apartment, section, manager) =>
             {

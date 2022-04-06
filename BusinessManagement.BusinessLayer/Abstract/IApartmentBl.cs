@@ -11,6 +11,8 @@ public interface IApartmentBl
     IResult DeleteExt(int id);
     IDataResult<ApartmentDto> GetById(int id);
     IDataResult<List<ApartmentDto>> GetBySectionId(int sectionId);
+    IDataResult<ApartmentExtDto> GetExtById(long id);
     IDataResult<List<ApartmentExtDto>> GetExtsByBusinessId(int businessId);
     IResult Update(ApartmentDto apartmentDto);
+    IResult UpdateExt(ApartmentExtDto apartmentExtDto);
 }

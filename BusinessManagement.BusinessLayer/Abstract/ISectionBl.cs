@@ -9,6 +9,7 @@ public interface ISectionBl
     IResult AddExt(SectionExtDto sectionExtDto);
     IResult Delete(int id);
     IResult DeleteExt(int id);
+    IDataResult<List<SectionDto>> GetByBusinessId(int businessId);
     IDataResult<SectionDto> GetById(int id);
     IDataResult<SectionExtDto> GetExtById(int id);
     IDataResult<List<SectionExtDto>> GetExtsByBusinessId(int businessId);

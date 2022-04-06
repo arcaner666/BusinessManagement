@@ -53,6 +53,15 @@ public class ApartmentsController : ControllerBase
         return BadRequest(result);
     }
 
+    [HttpGet("getextbyid/{id}")]
+    public IActionResult GetExtById(long id)
+    {
+        var result = _apartmentBl.GetExtById(id);
+        if (result.Success)
+            return Ok(result);
+        return BadRequest(result);
+    }
+
     [HttpGet("getextsbybusinessid/{businessId}")]
     public IActionResult GetExtsByBusinessId(int businessId)
     {
@@ -66,6 +75,15 @@ public class ApartmentsController : ControllerBase
     public IActionResult Update(ApartmentDto apartmentDto)
     {
         var result = _apartmentBl.Update(apartmentDto);
+        if (result.Success)
+            return Ok(result);
+        return BadRequest(result);
+    }
+
+    [HttpPost("updateext")]
+    public IActionResult UpdateExt(ApartmentExtDto apartmentExtDto)
+    {
+        var result = _apartmentBl.UpdateExt(apartmentExtDto);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);

@@ -21,6 +21,9 @@ public class AutofacModule : Module
         builder.RegisterType<AccountGroupBl>().As<IAccountGroupBl>().SingleInstance();
         builder.RegisterType<DpMsAccountGroupDal>().As<IAccountGroupDal>().SingleInstance();
 
+        builder.RegisterType<ApartmentBl>().As<IApartmentBl>().SingleInstance();
+        builder.RegisterType<DpMsApartmentDal>().As<IApartmentDal>().SingleInstance();
+
         builder.RegisterType<AuthorizationBl>().As<IAuthorizationBl>().SingleInstance();
 
         builder.RegisterType<BranchBl>().As<IBranchBl>().SingleInstance();

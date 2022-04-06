@@ -35,6 +35,15 @@ public class SectionsController : ControllerBase
         return BadRequest(result);
     }
 
+    [HttpGet("getbybusinessid/{businessId}")]
+    public IActionResult GetByBusinessId(int businessId)
+    {
+        var result = _sectionBl.GetByBusinessId(businessId);
+        if (result.Success)
+            return Ok(result);
+        return BadRequest(result);
+    }
+
     [HttpGet("getextbyid/{id}")]
     public IActionResult GetExtById(int id)
     {

@@ -39,7 +39,9 @@ public static class Messages
     public const string ApartmentDeleted = "ApartmentDeleted";
     public const string ApartmentExtAdded = "ApartmentExtAdded";
     public const string ApartmentExtDeleted = "ApartmentExtDeleted";
+    public const string ApartmentExtListedById = "ApartmentExtListedById";
     public const string ApartmentExtsListedByBusinessId = "ApartmentExtsListedByBusinessId";
+    public const string ApartmentExtUpdated = "ApartmentExtUpdated";
     public const string ApartmentListedById = "ApartmentListedById";
     public const string ApartmentNotFound = "ApartmentNotFound";
     public const string ApartmentsListedByBusinessId = "ApartmentsListedByBusinessId";

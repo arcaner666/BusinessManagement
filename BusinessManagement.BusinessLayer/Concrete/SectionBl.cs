@@ -119,6 +119,17 @@ public class SectionBl : ISectionBl
         return new SuccessResult(Messages.SectionExtDeleted);
     }
 
+    public IDataResult<List<SectionDto>> GetByBusinessId(int businessId)
+    {
+        List<Section> searchedSections = _sectionDal.GetByBusinessId(businessId);
+        if (searchedSections.Count == 0)
+            return new ErrorDataResult<List<SectionDto>>(Messages.SectionsNotFound);
+
+        List<SectionDto> searchedSectionDtos = FillDtos(searchedSections);
+
+        return new SuccessDataResult<List<SectionDto>>(searchedSectionDtos, Messages.SectionsListedByBusinessId);
+    }
+
     public IDataResult<SectionDto> GetById(int id)
     {
         Section searchedSection = _sectionDal.GetById(id);

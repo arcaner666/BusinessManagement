@@ -21,12 +21,8 @@ public static class ServiceExtensions
     public static void ConfigureIISIntegration(this IServiceCollection services) =>
         services.Configure<IISOptions>(options => { });
 
-    public static void ConfigureJwt(this IServiceCollection services)
+    public static void ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
     {
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
         var tokenOptions = configuration.GetSection("TokenOptions").Get<TokenOptions>();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
@@ -43,12 +39,8 @@ public static class ServiceExtensions
         });
     }
 
-    public static void ConfigureFileTransferOptions(this IServiceCollection services)
+    public static void ConfigureFileTransferOptions(this IServiceCollection services, IConfiguration configuration)
     {
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
         var fileTransferOptions = configuration.GetSection("FileTransferOptions").Get<FileTransferOptions>();
         services.Configure<FormOptions>(options =>
         {

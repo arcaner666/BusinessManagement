@@ -2,6 +2,7 @@
 using Autofac.Extras.DynamicProxy;
 using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Concrete;
+using BusinessManagement.BusinessLayer.CrossCuttingConcerns.Logging;
 using BusinessManagement.BusinessLayer.Utilities.Interceptors;
 using BusinessManagement.BusinessLayer.Utilities.Security.Cryptography;
 using BusinessManagement.BusinessLayer.Utilities.Security.JWT;
@@ -47,6 +48,8 @@ public class AutofacModule : Module
         builder.RegisterType<JwtHelper>().As<ITokenService>();
 
         builder.RegisterType<KeyService>().As<IKeyService>();
+
+        builder.RegisterType<LoggerManager>().As<ILoggerManager>().SingleInstance();
 
         builder.RegisterType<ManagerBl>().As<IManagerBl>().SingleInstance();
         builder.RegisterType<DpMsManagerDal>().As<IManagerDal>().SingleInstance();

@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
+using BusinessManagement.BusinessLayer.CrossCuttingConcerns.Logging;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
@@ -9,12 +10,15 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 
 public class SectionGroupBl : ISectionGroupBl
 {
+    private readonly ILoggerManager _logger;
     private readonly ISectionGroupDal _sectionGroupDal;
 
     public SectionGroupBl(
+        ILoggerManager logger,
         ISectionGroupDal sectionGroupDal
     )
     {
+        _logger = logger;
         _sectionGroupDal = sectionGroupDal;
     }
 

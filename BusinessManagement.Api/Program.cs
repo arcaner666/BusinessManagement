@@ -15,11 +15,11 @@ LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nl
 // ALTTAKİ KOD .NET 5'DE ÇALIŞIYORDU. KULLANACAĞIN ZAMAN .NET 6'YA GÖRE DÜZENLEMELİSİN!!!!!!!!!!!!!!!!
 // Bunu şimdilik dosya yüklemeyi kullanmadığım için kapattım.
 //// Bu satır sunucuya büyük bir dosya gönderirken alınan HTTP 413 hatasını çözüyor.
-//builder.Services.ConfigureFileTransferOptions();
+//builder.Services.ConfigureFileTransferOptions(builder.Configuration);
 
-builder.Services.ConfigureCors(); 
+builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
-builder.Services.ConfigureJwt();
+builder.Services.ConfigureJwt(builder.Configuration);
 
 builder.Services.AddControllers();
 
@@ -43,7 +43,7 @@ app.UseHttpsRedirection();
 // ŞİMDİLİK CODEMAZE KİTABINA GÖRE ÜSTTEKİ YERİNE BUNU KULLANACAĞIM.
 app.UseStaticFiles();
 
-app.UseForwardedHeaders(new ForwardedHeadersOptions 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.All
 });

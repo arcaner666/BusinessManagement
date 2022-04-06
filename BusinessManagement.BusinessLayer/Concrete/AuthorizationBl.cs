@@ -57,7 +57,8 @@ public class AuthorizationBl : IAuthorizationBl
     {
         // Veri tabanında gönderilen e-posta adresine sahip biri var mı kontrol eder.
         var getSystemUserResult = _systemUserBl.GetByEmail(authorizationDto.Email);
-        if (!getSystemUserResult.Success) return getSystemUserResult;
+        if (!getSystemUserResult.Success) 
+            return getSystemUserResult;
 
         // Varsa giriş yapmaya çalışır.
         var loginResult = Login(authorizationDto, getSystemUserResult.Data);
@@ -69,7 +70,8 @@ public class AuthorizationBl : IAuthorizationBl
     {
         // Veri tabanında gönderilen telefon numarasına sahip biri var mı kontrol eder.
         var getSystemUserResult = _systemUserBl.GetByPhone(authorizationDto.Phone);
-        if (!getSystemUserResult.Success) return getSystemUserResult;
+        if (!getSystemUserResult.Success) 
+            return getSystemUserResult;
 
         // Varsa giriş yapmaya çalışır.
         var loginResult = Login(authorizationDto, getSystemUserResult.Data);
@@ -136,11 +138,13 @@ public class AuthorizationBl : IAuthorizationBl
             Role = "Manager",
         };
         var addSystemUserResult = _systemUserBl.Add(systemUserDto);
-        if (!addSystemUserResult.Success) return addSystemUserResult;
+        if (!addSystemUserResult.Success) 
+            return addSystemUserResult;
 
         // Yetki adından yetkinin id'si bulunur.
         var getOperationClaimResult = _operationClaimBl.GetByOperationClaimName("Manager");
-        if (!getOperationClaimResult.Success) return getOperationClaimResult;
+        if (!getOperationClaimResult.Success) 
+            return getOperationClaimResult;
 
         // Yönetici yetkileri verilir.
         SystemUserClaimDto systemUserClaimDto = new()
@@ -149,7 +153,8 @@ public class AuthorizationBl : IAuthorizationBl
             OperationClaimId = getOperationClaimResult.Data.OperationClaimId,
         };
         var addSystemUserClaimResult = _systemUserClaimBl.Add(systemUserClaimDto);
-        if (!addSystemUserClaimResult.Success) return addSystemUserClaimResult;
+        if (!addSystemUserClaimResult.Success) 
+            return addSystemUserClaimResult;
 
         // Yeni bir işletme eklenir.
         BusinessDto businessDto = new()
@@ -158,7 +163,8 @@ public class AuthorizationBl : IAuthorizationBl
             BusinessName = managerExtDto.BusinessName,
         };
         var addBusinessResult = _businessBl.Add(businessDto);
-        if (!addBusinessResult.Success) return addBusinessResult;
+        if (!addBusinessResult.Success) 
+            return addBusinessResult;
 
         // İşletmenin merkez şubesinin adresi eklenir.
         FullAddressDto fullAddressDto = new()
@@ -170,7 +176,8 @@ public class AuthorizationBl : IAuthorizationBl
             AddressText = managerExtDto.AddressText,
         };
         var addFullAddressResult = _fullAddressBl.Add(fullAddressDto);
-        if (!addFullAddressResult.Success) return addFullAddressResult;
+        if (!addFullAddressResult.Success) 
+            return addFullAddressResult;
 
         // İşletmenin merkez şubesi eklenir.
         BranchDto branchDto = new()
@@ -182,21 +189,25 @@ public class AuthorizationBl : IAuthorizationBl
             BranchCode = "000001",
         };
         var addBranchResult = _branchBl.Add(branchDto);
-        if (!addBranchResult.Success) return addBranchResult;
+        if (!addBranchResult.Success) 
+            return addBranchResult;
 
         // Kullanıcı kaydındaki işletme ve şube id'leri güncellenir.
         addSystemUserResult.Data.BusinessId = addBusinessResult.Data.BusinessId;
         addSystemUserResult.Data.BranchId = addBranchResult.Data.BranchId;
         var updateSystemUserResult = _systemUserBl.Update(addSystemUserResult.Data);
-        if (!updateSystemUserResult.Success) return updateSystemUserResult;
+        if (!updateSystemUserResult.Success) 
+            return updateSystemUserResult;
 
         // Kasanın hesap grubunun id'si getirilir.
         var getAccountGroupResult = _accountGroupBl.GetByAccountGroupCode("100");
-        if (!getAccountGroupResult.Success) return getAccountGroupResult;
+        if (!getAccountGroupResult.Success) 
+            return getAccountGroupResult;
 
         // Kasanın doviz cinsi getirilir.
         var getCurrencyResult = _currencyBl.GetByCurrencyName("TL");
-        if (!getCurrencyResult.Success) return getCurrencyResult;
+        if (!getCurrencyResult.Success) 
+            return getCurrencyResult;
 
         // İşletmenin kasa hesabı oluşturulur.
         AccountDto accountDto = new()
@@ -212,7 +223,8 @@ public class AuthorizationBl : IAuthorizationBl
             StandartMaturity = 0,
         };
         var addAccountResult = _accountBl.Add(accountDto);
-        if (!addAccountResult.Success) return addAccountResult;
+        if (!addAccountResult.Success) 
+            return addAccountResult;
 
         // Yeni bir yönetici eklenir.
         ManagerDto managerDto = new()
@@ -223,7 +235,8 @@ public class AuthorizationBl : IAuthorizationBl
             Phone = managerExtDto.Phone,
         };
         var addManagerResult = _managerBl.Add(managerDto);
-        if (!addManagerResult.Success) return addManagerResult;
+        if (!addManagerResult.Success) 
+            return addManagerResult;
 
         // Yeni site grubu eklenir.
         SectionGroupDto sectionGroupDto = new()
@@ -233,7 +246,8 @@ public class AuthorizationBl : IAuthorizationBl
             SectionGroupName = "Genel",
         };
         var addSectionGroupResult = _sectionGroupBl.Add(sectionGroupDto);
-        if (!addSectionGroupResult.Success) return addSectionGroupResult;
+        if (!addSectionGroupResult.Success) 
+            return addSectionGroupResult;
 
         return new SuccessResult(Messages.AuthorizationSectionManagerRegistered);
     }
@@ -258,7 +272,8 @@ public class AuthorizationBl : IAuthorizationBl
         systemUserDto.RefreshTokenExpiryTime = DateTime.Now.AddHours(authorizationDto.RefreshTokenDuration);
         systemUserDto.UpdatedAt = DateTimeOffset.Now;
         var updateSystemUserResult = _systemUserBl.Update(systemUserDto);
-        if (!updateSystemUserResult.Success) return updateSystemUserResult;
+        if (!updateSystemUserResult.Success) 
+            return updateSystemUserResult;
 
         AuthorizationDto authorizationDtoResponse = new()
         {

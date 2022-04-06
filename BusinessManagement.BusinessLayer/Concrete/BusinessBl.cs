@@ -20,11 +20,11 @@ public class BusinessBl : IBusinessBl
 
     public IDataResult<BusinessDto> Add(BusinessDto businessDto)
     {
-        Business getBusiness = _businessDal.GetByBusinessName(businessDto.BusinessName);
-        if (getBusiness != null)
+        Business searchedBusiness = _businessDal.GetByBusinessName(businessDto.BusinessName);
+        if (searchedBusiness is not null)
             return new ErrorDataResult<BusinessDto>(Messages.BusinessAlreadyExists);
 
-        Business addBusiness = new()
+        Business addedBusiness = new()
         {
             OwnerSystemUserId = businessDto.OwnerSystemUserId,
             BusinessOrder = 0, // Her işletmeye özel bir kod üretilecek.
@@ -33,11 +33,11 @@ public class BusinessBl : IBusinessBl
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now,
         };
-        _businessDal.Add(addBusiness);
+        _businessDal.Add(addedBusiness);
 
-        BusinessDto addBusinessDto = FillDto(addBusiness);
+        BusinessDto addedBusinessDto = FillDto(addedBusiness);
 
-        return new SuccessDataResult<BusinessDto>(addBusinessDto, Messages.BusinessAdded);
+        return new SuccessDataResult<BusinessDto>(addedBusinessDto, Messages.BusinessAdded);
     }
     
     private BusinessDto FillDto(Business business)

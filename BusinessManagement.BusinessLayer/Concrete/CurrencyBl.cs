@@ -20,24 +20,24 @@ public class CurrencyBl : ICurrencyBl
 
     public IDataResult<List<CurrencyDto>> GetAll()
     {
-        List<Currency> getCurrencies = _currencyDal.GetAll();
-        if (getCurrencies.Count == 0)
+        List<Currency> allCurrencies = _currencyDal.GetAll();
+        if (allCurrencies.Count == 0)
             return new ErrorDataResult<List<CurrencyDto>>(Messages.CurrenciesNotFound);
 
-        List<CurrencyDto> getCurrencyDtos = FillDtos(getCurrencies);
+        List<CurrencyDto> allCurrencyDtos = FillDtos(allCurrencies);
 
-        return new SuccessDataResult<List<CurrencyDto>>(getCurrencyDtos, Messages.CurrenciesListed);
+        return new SuccessDataResult<List<CurrencyDto>>(allCurrencyDtos, Messages.CurrenciesListed);
     }
 
     public IDataResult<CurrencyDto> GetByCurrencyName(string currencyName)
     {
-        Currency getCurrency = _currencyDal.GetByCurrencyName(currencyName);
-        if (getCurrency == null)
+        Currency searchedCurrency = _currencyDal.GetByCurrencyName(currencyName);
+        if (searchedCurrency is null)
             return new ErrorDataResult<CurrencyDto>(Messages.CurrencyNotFound);
 
-        CurrencyDto getCurrencyDto = FillDto(getCurrency);
+        CurrencyDto searchedCurrencyDto = FillDto(searchedCurrency);
 
-        return new SuccessDataResult<CurrencyDto>(getCurrencyDto, Messages.CurrencyListedByCurrencyName);
+        return new SuccessDataResult<CurrencyDto>(searchedCurrencyDto, Messages.CurrencyListedByCurrencyName);
     }
 
     private CurrencyDto FillDto(Currency currency)

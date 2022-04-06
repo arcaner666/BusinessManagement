@@ -20,11 +20,11 @@ public class FullAddressBl : IFullAddressBl
 
     public IDataResult<FullAddressDto> Add(FullAddressDto fullAddressDto)
     {
-        FullAddress getFullAddress = _fullAddressDal.GetByAddressText(fullAddressDto.AddressText);
-        if (getFullAddress != null)
+        FullAddress searchedFullAddress = _fullAddressDal.GetByAddressText(fullAddressDto.AddressText);
+        if (searchedFullAddress is not null)
             return new ErrorDataResult<FullAddressDto>(Messages.FullAddressAlreadyExists);
 
-        FullAddress addFullAddress = new()
+        FullAddress addedFullAddress = new()
         {
             CityId = fullAddressDto.CityId,
             DistrictId = fullAddressDto.DistrictId,
@@ -34,11 +34,11 @@ public class FullAddressBl : IFullAddressBl
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now,
         };
-        _fullAddressDal.Add(addFullAddress);
+        _fullAddressDal.Add(addedFullAddress);
 
-        FullAddressDto addFullAddressDto = FillDto(addFullAddress);
+        FullAddressDto addedFullAddressDto = FillDto(addedFullAddress);
 
-        return new SuccessDataResult<FullAddressDto>(addFullAddressDto, Messages.FullAddressAdded);
+        return new SuccessDataResult<FullAddressDto>(addedFullAddressDto, Messages.FullAddressAdded);
     }
 
     public IResult Delete(long id)
@@ -54,29 +54,29 @@ public class FullAddressBl : IFullAddressBl
 
     public IDataResult<FullAddressDto> GetById(long id)
     {
-        FullAddress getFullAddress = _fullAddressDal.GetById(id);
-        if (getFullAddress == null)
+        FullAddress searchedFullAddress = _fullAddressDal.GetById(id);
+        if (searchedFullAddress is null)
             return new ErrorDataResult<FullAddressDto>(Messages.FullAddressNotFound);
 
-        FullAddressDto getFullAddressDto = FillDto(getFullAddress);
+        FullAddressDto searchedFullAddressDto = FillDto(searchedFullAddress);
 
-        return new SuccessDataResult<FullAddressDto>(getFullAddressDto, Messages.FullAddressListedById);
+        return new SuccessDataResult<FullAddressDto>(searchedFullAddressDto, Messages.FullAddressListedById);
     }
 
     public IResult Update(FullAddressDto fullAddressDto)
     {
-        FullAddress getFullAddress = _fullAddressDal.GetById(fullAddressDto.FullAddressId);
-        if (getFullAddress == null)
+        FullAddress searchedFullAddress = _fullAddressDal.GetById(fullAddressDto.FullAddressId);
+        if (searchedFullAddress is null)
             return new ErrorDataResult<FullAddressDto>(Messages.FullAddressNotFound);
 
-        getFullAddress.CityId = fullAddressDto.CityId;
-        getFullAddress.DistrictId = fullAddressDto.DistrictId;
-        getFullAddress.AddressTitle = fullAddressDto.AddressTitle;
-        getFullAddress.PostalCode = fullAddressDto.PostalCode;
-        getFullAddress.AddressText = fullAddressDto.AddressText;
-        getFullAddress.UpdatedAt = DateTimeOffset.Now;
+        searchedFullAddress.CityId = fullAddressDto.CityId;
+        searchedFullAddress.DistrictId = fullAddressDto.DistrictId;
+        searchedFullAddress.AddressTitle = fullAddressDto.AddressTitle;
+        searchedFullAddress.PostalCode = fullAddressDto.PostalCode;
+        searchedFullAddress.AddressText = fullAddressDto.AddressText;
+        searchedFullAddress.UpdatedAt = DateTimeOffset.Now;
 
-        _fullAddressDal.Update(getFullAddress);
+        _fullAddressDal.Update(searchedFullAddress);
 
         return new SuccessResult(Messages.FullAddressUpdated);
     }

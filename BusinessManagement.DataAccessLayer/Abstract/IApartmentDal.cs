@@ -9,6 +9,7 @@ public interface IApartmentDal
     Apartment GetByApartmentCode(string apartmentCode);
     Apartment GetById(long id);
     List<Apartment> GetBySectionId(int sectionId);
+    Apartment GetExtById(long id);
     List<Apartment> GetExtsByBusinessId(int businessId);
     void Update(Apartment apartment);
 }

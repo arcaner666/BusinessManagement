@@ -20,13 +20,13 @@ public class AccountBl : IAccountBl
 
     public IDataResult<AccountDto> Add(AccountDto accountDto)
     {
-        Account getAccount = _accountDal.GetByBusinessIdAndAccountCode(accountDto.BusinessId, accountDto.AccountCode);
-        if (getAccount != null)
+        Account searchedAccount = _accountDal.GetByBusinessIdAndAccountCode(accountDto.BusinessId, accountDto.AccountCode);
+        if (searchedAccount is not null)
         {
             return new ErrorDataResult<AccountDto>(Messages.AccountAlreadyExists);
         }
 
-        Account addAccount = new()
+        Account addedAccount = new()
         {
             BusinessId = accountDto.BusinessId,
             BranchId = accountDto.BranchId,
@@ -46,11 +46,11 @@ public class AccountBl : IAccountBl
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now,
         };
-        _accountDal.Add(addAccount);
+        _accountDal.Add(addedAccount);
 
-        AccountDto addAccountDto = FillDto(addAccount);
+        AccountDto addedAccountDto = FillDto(addedAccount);
 
-        return new SuccessDataResult<AccountDto>(addAccountDto, Messages.AccountAdded);
+        return new SuccessDataResult<AccountDto>(addedAccountDto, Messages.AccountAdded);
     }
 
     private AccountDto FillDto(Account account)

@@ -36,9 +36,13 @@ public static class Messages
     #region Apartment
     public const string ApartmentAdded = "ApartmentAdded";
     public const string ApartmentAlreadyExists = "ApartmentAlreadyExists";
+    public const string ApartmentDeleted = "ApartmentDeleted";
+    public const string ApartmentExtAdded = "ApartmentExtAdded";
     public const string ApartmentExtDeleted = "ApartmentExtDeleted";
     public const string ApartmentExtsListedByBusinessId = "ApartmentExtsListedByBusinessId";
+    public const string ApartmentListedById = "ApartmentListedById";
     public const string ApartmentNotFound = "ApartmentNotFound";
+    public const string ApartmentsListedByBusinessId = "ApartmentsListedByBusinessId";
     public const string ApartmentsListedBySectionId = "ApartmentsListedBySectionId";
     public const string ApartmentsNotFound = "ApartmentsNotFound";
     public const string ApartmentUpdated = "ApartmentUpdated";

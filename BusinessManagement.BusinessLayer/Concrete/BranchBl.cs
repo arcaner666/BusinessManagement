@@ -24,11 +24,11 @@ public class BranchBl : IBranchBl
 
     public IDataResult<BranchDto> Add(BranchDto branchDto)
     {
-        Branch getBranch = _branchDal.GetByBusinessIdAndBranchOrderOrBranchCode(branchDto.BusinessId, branchDto.BranchOrder, branchDto.BranchCode);
-        if (getBranch != null)
+        Branch searchedBranch = _branchDal.GetByBusinessIdAndBranchOrderOrBranchCode(branchDto.BusinessId, branchDto.BranchOrder, branchDto.BranchCode);
+        if (searchedBranch is not null)
             return new ErrorDataResult<BranchDto>(Messages.BranchAlreadyExists);
 
-        Branch addBranch = new()
+        Branch addedBranch = new()
         {
             BusinessId = branchDto.BusinessId,
             FullAddressId = branchDto.FullAddressId,
@@ -38,11 +38,11 @@ public class BranchBl : IBranchBl
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now,
         };
-        _branchDal.Add(addBranch);
+        _branchDal.Add(addedBranch);
 
-        BranchDto addBranchDto = FillDto(addBranch);
+        BranchDto addedBranchDto = FillDto(addedBranch);
 
-        return new SuccessDataResult<BranchDto>(addBranchDto, Messages.BranchAdded);
+        return new SuccessDataResult<BranchDto>(addedBranchDto, Messages.BranchAdded);
     }
 
     [TransactionScopeAspect]
@@ -139,46 +139,46 @@ public class BranchBl : IBranchBl
 
     public IDataResult<List<BranchDto>> GetByBusinessId(int businessId)
     {
-        List<Branch> branches = _branchDal.GetByBusinessId(businessId);
-        if (branches.Count == 0)
+        List<Branch> searchedBranches = _branchDal.GetByBusinessId(businessId);
+        if (searchedBranches.Count == 0)
             return new ErrorDataResult<List<BranchDto>>(Messages.BranchesNotFound);
 
-        List<BranchDto> branchDtos = FillDtos(branches);
+        List<BranchDto> searchedBranchDtos = FillDtos(searchedBranches);
 
-        return new SuccessDataResult<List<BranchDto>>(branchDtos, Messages.BranchsListedByAccountId);
+        return new SuccessDataResult<List<BranchDto>>(searchedBranchDtos, Messages.BranchsListedByAccountId);
     }
 
     public IDataResult<BranchDto> GetById(long id)
     {
-        Branch getBranch = _branchDal.GetById(id);
-        if (getBranch == null)
+        Branch searchedBranch = _branchDal.GetById(id);
+        if (searchedBranch is null)
             return new ErrorDataResult<BranchDto>(Messages.BranchNotFound);
 
-        BranchDto getBranchDto = FillDto(getBranch);
+        BranchDto searchedBranchDto = FillDto(searchedBranch);
 
-        return new SuccessDataResult<BranchDto>(getBranchDto, Messages.BranchListedById);
+        return new SuccessDataResult<BranchDto>(searchedBranchDto, Messages.BranchListedById);
     }
 
     public IDataResult<BranchExtDto> GetExtById(long id)
     {
-        Branch getBranch = _branchDal.GetExtById(id);
-        if (getBranch == null)
+        Branch searchedBranch = _branchDal.GetExtById(id);
+        if (searchedBranch is null)
             return new ErrorDataResult<BranchExtDto>(Messages.BranchNotFound);
 
-        BranchExtDto getBranchExtDto = FillExtDto(getBranch);
+        BranchExtDto searchedBranchExtDto = FillExtDto(searchedBranch);
 
-        return new SuccessDataResult<BranchExtDto>(getBranchExtDto, Messages.BranchExtListedById);
+        return new SuccessDataResult<BranchExtDto>(searchedBranchExtDto, Messages.BranchExtListedById);
     }
 
     public IResult Update(BranchDto branchDto)
     {
-        Branch getBranch = _branchDal.GetById(branchDto.BranchId);
-        if (getBranch == null)
+        Branch searchedBranch = _branchDal.GetById(branchDto.BranchId);
+        if (searchedBranch is null)
             return new ErrorDataResult<BranchDto>(Messages.BranchNotFound);
 
-        getBranch.BranchName = branchDto.BranchName;
-        getBranch.UpdatedAt = DateTimeOffset.Now;
-        _branchDal.Update(getBranch);
+        searchedBranch.BranchName = branchDto.BranchName;
+        searchedBranch.UpdatedAt = DateTimeOffset.Now;
+        _branchDal.Update(searchedBranch);
 
         return new SuccessResult(Messages.BranchUpdated);
     }

@@ -20,11 +20,11 @@ public class ManagerBl : IManagerBl
 
     public IDataResult<ManagerDto> Add(ManagerDto managerDto)
     {
-        Manager getManager = _managerDal.GetByBusinessIdAndPhone(managerDto.BusinessId, managerDto.Phone);
-        if (getManager != null)
+        Manager searchedManager = _managerDal.GetByBusinessIdAndPhone(managerDto.BusinessId, managerDto.Phone);
+        if (searchedManager is not null)
             return new ErrorDataResult<ManagerDto>(Messages.ManagerAlreadyExists);
 
-        Manager addManager = new()
+        Manager addedManager = new()
         {
             BusinessId = managerDto.BusinessId,
             BranchId = managerDto.BranchId,
@@ -37,22 +37,22 @@ public class ManagerBl : IManagerBl
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now,
         };
-        _managerDal.Add(addManager);
+        _managerDal.Add(addedManager);
 
-        ManagerDto addManagerDto = FillDto(addManager);
+        ManagerDto addedManagerDto = FillDto(addedManager);
 
-        return new SuccessDataResult<ManagerDto>(addManagerDto, Messages.ManagerAdded);
+        return new SuccessDataResult<ManagerDto>(addedManagerDto, Messages.ManagerAdded);
     }
 
     public IDataResult<List<ManagerDto>> GetByBusinessId(int businessId)
     {
-        List<Manager> managers = _managerDal.GetByBusinessId(businessId);
-        if (managers.Count == 0)
+        List<Manager> searchedManagers = _managerDal.GetByBusinessId(businessId);
+        if (searchedManagers.Count == 0)
             return new ErrorDataResult<List<ManagerDto>>(Messages.ManagersNotFound);
 
-        List<ManagerDto> managerDtos = FillDtos(managers);
+        List<ManagerDto> searchedManagerDtos = FillDtos(searchedManagers);
 
-        return new SuccessDataResult<List<ManagerDto>>(managerDtos, Messages.ManagersListedByBusinessId);
+        return new SuccessDataResult<List<ManagerDto>>(searchedManagerDtos, Messages.ManagersListedByBusinessId);
     }
 
     private ManagerDto FillDto(Manager manager)

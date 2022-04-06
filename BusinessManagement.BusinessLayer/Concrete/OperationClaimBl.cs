@@ -20,24 +20,24 @@ public class OperationClaimBl : IOperationClaimBl
 
     public IDataResult<List<OperationClaimDto>> GetAll()
     {
-        List<OperationClaim> getOperationClaims = _operationClaimDal.GetAll();
-        if (getOperationClaims.Count == 0)
+        List<OperationClaim> allOperationClaims = _operationClaimDal.GetAll();
+        if (allOperationClaims.Count == 0)
             return new ErrorDataResult<List<OperationClaimDto>>(Messages.OperationClaimsNotFound);
 
-        List<OperationClaimDto> getOperationClaimDtos = FillDtos(getOperationClaims);
+        List<OperationClaimDto> allOperationClaimDtos = FillDtos(allOperationClaims);
 
-        return new SuccessDataResult<List<OperationClaimDto>>(getOperationClaimDtos, Messages.OperationClaimsListed);
+        return new SuccessDataResult<List<OperationClaimDto>>(allOperationClaimDtos, Messages.OperationClaimsListed);
     }
 
     public IDataResult<OperationClaimDto> GetByOperationClaimName(string operationClaimName)
     {
-        OperationClaim getOperationClaim = _operationClaimDal.GetByOperationClaimName(operationClaimName);
-        if (getOperationClaim == null)
+        OperationClaim searchedOperationClaim = _operationClaimDal.GetByOperationClaimName(operationClaimName);
+        if (searchedOperationClaim is null)
             return new ErrorDataResult<OperationClaimDto>(Messages.OperationClaimNotFound);
 
-        OperationClaimDto getOperationClaimDto = FillDto(getOperationClaim);
+        OperationClaimDto searchedOperationClaimDto = FillDto(searchedOperationClaim);
 
-        return new SuccessDataResult<OperationClaimDto>(getOperationClaimDto, Messages.OperationClaimListedByOperationClaimName);
+        return new SuccessDataResult<OperationClaimDto>(searchedOperationClaimDto, Messages.OperationClaimListedByOperationClaimName);
     }
 
     private OperationClaimDto FillDto(OperationClaim operationClaim)

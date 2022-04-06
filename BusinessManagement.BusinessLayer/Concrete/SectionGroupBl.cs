@@ -20,11 +20,11 @@ public class SectionGroupBl : ISectionGroupBl
 
     public IDataResult<SectionGroupDto> Add(SectionGroupDto sectionGroupDto)
     {
-        SectionGroup getSectionGroup = _sectionGroupDal.GetByBusinessIdAndSectionGroupName(sectionGroupDto.BusinessId, sectionGroupDto.SectionGroupName);
-        if (getSectionGroup != null)
+        SectionGroup searchedSectionGroup = _sectionGroupDal.GetByBusinessIdAndSectionGroupName(sectionGroupDto.BusinessId, sectionGroupDto.SectionGroupName);
+        if (searchedSectionGroup is not null)
             return new ErrorDataResult<SectionGroupDto>(Messages.SectionGroupAlreadyExists);
 
-        SectionGroup addSectionGroup = new()
+        SectionGroup addedSectionGroup = new()
         {
             BusinessId = sectionGroupDto.BusinessId,
             BranchId = sectionGroupDto.BranchId,
@@ -32,11 +32,11 @@ public class SectionGroupBl : ISectionGroupBl
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now,
         };
-        _sectionGroupDal.Add(addSectionGroup);
+        _sectionGroupDal.Add(addedSectionGroup);
 
-        SectionGroupDto addSectionGroupDto = FillDto(addSectionGroup);
+        SectionGroupDto addedSectionGroupDto = FillDto(addedSectionGroup);
 
-        return new SuccessDataResult<SectionGroupDto>(addSectionGroupDto, Messages.SectionGroupAdded);
+        return new SuccessDataResult<SectionGroupDto>(addedSectionGroupDto, Messages.SectionGroupAdded);
     }
 
     public IResult Delete(long id)
@@ -52,36 +52,36 @@ public class SectionGroupBl : ISectionGroupBl
 
     public IDataResult<List<SectionGroupDto>> GetByBusinessId(int businessId)
     {
-        List<SectionGroup> sectionGroups = _sectionGroupDal.GetByBusinessId(businessId);
-        if (sectionGroups.Count == 0)
+        List<SectionGroup> searchedSectionGroups = _sectionGroupDal.GetByBusinessId(businessId);
+        if (searchedSectionGroups.Count == 0)
             return new ErrorDataResult<List<SectionGroupDto>>(Messages.SectionGroupsNotFound);
 
-        List<SectionGroupDto> sectionGroupDtos = FillDtos(sectionGroups);
+        List<SectionGroupDto> searchedSectionGroupDtos = FillDtos(searchedSectionGroups);
 
-        return new SuccessDataResult<List<SectionGroupDto>>(sectionGroupDtos, Messages.SectionGroupsListedByBusinessId);
+        return new SuccessDataResult<List<SectionGroupDto>>(searchedSectionGroupDtos, Messages.SectionGroupsListedByBusinessId);
     }
 
     public IDataResult<SectionGroupDto> GetById(long id)
     {
-        SectionGroup getSectionGroup = _sectionGroupDal.GetById(id);
-        if (getSectionGroup == null)
+        SectionGroup searchedSectionGroup = _sectionGroupDal.GetById(id);
+        if (searchedSectionGroup is null)
             return new ErrorDataResult<SectionGroupDto>(Messages.SectionGroupNotFound);
 
-        SectionGroupDto getSectionGroupDto = FillDto(getSectionGroup);
+        SectionGroupDto searchedSectionGroupDto = FillDto(searchedSectionGroup);
 
-        return new SuccessDataResult<SectionGroupDto>(getSectionGroupDto, Messages.SectionGroupListedById);
+        return new SuccessDataResult<SectionGroupDto>(searchedSectionGroupDto, Messages.SectionGroupListedById);
     }
 
     public IResult Update(SectionGroupDto sectionGroupDto)
     {
-        SectionGroup getSectionGroup = _sectionGroupDal.GetById(sectionGroupDto.SectionGroupId);
-        if (getSectionGroup == null)
+        SectionGroup searchedSectionGroup = _sectionGroupDal.GetById(sectionGroupDto.SectionGroupId);
+        if (searchedSectionGroup is null)
             return new ErrorDataResult<SectionDto>(Messages.SectionGroupNotFound);
 
-        getSectionGroup.BranchId = sectionGroupDto.BranchId;
-        getSectionGroup.SectionGroupName = sectionGroupDto.SectionGroupName;
-        getSectionGroup.UpdatedAt = DateTimeOffset.Now;
-        _sectionGroupDal.Update(getSectionGroup);
+        searchedSectionGroup.BranchId = sectionGroupDto.BranchId;
+        searchedSectionGroup.SectionGroupName = sectionGroupDto.SectionGroupName;
+        searchedSectionGroup.UpdatedAt = DateTimeOffset.Now;
+        _sectionGroupDal.Update(searchedSectionGroup);
 
         return new SuccessResult(Messages.SectionGroupUpdated);
 

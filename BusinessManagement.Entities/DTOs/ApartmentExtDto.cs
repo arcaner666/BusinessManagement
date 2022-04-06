@@ -18,7 +18,4 @@ public class ApartmentExtDto
 
     // Extended With Manager
     public string ManagerNameSurname { get; set; }
-
-    // Extended With Section + FullAddress
-    public string AddressText { get; set; }
 }

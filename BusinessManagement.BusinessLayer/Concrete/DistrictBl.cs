@@ -20,24 +20,24 @@ public class DistrictBl : IDistrictBl
 
     public IDataResult<List<DistrictDto>> GetAll()
     {
-        List<District> getDistricts = _districtDal.GetAll();
-        if (getDistricts.Count == 0)
+        List<District> allDistricts = _districtDal.GetAll();
+        if (allDistricts.Count == 0)
             return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
 
-        List<DistrictDto> getDistrictDtos = FillDtos(getDistricts);
+        List<DistrictDto> allDistrictDtos = FillDtos(allDistricts);
 
-        return new SuccessDataResult<List<DistrictDto>>(getDistrictDtos, Messages.DistrictsListed);
+        return new SuccessDataResult<List<DistrictDto>>(allDistrictDtos, Messages.DistrictsListed);
     }
 
     public IDataResult<List<DistrictDto>> GetByCityId(short cityId)
     {
-        List<District> getDistricts = _districtDal.GetByCityId(cityId);
-        if (getDistricts.Count == 0) 
+        List<District> searchedDistricts = _districtDal.GetByCityId(cityId);
+        if (searchedDistricts.Count == 0) 
             return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
 
-        List<DistrictDto> getDistrictDtos = FillDtos(getDistricts);
+        List<DistrictDto> searchedDistrictDtos = FillDtos(searchedDistricts);
 
-        return new SuccessDataResult<List<DistrictDto>>(getDistrictDtos, Messages.DistrictsListedByCityId);
+        return new SuccessDataResult<List<DistrictDto>>(searchedDistrictDtos, Messages.DistrictsListedByCityId);
     }
 
     private DistrictDto FillDto(District district)

@@ -21,14 +21,14 @@ public class SystemUserBl : ISystemUserBl
 
     public IDataResult<SystemUserDto> Add(SystemUserDto systemUserDto)
     {
-        SystemUser getSystemUser = _systemUserDal.GetByPhone(systemUserDto.Phone);
-        if (getSystemUser != null)
+        SystemUser searchedSystemUser = _systemUserDal.GetByPhone(systemUserDto.Phone);
+        if (searchedSystemUser is not null)
             return new ErrorDataResult<SystemUserDto>(Messages.SystemUserAlreadyExists);
 
         // Şu aşamada, kayıt olan kullanıcıya SMS ile şifre gönderilemediği için şifre 123456 yapıldı.
         HashingHelper.CreatePasswordHash("123456", out byte[] passwordHash, out byte[] passwordSalt);
 
-        SystemUser addSystemUser = new()
+        SystemUser addedSystemUser = new()
         {
             Email = "",
             Phone = systemUserDto.Phone,
@@ -43,61 +43,61 @@ public class SystemUserBl : ISystemUserBl
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now
         };
-        _systemUserDal.Add(addSystemUser);
+        _systemUserDal.Add(addedSystemUser);
 
-        SystemUserDto addSystemUserDto = FillDto(addSystemUser);
+        SystemUserDto addedSystemUserDto = FillDto(addedSystemUser);
 
-        return new SuccessDataResult<SystemUserDto>(addSystemUserDto, Messages.SystemUserAdded);
+        return new SuccessDataResult<SystemUserDto>(addedSystemUserDto, Messages.SystemUserAdded);
     }
 
     public IDataResult<SystemUserDto> GetByEmail(string email)
     {
-        SystemUser getSystemUser = _systemUserDal.GetByEmail(email);
-        if (getSystemUser == null)
+        SystemUser searchedSystemUser = _systemUserDal.GetByEmail(email);
+        if (searchedSystemUser is null)
             return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
 
-        SystemUserDto getSystemUserDto = FillDto(getSystemUser);
+        SystemUserDto searchedSystemUserDto = FillDto(searchedSystemUser);
 
-        return new SuccessDataResult<SystemUserDto>(getSystemUserDto, Messages.SystemUserListedByEmail);
+        return new SuccessDataResult<SystemUserDto>(searchedSystemUserDto, Messages.SystemUserListedByEmail);
     }
 
     public IDataResult<SystemUserDto> GetById(long id)
     {
-        SystemUser getSystemUser = _systemUserDal.GetById(id);
-        if (getSystemUser == null)
+        SystemUser searchedSystemUser = _systemUserDal.GetById(id);
+        if (searchedSystemUser is null)
             return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
 
-        SystemUserDto getSystemUserDto = FillDto(getSystemUser);
+        SystemUserDto searchedSystemUserDto = FillDto(searchedSystemUser);
 
-        return new SuccessDataResult<SystemUserDto>(getSystemUserDto, Messages.SystemUserListedById);
+        return new SuccessDataResult<SystemUserDto>(searchedSystemUserDto, Messages.SystemUserListedById);
     }
 
     public IDataResult<SystemUserDto> GetByPhone(string phone)
     {
-        SystemUser getSystemUser = _systemUserDal.GetByPhone(phone);
-        if (getSystemUser == null)
+        SystemUser searchedSystemUser = _systemUserDal.GetByPhone(phone);
+        if (searchedSystemUser is null)
             return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
 
-        SystemUserDto getSystemUserDto = FillDto(getSystemUser);
+        SystemUserDto searchedSystemUserDto = FillDto(searchedSystemUser);
 
-        return new SuccessDataResult<SystemUserDto>(getSystemUserDto, Messages.SystemUserListedByPhone);
+        return new SuccessDataResult<SystemUserDto>(searchedSystemUserDto, Messages.SystemUserListedByPhone);
     }
 
     public IResult Update(SystemUserDto systemUserDto)
     {
-        SystemUser getSystemUser = _systemUserDal.GetById(systemUserDto.SystemUserId);
-        if (getSystemUser == null)
+        SystemUser searchedSystemUser = _systemUserDal.GetById(systemUserDto.SystemUserId);
+        if (searchedSystemUser is null)
             return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
 
-        getSystemUser.Email = systemUserDto.Email;
-        getSystemUser.Role = systemUserDto.Role;
-        getSystemUser.BusinessId = systemUserDto.BusinessId;
-        getSystemUser.BranchId = systemUserDto.BranchId;
-        getSystemUser.Blocked = systemUserDto.Blocked;
-        getSystemUser.RefreshToken = systemUserDto.RefreshToken;
-        getSystemUser.RefreshTokenExpiryTime = systemUserDto.RefreshTokenExpiryTime;
-        getSystemUser.UpdatedAt = DateTimeOffset.Now;
-        _systemUserDal.Update(getSystemUser);
+        searchedSystemUser.Email = systemUserDto.Email;
+        searchedSystemUser.Role = systemUserDto.Role;
+        searchedSystemUser.BusinessId = systemUserDto.BusinessId;
+        searchedSystemUser.BranchId = systemUserDto.BranchId;
+        searchedSystemUser.Blocked = systemUserDto.Blocked;
+        searchedSystemUser.RefreshToken = systemUserDto.RefreshToken;
+        searchedSystemUser.RefreshTokenExpiryTime = systemUserDto.RefreshTokenExpiryTime;
+        searchedSystemUser.UpdatedAt = DateTimeOffset.Now;
+        _systemUserDal.Update(searchedSystemUser);
 
         return new SuccessResult(Messages.SystemUserUpdated);
     }

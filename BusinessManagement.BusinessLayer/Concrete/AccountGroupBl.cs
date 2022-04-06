@@ -20,35 +20,35 @@ public class AccountGroupBl : IAccountGroupBl
 
     public IDataResult<List<AccountGroupDto>> GetAll()
     {
-        List<AccountGroup> getAccountGroups = _accountGroupDal.GetAll();
-        if (getAccountGroups.Count == 0)
+        List<AccountGroup> allAccountGroups = _accountGroupDal.GetAll();
+        if (allAccountGroups.Count == 0)
             return new ErrorDataResult<List<AccountGroupDto>>(Messages.AccountGroupsNotFound);
 
-        List<AccountGroupDto> getAccountGroupDtos = FillDtos(getAccountGroups);
+        List<AccountGroupDto> allAccountGroupDtos = FillDtos(allAccountGroups);
 
-        return new SuccessDataResult<List<AccountGroupDto>>(getAccountGroupDtos, Messages.AccountGroupsListed);
+        return new SuccessDataResult<List<AccountGroupDto>>(allAccountGroupDtos, Messages.AccountGroupsListed);
     }
 
     public IDataResult<AccountGroupDto> GetByAccountGroupCode(string accountGroupCode)
     {
-        AccountGroup getAccountGroup = _accountGroupDal.GetByAccountGroupCode(accountGroupCode);
-        if (getAccountGroup == null)
+        AccountGroup searchedAccountGroup = _accountGroupDal.GetByAccountGroupCode(accountGroupCode);
+        if (searchedAccountGroup is null)
             return new ErrorDataResult<AccountGroupDto>(Messages.AccountGroupNotFound);
 
-        AccountGroupDto getAccountGroupDto = FillDto(getAccountGroup);
+        AccountGroupDto searchedAccountGroupDto = FillDto(searchedAccountGroup);
 
-        return new SuccessDataResult<AccountGroupDto>(getAccountGroupDto, Messages.AccountGroupListedByAccountGroupCode);
+        return new SuccessDataResult<AccountGroupDto>(searchedAccountGroupDto, Messages.AccountGroupListedByAccountGroupCode);
     }
 
     public IDataResult<AccountGroupDto> GetById(short id)
     {
-        AccountGroup getAccountGroup = _accountGroupDal.GetById(id);
-        if (getAccountGroup == null)
+        AccountGroup searchedAccountGroup = _accountGroupDal.GetById(id);
+        if (searchedAccountGroup is null)
             return new ErrorDataResult<AccountGroupDto>(Messages.AccountGroupNotFound);
 
-        AccountGroupDto getAccountGroupDto = FillDto(getAccountGroup);
+        AccountGroupDto searchedAccountGroupDto = FillDto(searchedAccountGroup);
 
-        return new SuccessDataResult<AccountGroupDto>(getAccountGroupDto, Messages.AccountGroupListedById);
+        return new SuccessDataResult<AccountGroupDto>(searchedAccountGroupDto, Messages.AccountGroupListedById);
     }
 
     private AccountGroupDto FillDto(AccountGroup accountGroup)

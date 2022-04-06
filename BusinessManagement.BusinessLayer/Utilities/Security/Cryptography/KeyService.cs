@@ -21,7 +21,7 @@ public class KeyService : IKeyService
     public string GenerateApartmentCode(List<Apartment> apartments, string sectionCode)
     {
         string apartmentCode = GenerateUniqueKey(2, secureUppercaseLettersAndNumbers);
-        if (apartments != null)
+        if (apartments is not null)
         {
             while (SearchApartmentWithSameCode(apartments, apartmentCode))
             {
@@ -34,7 +34,7 @@ public class KeyService : IKeyService
     public string GenerateFlatCode(List<Flat> flats, string apartmentCode)
     {
         string flatCode = GenerateUniqueKey(2, secureUppercaseLettersAndNumbers);
-        if (flats != null)
+        if (flats is not null)
         {
             while (SearchFlatWithSameCode(flats, flatCode))
             {
@@ -47,7 +47,7 @@ public class KeyService : IKeyService
     public string GenerateSectionCode(List<Section> sections)
     {
         string sectionCode = GenerateUniqueKey(4, secureUppercaseLettersAndNumbers);
-        if (sections != null)
+        if (sections is not null)
         {
             while (SearchSectionWithSameCode(sections, sectionCode))
             {

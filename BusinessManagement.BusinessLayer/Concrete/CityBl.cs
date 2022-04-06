@@ -20,13 +20,13 @@ public class CityBl : ICityBl
 
     public IDataResult<List<CityDto>> GetAll()
     {
-        List<City> getCities = _cityDal.GetAll();
-        if (getCities.Count == 0)
+        List<City> allCities = _cityDal.GetAll();
+        if (allCities.Count == 0)
             return new ErrorDataResult<List<CityDto>>(Messages.CitiesNotFound);
 
-        List<CityDto> getCityDtos = FillDtos(getCities);
+        List<CityDto> allCityDtos = FillDtos(allCities);
 
-        return new SuccessDataResult<List<CityDto>>(getCityDtos, Messages.CitiesListed);
+        return new SuccessDataResult<List<CityDto>>(allCityDtos, Messages.CitiesListed);
     }
 
     private CityDto FillDto(City city)

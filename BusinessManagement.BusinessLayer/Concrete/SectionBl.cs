@@ -28,11 +28,11 @@ public class SectionBl : ISectionBl
 
     public IDataResult<SectionDto> Add(SectionDto sectionDto)
     {
-        Section getSection = _sectionDal.GetBySectionCode(sectionDto.SectionCode);
-        if (getSection != null)
+        Section searchedSection = _sectionDal.GetBySectionCode(sectionDto.SectionCode);
+        if (searchedSection is not null)
             return new ErrorDataResult<SectionDto>(Messages.SectionAlreadyExists);
 
-        Section addSection = new()
+        Section addedSection = new()
         {
             SectionGroupId = sectionDto.SectionGroupId,
             BusinessId = sectionDto.BusinessId,
@@ -44,11 +44,11 @@ public class SectionBl : ISectionBl
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now,
         };
-        _sectionDal.Add(addSection);
+        _sectionDal.Add(addedSection);
 
-        SectionDto addSectionDto = FillDto(addSection);
+        SectionDto addedSectionDto = FillDto(addedSection);
 
-        return new SuccessDataResult<SectionDto>(addSectionDto, Messages.SectionAdded);
+        return new SuccessDataResult<SectionDto>(addedSectionDto, Messages.SectionAdded);
     }
 
     [TransactionScopeAspect]
@@ -68,10 +68,10 @@ public class SectionBl : ISectionBl
             return addFullAddressResult;
 
         // Eşsiz bir site kodu oluşturmak için tüm siteler getirilir.
-        List<Section> getSections = _sectionDal.GetAll();
+        List<Section> allSections = _sectionDal.GetAll();
 
         // Site kodu üretilir.
-        string sectionCode = _keyService.GenerateSectionCode(getSections);
+        string sectionCode = _keyService.GenerateSectionCode(allSections);
 
         // Site eklenir.
         SectionDto sectionDto = new()
@@ -121,50 +121,50 @@ public class SectionBl : ISectionBl
 
     public IDataResult<SectionDto> GetById(int id)
     {
-        Section getSection = _sectionDal.GetById(id);
-        if (getSection == null)
+        Section searchedSection = _sectionDal.GetById(id);
+        if (searchedSection is null)
             return new ErrorDataResult<SectionDto>(Messages.SectionNotFound);
 
-        SectionDto getSectionDto = FillDto(getSection);
+        SectionDto searchedSectionDto = FillDto(searchedSection);
 
-        return new SuccessDataResult<SectionDto>(getSectionDto, Messages.SectionListedById);
+        return new SuccessDataResult<SectionDto>(searchedSectionDto, Messages.SectionListedById);
     }
 
     public IDataResult<SectionExtDto> GetExtById(int id)
     {
-        Section getSection = _sectionDal.GetExtById(id);
-        if (getSection == null)
+        Section searchedSection = _sectionDal.GetExtById(id);
+        if (searchedSection is null)
             return new ErrorDataResult<SectionExtDto>(Messages.SectionNotFound);
 
-        SectionExtDto getSectionExtDto = FillExtDto(getSection);
+        SectionExtDto searchedSectionExtDto = FillExtDto(searchedSection);
 
-        return new SuccessDataResult<SectionExtDto>(getSectionExtDto, Messages.SectionExtListedById);
+        return new SuccessDataResult<SectionExtDto>(searchedSectionExtDto, Messages.SectionExtListedById);
     }
 
     public IDataResult<List<SectionExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<Section> sections = _sectionDal.GetExtsByBusinessId(businessId);
-        if (sections.Count == 0)
+        List<Section> searchedSections = _sectionDal.GetExtsByBusinessId(businessId);
+        if (searchedSections.Count == 0)
             return new ErrorDataResult<List<SectionExtDto>>(Messages.SectionsNotFound);
 
-        List<SectionExtDto> sectionExtDtos = FillExtDtos(sections);
+        List<SectionExtDto> searchedSectionExtDtos = FillExtDtos(searchedSections);
 
-        return new SuccessDataResult<List<SectionExtDto>>(sectionExtDtos, Messages.SectionExtsListedByBusinessId);
+        return new SuccessDataResult<List<SectionExtDto>>(searchedSectionExtDtos, Messages.SectionExtsListedByBusinessId);
     }
 
     public IResult Update(SectionDto sectionDto)
     {
-        Section getSection = _sectionDal.GetById(sectionDto.SectionId);
-        if (getSection == null)
+        Section searchedSection = _sectionDal.GetById(sectionDto.SectionId);
+        if (searchedSection is null)
             return new ErrorDataResult<SectionDto>(Messages.SectionNotFound);
 
-        getSection.SectionId = sectionDto.SectionId;
-        getSection.SectionGroupId = sectionDto.SectionGroupId;
-        getSection.BranchId = sectionDto.BranchId;
-        getSection.ManagerId = sectionDto.ManagerId;
-        getSection.SectionName = sectionDto.SectionName;
-        getSection.UpdatedAt = DateTimeOffset.Now;
-        _sectionDal.Update(getSection);
+        searchedSection.SectionId = sectionDto.SectionId;
+        searchedSection.SectionGroupId = sectionDto.SectionGroupId;
+        searchedSection.BranchId = sectionDto.BranchId;
+        searchedSection.ManagerId = sectionDto.ManagerId;
+        searchedSection.SectionName = sectionDto.SectionName;
+        searchedSection.UpdatedAt = DateTimeOffset.Now;
+        _sectionDal.Update(searchedSection);
 
         return new SuccessResult(Messages.SectionUpdated);
     }

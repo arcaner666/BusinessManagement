@@ -39,6 +39,13 @@ public class DpMsApartmentDal : IApartmentDal
         return _db.Query<Apartment>(sql, new { @ApartmentCode = apartmentCode }).SingleOrDefault();
     }
 
+    public List<Apartment> GetByBusinessId(int businessId)
+    {
+        var sql = "SELECT * FROM Apartment"
+            + " WHERE BusinessId = @BusinessId";
+        return _db.Query<Apartment>(sql, new { @BusinessId = businessId }).ToList();
+    }
+
     public Apartment GetById(long id)
     {
         var sql = "SELECT * FROM Apartment"

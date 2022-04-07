@@ -42,8 +42,14 @@ public class AutofacModule : Module
         builder.RegisterType<DistrictBl>().As<IDistrictBl>().SingleInstance();
         builder.RegisterType<DpMsDistrictDal>().As<IDistrictDal>().SingleInstance();
 
+        builder.RegisterType<FlatBl>().As<IFlatBl>().SingleInstance();
+        builder.RegisterType<DpMsFlatDal>().As<IFlatDal>().SingleInstance();
+
         builder.RegisterType<FullAddressBl>().As<IFullAddressBl>().SingleInstance();
         builder.RegisterType<DpMsFullAddressDal>().As<IFullAddressDal>().SingleInstance();
+
+        builder.RegisterType<HouseOwnerBl>().As<IHouseOwnerBl>().SingleInstance();
+        builder.RegisterType<DpMsHouseOwnerDal>().As<IHouseOwnerDal>().SingleInstance();
 
         builder.RegisterType<JwtHelper>().As<ITokenService>();
 
@@ -68,6 +74,9 @@ public class AutofacModule : Module
 
         builder.RegisterType<SystemUserClaimBl>().As<ISystemUserClaimBl>().SingleInstance();
         builder.RegisterType<DpMsSystemUserClaimDal>().As<ISystemUserClaimDal>().SingleInstance();
+
+        builder.RegisterType<TenantBl>().As<ITenantBl>().SingleInstance();
+        builder.RegisterType<DpMsTenantDal>().As<ITenantDal>().SingleInstance();
 
         var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

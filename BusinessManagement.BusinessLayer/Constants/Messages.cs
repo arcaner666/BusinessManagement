@@ -142,7 +142,10 @@ public static class Messages
     public const string FlatAlreadyExists = "FlatAlreadyExists";
     public const string FlatDeleted = "FlatDeleted";
     public const string FlatExtAdded = "FlatExtAdded";
+    public const string FlatExtDeleted = "FlatExtDeleted";
+    public const string FlatExtListedById = "FlatExtListedById";
     public const string FlatExtsListedByBusinessId = "FlatExtsListedByBusinessId";
+    public const string FlatExtUpdated = "FlatExtUpdated";
     public const string FlatListedByFlatCode = "FlatListedByFlatCode";
     public const string FlatListedById = "FlatListedById";
     public const string FlatNotFound = "FlatNotFound";
@@ -180,6 +183,7 @@ public static class Messages
     public const string HouseOwnerExtsListedByBusinessId = "HouseOwnerExtsListedByBusinessId";
     public const string HouseOwnerExtUpdated = "HouseOwnerExtUpdated";
     public const string HouseOwnerNotFound = "HouseOwnerNotFound";
+    public const string HouseOwnersListedByBusinessId = "HouseOwnersListedByBusinessId";
     public const string HouseOwnersNotFound = "HouseOwnersNotFound";
     #endregion
     
@@ -231,6 +235,7 @@ public static class Messages
     public const string TenantExtsListedByBusinessId = "TenantExtsListedByBusinessId";
     public const string TenantExtUpdated = "TenantExtUpdated";
     public const string TenantNotFound = "TenantNotFound";
+    public const string TenantsListedByBusinessId = "TenantsListedByBusinessId";
     public const string TenantsNotFound = "TenantsNotFound";
     #endregion
 }

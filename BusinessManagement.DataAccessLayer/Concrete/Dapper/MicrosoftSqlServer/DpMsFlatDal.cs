@@ -53,6 +53,28 @@ public class DpMsFlatDal : IFlatDal
         return _db.Query<Flat>(sql, new { @FlatId = id }).SingleOrDefault();
     }
 
+    public Flat GetExtById(long id)
+    {
+        var sql = "SELECT * FROM Flat f"
+                + " INNER JOIN Section s ON f.SectionId = s.SectionId"
+                + " INNER JOIN Apartment a ON f.ApartmentId = a.ApartmentId"
+                + " LEFT JOIN HouseOwner o ON f.HouseOwnerId = o.HouseOwnerId"
+                + " LEFT JOIN Tenant t ON f.TenantId = t.TenantId"
+                + " WHERE f.FlatId = @FlatId;";
+        return _db.Query<Flat, Section, Apartment, HouseOwner, Tenant, Flat>(sql,
+            (flat, section, apartment, houseOwner, tenant) =>
+            {
+                flat.Section = section;
+                flat.Apartment = apartment;
+                if (houseOwner != null)
+                    flat.HouseOwner = houseOwner;
+                if (tenant != null)
+                    flat.Tenant = tenant;
+                return flat;
+            }, new { @FlatId = id },
+            splitOn: "SectionId,ApartmentId,HouseOwnerId,TenantId").SingleOrDefault();
+    }
+
     public List<Flat> GetExtsByBusinessId(int businessId)
     {
         var sql = "SELECT * FROM Flat f"

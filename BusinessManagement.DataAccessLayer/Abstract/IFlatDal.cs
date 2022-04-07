@@ -9,6 +9,7 @@ public interface IFlatDal
     List<Flat> GetByApartmentId(long apartmentId);
     Flat GetByFlatCode(string flatCode);
     Flat GetById(long id);
+    Flat GetExtById(long id);
     List<Flat> GetExtsByBusinessId(int businessId);
     void Update(Flat flat);
 }

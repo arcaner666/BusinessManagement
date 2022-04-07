@@ -11,8 +11,8 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 
 public class ApartmentBl : IApartmentBl
 {
-    private readonly IKeyService _keyService;
     private readonly IApartmentDal _apartmentDal;
+    private readonly IKeyService _keyService;
     private readonly ISectionBl _sectionBl;
 
     public ApartmentBl(
@@ -83,7 +83,7 @@ public class ApartmentBl : IApartmentBl
         return new SuccessResult(Messages.ApartmentExtAdded);
     }
 
-    public IResult Delete(int id)
+    public IResult Delete(long id)
     {
         var getApartmentResult = GetById(id);
         if (getApartmentResult is null)
@@ -95,7 +95,7 @@ public class ApartmentBl : IApartmentBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExt(int id)
+    public IResult DeleteExt(long id)
     {
         //// Apartmandaki daireler silinir.
         //List<Flat> getFlatsResult = _flatDal.GetByApartmentId(apartmentDto.ApartmentId);
@@ -117,7 +117,18 @@ public class ApartmentBl : IApartmentBl
         return new SuccessResult(Messages.ApartmentExtDeleted);
     }
 
-    public IDataResult<ApartmentDto> GetById(int id)
+    public IDataResult<List<ApartmentDto>> GetByBusinessId(int businessId)
+    {
+        List<Apartment> searchedApartments = _apartmentDal.GetByBusinessId(businessId);
+        if (searchedApartments.Count == 0)
+            return new ErrorDataResult<List<ApartmentDto>>(Messages.ApartmentsNotFound);
+
+        List<ApartmentDto> searchedApartmentDtos = FillDtos(searchedApartments);
+
+        return new SuccessDataResult<List<ApartmentDto>>(searchedApartmentDtos, Messages.ApartmentsListedByBusinessId);
+    }
+
+    public IDataResult<ApartmentDto> GetById(long id)
     {
         Apartment searchedApartment = _apartmentDal.GetById(id);
         if (searchedApartment is null)

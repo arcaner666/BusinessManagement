@@ -32,6 +32,13 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
         _db.Execute(sql, new { @HouseOwnerId = id });
     }
 
+    public List<HouseOwner> GetByBusinessId(int businessId)
+    {
+        var sql = "SELECT * FROM HouseOwner"
+            + " WHERE BusinessId = @BusinessId";
+        return _db.Query<HouseOwner>(sql, new { @BusinessId = businessId }).ToList();
+    }
+
     public HouseOwner GetById(long id)
     {
         var sql = "SELECT * FROM HouseOwner"

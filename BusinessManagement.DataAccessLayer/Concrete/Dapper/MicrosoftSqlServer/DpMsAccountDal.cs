@@ -57,6 +57,24 @@ public class DpMsAccountDal : IAccountDal
         return _db.Query<Account>(sql, new { @AccountId = id }).SingleOrDefault();
     }
 
+    public Account GetExtById(long id)
+    {
+        var sql = "SELECT * FROM Account a"
+            + " INNER JOIN Branch b ON a.BranchId = b.BranchId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " INNER JOIN Currency c ON a.CurrencyId = c.CurrencyId"
+            + " WHERE a.AccountId = @AccountId";
+        return _db.Query<Account, Branch, AccountGroup, Currency, Account>(sql,
+            (account, branch, accountGroup, currency) =>
+            {
+                account.Branch = branch;
+                account.AccountGroup = accountGroup;
+                account.Currency = currency;
+                return account;
+            }, new { @AccountId = id },
+            splitOn: "BranchId,AccountGroupId,CurrencyId").SingleOrDefault();
+    }
+
     public List<Account> GetExtsByBusinessId(int businessId)
     {
         var sql = "SELECT * FROM Account a"

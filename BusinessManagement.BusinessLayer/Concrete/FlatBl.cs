@@ -89,7 +89,7 @@ public class FlatBl : IFlatBl
     {
         var getFlatResult = GetById(id);
         if (getFlatResult is null)
-            return new ErrorResult(Messages.FlatNotFound);
+            return getFlatResult;
 
         _flatDal.Delete(id);
 

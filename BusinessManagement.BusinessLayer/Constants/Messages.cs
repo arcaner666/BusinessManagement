@@ -3,26 +3,32 @@
 public static class Messages
 {
     #region Account
+    public const string AccountAccountGroupIsNotDefined = "AccountAccountGroupIsNotDefined";
     public const string AccountAdded = "AccountAdded";
     public const string AccountAlreadyExists = "AccountAlreadyExists";
     public const string AccountCashAdded = "AccountCashAdded";
     public const string AccountCashDeleted = "AccountCashDeleted";
-    public const string AccountAccountGroupIsNotDefined = "AccountAccountGroupIsNotDefined";
+    public const string AccountDeleted = "AccountDeleted";
     public const string AccountEmployeeAdded = "AccountEmployeeAdded";
     public const string AccountEmployeeDeleted = "AccountEmployeeDeleted";
+    public const string AccountExtAdded = "AccountExtAdded";
+    public const string AccountExtDeleted = "AccountExtDeleted";
+    public const string AccountExtListedById = "AccountExtListedById";
     public const string AccountExtsListedByBusinessId = "AccountExtsListedByBusinessId";
     public const string AccountExtsListedByBusinessIdAndAccountGroupCode = "AccountExtsListedByBusinessIdAndAccountGroupCode";
     public const string AccountExtUpdated = "AccountExtUpdated";
-    public const string AccountNotFound = "AccountNotFound";
-    public const string AccountOrderAndCodeGenerated = "AccountOrderAndCodeGenerated";
     public const string AccountHouseOwnerAdded = "AccountHouseOwnerAdded";
     public const string AccountHouseOwnerDeleted = "AccountHouseOwnerDeleted";
+    public const string AccountListedById = "AccountListedById";
+    public const string AccountNotFound = "AccountNotFound";
+    public const string AccountOrderAndCodeGenerated = "AccountOrderAndCodeGenerated";
     public const string AccountsNotFound = "AccountsNotFound";
     public const string AccountSystemUserAdded = "AccountSystemUserAdded";
     public const string AccountSystemUserClaimsAdded = "AccountSystemUserClaimsAdded";
     public const string AccountTaxNumberOrIdentityNumberIsNull = "AccountTaxNumberOrIdentityNumberIsNull";
     public const string AccountTenantAdded = "AccountTenantAdded";
     public const string AccountTenantDeleted = "AccountTenantDeleted";
+    public const string AccountUpdated = "AccountUpdated";
     #endregion
 
     #region AccountGroup

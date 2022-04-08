@@ -87,7 +87,7 @@ public class ApartmentBl : IApartmentBl
     {
         var getApartmentResult = GetById(id);
         if (getApartmentResult is null)
-            return new ErrorResult(Messages.ApartmentNotFound);
+            return getApartmentResult;
 
         _apartmentDal.Delete(id);
 

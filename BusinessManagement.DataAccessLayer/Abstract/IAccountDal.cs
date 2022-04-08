@@ -9,6 +9,7 @@ public interface IAccountDal
     List<Account> GetByAccountGroupId(short accountGroupId);
     Account GetByBusinessIdAndAccountCode(int businessId, string accountCode);
     Account GetById(long id);
+    Account GetExtById(long id);
     List<Account> GetExtsByBusinessId(int businessId);
     List<Account> GetExtsByBusinessIdAndAccountGroupCode(int businessId, string[] accountGroupCodes);
     Account GetLastAccountOrderForAnAccountGroup(int businessId, long branchId, string accountGroupCode);

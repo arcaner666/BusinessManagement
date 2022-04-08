@@ -228,6 +228,7 @@ public class AccountBl : IAccountBl
     {
         AccountDto accountDto = new()
         {
+            AccountId = accountExtDto.AccountId,
             AccountName = accountExtDto.AccountName,
             TaxOffice = accountExtDto.TaxOffice,
             TaxNumber = accountExtDto.TaxNumber,

@@ -62,10 +62,10 @@ public class AccountsController : ControllerBase
         return BadRequest(result);
     }
 
-    [HttpPost("getextsbybusinessidandaccountgroupcode")]
-    public IActionResult GetExtsByBusinessIdAndAccountGroupCode(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto)
+    [HttpPost("getextsbybusinessidandaccountgroupcodes")]
+    public IActionResult GetExtsByBusinessIdAndAccountGroupCodes(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto)
     {
-        var result = _accountBl.GetExtsByBusinessIdAndAccountGroupCode(accountGetByAccountGroupCodesDto);
+        var result = _accountBl.GetExtsByBusinessIdAndAccountGroupCodes(accountGetByAccountGroupCodesDto);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);

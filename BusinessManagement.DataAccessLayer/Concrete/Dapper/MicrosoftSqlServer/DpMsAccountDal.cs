@@ -93,7 +93,7 @@ public class DpMsAccountDal : IAccountDal
             splitOn: "BranchId,AccountGroupId,CurrencyId").ToList();
     }
 
-    public List<Account> GetExtsByBusinessIdAndAccountGroupCode(int businessId, string[] accountGroupCodes)
+    public List<Account> GetExtsByBusinessIdAndAccountGroupCodes(int businessId, string[] accountGroupCodes)
     {
         var sql = "SELECT * FROM Account a"
             + " INNER JOIN Branch b ON a.BranchId = b.BranchId"

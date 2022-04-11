@@ -32,6 +32,16 @@ public class DpMsAccountGroupDal : IAccountGroupDal
         }).SingleOrDefault();
     }
 
+    public List<AccountGroup> GetByAccountGroupCodes(string[] accountGroupCodes)
+    {
+        var sql = "SELECT * FROM AccountGroup"
+            + " WHERE AccountGroupCode IN @AccountGroupCodes";
+        return _db.Query<AccountGroup>(sql, new
+        {
+            @AccountGroupCodes = accountGroupCodes,
+        }).ToList();
+    }
+
     public AccountGroup GetById(short id)
     {
         var sql = "SELECT * FROM AccountGroup"

@@ -40,6 +40,17 @@ public class AccountGroupBl : IAccountGroupBl
         return new SuccessDataResult<AccountGroupDto>(searchedAccountGroupDto, Messages.AccountGroupListedByAccountGroupCode);
     }
 
+    public IDataResult<List<AccountGroupDto>> GetByAccountGroupCodes(AccountGroupCodesDto accountGroupCodesDto)
+    {
+        List<AccountGroup> searchedAccountGroups = _accountGroupDal.GetByAccountGroupCodes(accountGroupCodesDto.AccountGroupCodes);
+        if (searchedAccountGroups.Count == 0)
+            return new ErrorDataResult<List<AccountGroupDto>>(Messages.AccountGroupsNotFound);
+
+        List<AccountGroupDto> searchedAccountGroupDtos = FillDtos(searchedAccountGroups);
+
+        return new SuccessDataResult<List<AccountGroupDto>>(searchedAccountGroupDtos, Messages.AccountGroupsListedByAccountGroupCodes);
+    }
+
     public IDataResult<AccountGroupDto> GetById(short id)
     {
         AccountGroup searchedAccountGroup = _accountGroupDal.GetById(id);

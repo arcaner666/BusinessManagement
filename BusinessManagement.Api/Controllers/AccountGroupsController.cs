@@ -1,4 +1,5 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
+using BusinessManagement.Entities.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
@@ -21,6 +22,15 @@ public class AccountGroupsController : ControllerBase
     {
         var result = _accountGroupBl.GetAll();
         if (result.Success) 
+            return Ok(result);
+        return BadRequest(result);
+    }
+
+    [HttpPost("getbyaccountgroupcodes")]
+    public IActionResult GetByAccountGroupCodes(AccountGroupCodesDto accountGroupCodesDto)
+    {
+        var result = _accountGroupBl.GetByAccountGroupCodes(accountGroupCodesDto);
+        if (result.Success)
             return Ok(result);
         return BadRequest(result);
     }

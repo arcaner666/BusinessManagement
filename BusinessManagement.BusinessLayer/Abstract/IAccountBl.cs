@@ -13,7 +13,7 @@ public interface IAccountBl
     IDataResult<AccountDto> GetById(long id);
     IDataResult<AccountExtDto> GetExtById(long id);
     IDataResult<List<AccountExtDto>> GetExtsByBusinessId(int businessId);
-    IDataResult<List<AccountExtDto>> GetExtsByBusinessIdAndAccountGroupCode(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto);
+    IDataResult<List<AccountExtDto>> GetExtsByBusinessIdAndAccountGroupCodes(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto);
     IResult Update(AccountDto accountDto);
     IResult UpdateExt(AccountExtDto accountExtDto);
 }

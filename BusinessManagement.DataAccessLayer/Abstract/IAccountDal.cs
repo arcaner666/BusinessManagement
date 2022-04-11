@@ -11,7 +11,7 @@ public interface IAccountDal
     Account GetById(long id);
     Account GetExtById(long id);
     List<Account> GetExtsByBusinessId(int businessId);
-    List<Account> GetExtsByBusinessIdAndAccountGroupCode(int businessId, string[] accountGroupCodes);
+    List<Account> GetExtsByBusinessIdAndAccountGroupCodes(int businessId, string[] accountGroupCodes);
     Account GetLastAccountOrderForAnAccountGroup(int businessId, long branchId, string accountGroupCode);
     Account GetMaxAccountOrderByBusinessIdAndBranchIdAndAccountGroupId(int businessId, long branchId, short accountGroupId);
     void Update(Account account);

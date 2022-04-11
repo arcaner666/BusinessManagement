@@ -36,6 +36,7 @@ public static class Messages
     public const string AccountGroupListedById = "AccountGroupListedById";
     public const string AccountGroupNotFound = "AccountGroupNotFound";
     public const string AccountGroupsListed = "AccountGroupsListed";
+    public const string AccountGroupsListedByAccountGroupCodes = "AccountGroupsListedByAccountGroupCodes";
     public const string AccountGroupsNotFound = "AccountGroupsNotFound";
     #endregion
 

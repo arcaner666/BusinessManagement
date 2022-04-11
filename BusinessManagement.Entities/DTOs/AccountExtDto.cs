@@ -26,6 +26,7 @@ public class AccountExtDto
 
     // Extended With AccountGroup
     public string AccountGroupName { get; set; }
+    public string AccountGroupCode { get; set; }
 
     // Extended With Currency
     public string CurrencyName { get; set; }

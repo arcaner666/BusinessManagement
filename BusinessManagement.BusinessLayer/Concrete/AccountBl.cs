@@ -192,9 +192,9 @@ public class AccountBl : IAccountBl
         return new SuccessDataResult<List<AccountExtDto>>(searchedAccountExtDtos, Messages.AccountExtsListedByBusinessId);
     }
 
-    public IDataResult<List<AccountExtDto>> GetExtsByBusinessIdAndAccountGroupCode(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto)
+    public IDataResult<List<AccountExtDto>> GetExtsByBusinessIdAndAccountGroupCodes(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto)
     {
-        List<Account> searchedAccounts = _accountDal.GetExtsByBusinessIdAndAccountGroupCode(accountGetByAccountGroupCodesDto.BusinessId, accountGetByAccountGroupCodesDto.AccountGroupCodes);
+        List<Account> searchedAccounts = _accountDal.GetExtsByBusinessIdAndAccountGroupCodes(accountGetByAccountGroupCodesDto.BusinessId, accountGetByAccountGroupCodesDto.AccountGroupCodes);
         if (searchedAccounts.Count == 0)
             return new ErrorDataResult<List<AccountExtDto>>(Messages.AccountsNotFound);
 
@@ -305,6 +305,7 @@ public class AccountBl : IAccountBl
 
             BranchName = account.Branch.BranchName,
             AccountGroupName = account.AccountGroup.AccountGroupName,
+            AccountGroupCode = account.AccountGroup.AccountGroupCode,
             CurrencyName = account.Currency.CurrencyName,
         };
         return accountExtDto;

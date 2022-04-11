@@ -7,5 +7,6 @@ public interface IAccountGroupBl
 {
     IDataResult<List<AccountGroupDto>> GetAll();
     IDataResult<AccountGroupDto> GetByAccountGroupCode(string accountGroupCode);
+    IDataResult<List<AccountGroupDto>> GetByAccountGroupCodes(AccountGroupCodesDto accountGroupCodesDto);
     IDataResult<AccountGroupDto> GetById(short id);
 }

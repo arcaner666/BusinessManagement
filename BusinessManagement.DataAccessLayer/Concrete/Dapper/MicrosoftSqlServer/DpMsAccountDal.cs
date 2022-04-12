@@ -99,8 +99,7 @@ public class DpMsAccountDal : IAccountDal
             + " INNER JOIN Branch b ON a.BranchId = b.BranchId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN Currency c ON a.CurrencyId = c.CurrencyId"
-            + " WHERE a.BusinessId = @BusinessId AND a.AccountGroupId IN"
-            + " (SELECT AccountGroupId FROM AccountGroup WHERE AccountGroupCode IN @AccountGroupCodes)";
+            + " WHERE a.BusinessId = @BusinessId AND ag.AccountGroupCode IN @AccountGroupCodes";
         return _db.Query<Account, Branch, AccountGroup, Currency, Account>(sql,
             (account, branch, accountGroup, currency) =>
             {

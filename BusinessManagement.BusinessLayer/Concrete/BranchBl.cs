@@ -102,7 +102,7 @@ public class BranchBl : IBranchBl
             return deleteBranchResult;
 
         // Şubenin adresi silinir.
-        var deleteFullAddressResult = _fullAddressBl.Delete(id);
+        var deleteFullAddressResult = _fullAddressBl.Delete(getBranchResult.Data.FullAddressId);
         if (!deleteFullAddressResult.Success)
             return deleteFullAddressResult;
 

@@ -1,5 +1,4 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
-using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -11,15 +10,12 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 public class BranchBl : IBranchBl
 {
     private readonly IBranchDal _branchDal;
-    private readonly IFullAddressBl _fullAddressBl;
 
     public BranchBl(
-        IBranchDal branchDal,
-        IFullAddressBl fullAddressBl
+        IBranchDal branchDal
     )
     {
         _branchDal = branchDal;
-        _fullAddressBl = fullAddressBl;
     }
 
     public IDataResult<BranchDto> Add(BranchDto branchDto)
@@ -45,68 +41,11 @@ public class BranchBl : IBranchBl
         return new SuccessDataResult<BranchDto>(addedBranchDto, Messages.BranchAdded);
     }
 
-    [TransactionScopeAspect]
-    public IResult AddExt(BranchExtDto branchExtDto)
-    {
-        // Şubenin adresi eklenir.
-        FullAddressDto fullAddressDto = new()
-        {
-            CityId = branchExtDto.CityId,
-            DistrictId = branchExtDto.DistrictId,
-            AddressTitle = branchExtDto.AddressTitle,
-            PostalCode = branchExtDto.PostalCode,
-            AddressText = branchExtDto.AddressText,
-        };
-        var addFullAddressResult = _fullAddressBl.Add(fullAddressDto);
-        if (!addFullAddressResult.Success)
-            return addFullAddressResult;
-
-        // Şube eklenir.
-        BranchDto branchDto = new()
-        {
-            BusinessId = branchExtDto.BusinessId,
-            FullAddressId = addFullAddressResult.Data.FullAddressId,
-            BranchOrder = branchExtDto.BranchOrder,
-            BranchName = branchExtDto.BranchName,
-            BranchCode = branchExtDto.BranchCode,
-        };
-        var addBranchResult = Add(branchDto);
-        if (!addBranchResult.Success)
-            return addBranchResult;
-
-        return new SuccessResult(Messages.BranchExtAdded);
-    }
-
     public IResult Delete(long id)
     {
         _branchDal.Delete(id);
 
         return new SuccessResult(Messages.BranchDeleted);
-    }
-
-    [TransactionScopeAspect]
-    public IResult DeleteExt(long id)
-    {
-        // Şube getirilir.
-        var getBranchResult = GetById(id);
-        if (!getBranchResult.Success)
-            return getBranchResult;
-
-        // Merkez şubenin silinmesi engellenir.
-        if (getBranchResult.Data.BranchName == "Merkez")
-            return new ErrorResult(Messages.BranchCanNotDeleteMainBranch);
-
-        // Şube silinir.
-        var deleteBranchResult = Delete(id);
-        if (!deleteBranchResult.Success)
-            return deleteBranchResult;
-
-        // Şubenin adresi silinir.
-        var deleteFullAddressResult = _fullAddressBl.Delete(getBranchResult.Data.FullAddressId);
-        if (!deleteFullAddressResult.Success)
-            return deleteFullAddressResult;
-
-        return new SuccessResult(Messages.BranchExtDeleted);
     }
 
     public IDataResult<BranchCodeDto> GenerateBranchCode(int businessId)
@@ -159,17 +98,6 @@ public class BranchBl : IBranchBl
         return new SuccessDataResult<BranchDto>(searchedBranchDto, Messages.BranchListedById);
     }
 
-    public IDataResult<BranchExtDto> GetExtById(long id)
-    {
-        Branch searchedBranch = _branchDal.GetExtById(id);
-        if (searchedBranch is null)
-            return new ErrorDataResult<BranchExtDto>(Messages.BranchNotFound);
-
-        BranchExtDto searchedBranchExtDto = FillExtDto(searchedBranch);
-
-        return new SuccessDataResult<BranchExtDto>(searchedBranchExtDto, Messages.BranchExtListedById);
-    }
-
     public IResult Update(BranchDto branchDto)
     {
         Branch searchedBranch = _branchDal.GetById(branchDto.BranchId);
@@ -181,34 +109,6 @@ public class BranchBl : IBranchBl
         _branchDal.Update(searchedBranch);
 
         return new SuccessResult(Messages.BranchUpdated);
-    }
-
-    [TransactionScopeAspect]
-    public IResult UpdateExt(BranchExtDto branchExtDto)
-    {
-        FullAddressDto fullAddressDto = new()
-        {
-            FullAddressId = branchExtDto.FullAddressId,
-            CityId = branchExtDto.CityId,
-            DistrictId = branchExtDto.DistrictId,
-            AddressTitle = branchExtDto.AddressTitle,
-            PostalCode = branchExtDto.PostalCode,
-            AddressText = branchExtDto.AddressText,
-        };
-        var updateFullAddressResult = _fullAddressBl.Update(fullAddressDto);
-        if (!updateFullAddressResult.Success)
-            return updateFullAddressResult;
-
-        BranchDto branchDto = new()
-        {
-            BranchId = branchExtDto.BranchId,
-            BranchName = branchExtDto.BranchName,
-        };
-        var updateBranchResult = Update(branchDto);
-        if (!updateBranchResult.Success)
-            return updateBranchResult;
-
-        return new SuccessResult(Messages.BranchExtUpdated);
     }
 
     private BranchDto FillDto(Branch branch)
@@ -233,35 +133,5 @@ public class BranchBl : IBranchBl
         List<BranchDto> branchDtos = branchs.Select(branch => FillDto(branch)).ToList();
 
         return branchDtos;
-    }
-
-    private BranchExtDto FillExtDto(Branch branch)
-    {
-        BranchExtDto branchExtDto = new()
-        {
-            BranchId = branch.BranchId,
-            BusinessId = branch.BusinessId,
-            FullAddressId = branch.FullAddressId,
-            BranchOrder = branch.BranchOrder,
-            BranchName = branch.BranchName,
-            BranchCode = branch.BranchCode,
-            CreatedAt = branch.CreatedAt,
-            UpdatedAt = branch.UpdatedAt,
-
-            CityId = branch.FullAddress.CityId,
-            DistrictId = branch.FullAddress.DistrictId,
-            AddressTitle = branch.FullAddress.AddressTitle,
-            PostalCode = branch.FullAddress.PostalCode,
-            AddressText = branch.FullAddress.AddressText,
-        };
-
-        return branchExtDto;
-    }
-
-    private List<BranchExtDto> FillExtDtos(List<Branch> branches)
-    {
-        List<BranchExtDto> branchExtDtos = branches.Select(branch => FillExtDto(branch)).ToList();
-
-        return branchExtDtos;
     }
 }

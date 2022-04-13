@@ -186,12 +186,17 @@ public static class Messages
     #endregion
 
     #region HouseOwner
+    public const string HouseOwnerAdded = "HouseOwnerAdded";
     public const string HouseOwnerAlreadyExists = "HouseOwnerAlreadyExists";
+    public const string HouseOwnerDeleted = "HouseOwnerDeleted";
+    public const string HouseOwnerExtListedById = "HouseOwnerExtListedById";
     public const string HouseOwnerExtsListedByBusinessId = "HouseOwnerExtsListedByBusinessId";
     public const string HouseOwnerExtUpdated = "HouseOwnerExtUpdated";
+    public const string HouseOwnerListedById = "HouseOwnerListedById";
     public const string HouseOwnerNotFound = "HouseOwnerNotFound";
     public const string HouseOwnersListedByBusinessId = "HouseOwnersListedByBusinessId";
     public const string HouseOwnersNotFound = "HouseOwnersNotFound";
+    public const string HouseOwnerUpdated = "HouseOwnerUpdated";
     #endregion
     
     #region Section

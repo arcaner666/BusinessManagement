@@ -39,21 +39,7 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
         return _db.Query<HouseOwner>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public HouseOwner GetById(long id)
-    {
-        var sql = "SELECT * FROM HouseOwner"
-            + " WHERE HouseOwnerId = @HouseOwnerId";
-        return _db.Query<HouseOwner>(sql, new { @HouseOwnerId = id }).SingleOrDefault();
-    }
-
-    public List<HouseOwner> GetExtsByBusinessId(int businessId)
-    {
-        var sql = "SELECT * FROM HouseOwner"
-            + " WHERE BusinessId = @BusinessId";
-        return _db.Query<HouseOwner>(sql, new { @BusinessId = businessId } ).ToList();
-    }
-
-    public HouseOwner GetIfAlreadyExist(int businessId, long accountId)
+    public HouseOwner GetByBusinessIdAndAccountId(int businessId, long accountId)
     {
         var sql = "SELECT * FROM HouseOwner"
             + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
@@ -62,6 +48,45 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
             @BusinessId = businessId,
             @AccountId = accountId,
         }).SingleOrDefault();
+    }
+
+    public HouseOwner GetById(long id)
+    {
+        var sql = "SELECT * FROM HouseOwner"
+            + " WHERE HouseOwnerId = @HouseOwnerId";
+        return _db.Query<HouseOwner>(sql, new { @HouseOwnerId = id }).SingleOrDefault();
+    }
+
+    public HouseOwner GetExtById(long id)
+    {
+        var sql = "SELECT * FROM HouseOwner ho"
+            + " INNER JOIN Account a ON ho.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " WHERE ho.HouseOwnerId = @HouseOwnerId";
+        return _db.Query<HouseOwner, Account, AccountGroup, HouseOwner>(sql,
+            (houseOwner, account, accountGroup) =>
+            {
+                houseOwner.Account = account;
+                houseOwner.Account.AccountGroup = accountGroup;
+                return houseOwner;
+            }, new { @HouseOwnerId = id },
+            splitOn: "AccountId,AccountGroupId").SingleOrDefault();
+    }
+
+    public List<HouseOwner> GetExtsByBusinessId(int businessId)
+    {
+        var sql = "SELECT * FROM HouseOwner ho"
+            + " INNER JOIN Account a ON ho.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " WHERE ho.BusinessId = @BusinessId";
+        return _db.Query<HouseOwner, Account, AccountGroup, HouseOwner>(sql,
+            (houseOwner, account, accountGroup) =>
+            {
+                houseOwner.Account = account;
+                houseOwner.Account.AccountGroup = accountGroup;
+                return houseOwner;
+            }, new { @BusinessId = businessId },
+            splitOn: "AccountId,AccountGroupId").ToList();
     }
 
     public void Update(HouseOwner houseOwner)

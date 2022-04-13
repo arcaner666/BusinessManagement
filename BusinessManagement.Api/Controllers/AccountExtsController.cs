@@ -6,21 +6,21 @@ namespace BusinessManagement.Api.Controllers;
 
 [Route("api/[controller]/")]
 [ApiController]
-public class AccountsController : ControllerBase
+public class AccountExtsController : ControllerBase
 {
-    private readonly IAccountBl _accountBl;
+    private readonly IAccountExtBl _accountExtBl;
 
-    public AccountsController(
-        IAccountBl accountBl
+    public AccountExtsController(
+        IAccountExtBl accountExtBl
     )
     {
-        _accountBl = accountBl;
+        _accountExtBl = accountExtBl;
     }
 
     [HttpPost("addext")]
     public IActionResult AddExt(AccountExtDto accountExtDto)
     {
-        var result = _accountBl.AddExt(accountExtDto);
+        var result = _accountExtBl.AddExt(accountExtDto);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
@@ -29,7 +29,7 @@ public class AccountsController : ControllerBase
     [HttpDelete("deleteext/{id}")]
     public IActionResult DeleteExt(long id)
     {
-        var result = _accountBl.DeleteExt(id);
+        var result = _accountExtBl.DeleteExt(id);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
@@ -38,7 +38,7 @@ public class AccountsController : ControllerBase
     [HttpGet("generateaccountcode/{businessId}/{branchId}/{accountGroupCode}")]
     public IActionResult GenerateAccountCode(int businessId, long branchId, string accountGroupCode)
     {
-        var result = _accountBl.GenerateAccountCode(businessId, branchId, accountGroupCode);
+        var result = _accountExtBl.GenerateAccountCode(businessId, branchId, accountGroupCode);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
@@ -47,7 +47,7 @@ public class AccountsController : ControllerBase
     [HttpGet("getextbyid/{id}")]
     public IActionResult GetExtById(long id)
     {
-        var result = _accountBl.GetExtById(id);
+        var result = _accountExtBl.GetExtById(id);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
@@ -56,7 +56,7 @@ public class AccountsController : ControllerBase
     [HttpGet("getextsbybusinessid/{businessId}")]
     public IActionResult GetExtsByBusinessId(int businessId)
     {
-        var result = _accountBl.GetExtsByBusinessId(businessId);
+        var result = _accountExtBl.GetExtsByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
@@ -65,7 +65,7 @@ public class AccountsController : ControllerBase
     [HttpPost("getextsbybusinessidandaccountgroupcodes")]
     public IActionResult GetExtsByBusinessIdAndAccountGroupCodes(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto)
     {
-        var result = _accountBl.GetExtsByBusinessIdAndAccountGroupCodes(accountGetByAccountGroupCodesDto);
+        var result = _accountExtBl.GetExtsByBusinessIdAndAccountGroupCodes(accountGetByAccountGroupCodesDto);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
@@ -74,7 +74,7 @@ public class AccountsController : ControllerBase
     [HttpPost("updateext")]
     public IActionResult UpdateExt(AccountExtDto accountExtDto)
     {
-        var result = _accountBl.UpdateExt(accountExtDto);
+        var result = _accountExtBl.UpdateExt(accountExtDto);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);

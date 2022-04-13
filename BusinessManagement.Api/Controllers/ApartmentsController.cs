@@ -1,5 +1,4 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
@@ -17,24 +16,6 @@ public class ApartmentsController : ControllerBase
         _apartmentBl = apartmentBl;
     }
 
-    [HttpPost("addext")]
-    public IActionResult AddExt(ApartmentExtDto apartmentExtDto)
-    {
-        var result = _apartmentBl.AddExt(apartmentExtDto);
-        if (result.Success)
-            return Ok(result);
-        return BadRequest(result);
-    }
-
-    [HttpDelete("deleteext/{id}")]
-    public IActionResult DeleteExt(int id)
-    {
-        var result = _apartmentBl.DeleteExt(id);
-        if (result.Success)
-            return Ok(result);
-        return BadRequest(result);
-    }
-
     [HttpGet("getbybusinessid/{businessId}")]
     public IActionResult GetByBusinessId(int businessId)
     {
@@ -48,33 +29,6 @@ public class ApartmentsController : ControllerBase
     public IActionResult GetBySectionId(int sectionId)
     {
         var result = _apartmentBl.GetBySectionId(sectionId);
-        if (result.Success)
-            return Ok(result);
-        return BadRequest(result);
-    }
-
-    [HttpGet("getextbyid/{id}")]
-    public IActionResult GetExtById(long id)
-    {
-        var result = _apartmentBl.GetExtById(id);
-        if (result.Success)
-            return Ok(result);
-        return BadRequest(result);
-    }
-
-    [HttpGet("getextsbybusinessid/{businessId}")]
-    public IActionResult GetExtsByBusinessId(int businessId)
-    {
-        var result = _apartmentBl.GetExtsByBusinessId(businessId);
-        if (result.Success)
-            return Ok(result);
-        return BadRequest(result);
-    }
-
-    [HttpPost("updateext")]
-    public IActionResult UpdateExt(ApartmentExtDto apartmentExtDto)
-    {
-        var result = _apartmentBl.UpdateExt(apartmentExtDto);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);

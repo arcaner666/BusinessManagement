@@ -7,8 +7,9 @@ public interface IHouseOwnerDal
     HouseOwner Add(HouseOwner houseOwner);
     void Delete(long id);
     List<HouseOwner> GetByBusinessId(int businessId);
+    HouseOwner GetByBusinessIdAndAccountId(int businessId, long accountId);
     HouseOwner GetById(long id);
+    HouseOwner GetExtById(long id);
     List<HouseOwner> GetExtsByBusinessId(int businessId);
-    HouseOwner GetIfAlreadyExist(int businessId, long accountId);
     void Update(HouseOwner houseOwner);
 }

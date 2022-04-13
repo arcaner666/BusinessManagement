@@ -6,30 +6,30 @@ namespace BusinessManagement.Api.Controllers;
 
 [Route("api/[controller]/")]
 [ApiController]
-public class FlatsController : ControllerBase
+public class ApartmentExtsController : ControllerBase
 {
-    private readonly IFlatBl _flatBl;
+    private readonly IApartmentExtBl _apartmentExtBl;
 
-    public FlatsController(
-        IFlatBl flatBl
+    public ApartmentExtsController(
+        IApartmentExtBl apartmentExtBl
     )
     {
-        _flatBl = flatBl;
+        _apartmentExtBl = apartmentExtBl;
     }
 
     [HttpPost("addext")]
-    public IActionResult AddExt(FlatExtDto flatExtDto)
+    public IActionResult AddExt(ApartmentExtDto apartmentExtDto)
     {
-        var result = _flatBl.AddExt(flatExtDto);
+        var result = _apartmentExtBl.AddExt(apartmentExtDto);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
     }
 
     [HttpDelete("deleteext/{id}")]
-    public IActionResult DeleteExt(long id)
+    public IActionResult DeleteExt(int id)
     {
-        var result = _flatBl.DeleteExt(id);
+        var result = _apartmentExtBl.DeleteExt(id);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
@@ -38,7 +38,7 @@ public class FlatsController : ControllerBase
     [HttpGet("getextbyid/{id}")]
     public IActionResult GetExtById(long id)
     {
-        var result = _flatBl.GetExtById(id);
+        var result = _apartmentExtBl.GetExtById(id);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
@@ -47,16 +47,16 @@ public class FlatsController : ControllerBase
     [HttpGet("getextsbybusinessid/{businessId}")]
     public IActionResult GetExtsByBusinessId(int businessId)
     {
-        var result = _flatBl.GetExtsByBusinessId(businessId);
+        var result = _apartmentExtBl.GetExtsByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
     }
 
     [HttpPost("updateext")]
-    public IActionResult UpdateExt(FlatExtDto flatExtDto)
+    public IActionResult UpdateExt(ApartmentExtDto apartmentExtDto)
     {
-        var result = _flatBl.UpdateExt(flatExtDto);
+        var result = _apartmentExtBl.UpdateExt(apartmentExtDto);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);

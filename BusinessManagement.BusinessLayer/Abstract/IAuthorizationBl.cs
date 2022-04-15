@@ -9,5 +9,5 @@ public interface IAuthorizationBl
     IResult LoginWithPhone(AuthorizationDto authorizationDto);
     IResult Logout(long systemUserId);
     IResult RefreshAccessToken(AuthorizationDto authorizationDto);
-    IResult RegisterSectionManager(ManagerExtDto managerExtDto);
+    IResult RegisterSectionManager(RegisterSectionManagerDto registerSectionManagerDto);
 }

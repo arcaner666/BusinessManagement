@@ -21,10 +21,12 @@ namespace BusinessManagement.Entities.DatabaseModels
         public virtual DbSet<AccountOperation> AccountOperations { get; set; }
         public virtual DbSet<AccountOperationDetail> AccountOperationDetails { get; set; }
         public virtual DbSet<AccountOperationType> AccountOperationTypes { get; set; }
+        public virtual DbSet<AccountType> AccountTypes { get; set; }
         public virtual DbSet<Apartment> Apartments { get; set; }
         public virtual DbSet<Bank> Banks { get; set; }
         public virtual DbSet<Branch> Branches { get; set; }
         public virtual DbSet<Business> Businesses { get; set; }
+        public virtual DbSet<Cash> Cashes { get; set; }
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Currency> Currencies { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
@@ -78,25 +80,25 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.AccountGroupId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Account__Account__412EB0B6");
+                    .HasConstraintName("FK__Account__Account__4316F928");
+
+                entity.HasOne(d => d.AccountType)
+                    .WithMany(p => p.Accounts)
+                    .HasForeignKey(d => d.AccountTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Account__Account__440B1D61");
 
                 entity.HasOne(d => d.Branch)
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Account__BranchI__403A8C7D");
+                    .HasConstraintName("FK__Account__BranchI__4222D4EF");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Account__Busines__3F466844");
-
-                entity.HasOne(d => d.Currency)
-                    .WithMany(p => p.Accounts)
-                    .HasForeignKey(d => d.CurrencyId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Account__Currenc__4222D4EF");
+                    .HasConstraintName("FK__Account__Busines__412EB0B6");
             });
 
             modelBuilder.Entity<AccountGroup>(entity =>
@@ -124,25 +126,25 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.AccountOperations)
                     .HasForeignKey(d => d.AccountOperationTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AccountOp__Accou__00200768");
+                    .HasConstraintName("FK__AccountOp__Accou__07C12930");
 
                 entity.HasOne(d => d.Branch)
                     .WithMany(p => p.AccountOperations)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AccountOp__Branc__7F2BE32F");
+                    .HasConstraintName("FK__AccountOp__Branc__06CD04F7");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.AccountOperations)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AccountOp__Busin__7E37BEF6");
+                    .HasConstraintName("FK__AccountOp__Busin__05D8E0BE");
 
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.AccountOperations)
                     .HasForeignKey(d => d.EmployeeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AccountOp__Emplo__01142BA1");
+                    .HasConstraintName("FK__AccountOp__Emplo__08B54D69");
             });
 
             modelBuilder.Entity<AccountOperationDetail>(entity =>
@@ -163,31 +165,31 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.AccountOperationDetails)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AccountOp__Accou__06CD04F7");
+                    .HasConstraintName("FK__AccountOp__Accou__0E6E26BF");
 
                 entity.HasOne(d => d.AccountOperation)
                     .WithMany(p => p.AccountOperationDetails)
                     .HasForeignKey(d => d.AccountOperationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AccountOp__Accou__05D8E0BE");
+                    .HasConstraintName("FK__AccountOp__Accou__0D7A0286");
 
                 entity.HasOne(d => d.Branch)
                     .WithMany(p => p.AccountOperationDetails)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AccountOp__Branc__04E4BC85");
+                    .HasConstraintName("FK__AccountOp__Branc__0C85DE4D");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.AccountOperationDetails)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AccountOp__Busin__03F0984C");
+                    .HasConstraintName("FK__AccountOp__Busin__0B91BA14");
 
                 entity.HasOne(d => d.Currency)
                     .WithMany(p => p.AccountOperationDetails)
                     .HasForeignKey(d => d.CurrencyId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__AccountOp__Curre__07C12930");
+                    .HasConstraintName("FK__AccountOp__Curre__0F624AF8");
             });
 
             modelBuilder.Entity<AccountOperationType>(entity =>
@@ -195,6 +197,15 @@ namespace BusinessManagement.Entities.DatabaseModels
                 entity.ToTable("AccountOperationType");
 
                 entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<AccountType>(entity =>
+            {
+                entity.ToTable("AccountType");
+
+                entity.Property(e => e.AccountTypeName)
                     .IsRequired()
                     .HasMaxLength(100);
             });
@@ -215,25 +226,25 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.Apartments)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Apartment__Branc__70DDC3D8");
+                    .HasConstraintName("FK__Apartment__Branc__787EE5A0");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.Apartments)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Apartment__Busin__6FE99F9F");
+                    .HasConstraintName("FK__Apartment__Busin__778AC167");
 
                 entity.HasOne(d => d.Manager)
                     .WithMany(p => p.Apartments)
                     .HasForeignKey(d => d.ManagerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Apartment__Manag__71D1E811");
+                    .HasConstraintName("FK__Apartment__Manag__797309D9");
 
                 entity.HasOne(d => d.Section)
                     .WithMany(p => p.Apartments)
                     .HasForeignKey(d => d.SectionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Apartment__Secti__6EF57B66");
+                    .HasConstraintName("FK__Apartment__Secti__76969D2E");
             });
 
             modelBuilder.Entity<Bank>(entity =>
@@ -272,25 +283,25 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.Banks)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Bank__AccountId__46E78A0C");
+                    .HasConstraintName("FK__Bank__AccountId__4E88ABD4");
 
                 entity.HasOne(d => d.Branch)
                     .WithMany(p => p.Banks)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Bank__BranchId__45F365D3");
+                    .HasConstraintName("FK__Bank__BranchId__4D94879B");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.Banks)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Bank__BusinessId__44FF419A");
+                    .HasConstraintName("FK__Bank__BusinessId__4CA06362");
 
                 entity.HasOne(d => d.FullAddress)
                     .WithMany(p => p.Banks)
                     .HasForeignKey(d => d.FullAddressId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Bank__FullAddres__47DBAE45");
+                    .HasConstraintName("FK__Bank__FullAddres__4F7CD00D");
             });
 
             modelBuilder.Entity<Branch>(entity =>
@@ -335,6 +346,35 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .HasForeignKey(d => d.OwnerSystemUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Business__OwnerS__34C8D9D1");
+            });
+
+            modelBuilder.Entity<Cash>(entity =>
+            {
+                entity.ToTable("Cash");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Cashes)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Cash__AccountId__48CFD27E");
+
+                entity.HasOne(d => d.Branch)
+                    .WithMany(p => p.Cashes)
+                    .HasForeignKey(d => d.BranchId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Cash__BranchId__47DBAE45");
+
+                entity.HasOne(d => d.Business)
+                    .WithMany(p => p.Cashes)
+                    .HasForeignKey(d => d.BusinessId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Cash__BusinessId__46E78A0C");
+
+                entity.HasOne(d => d.Currency)
+                    .WithMany(p => p.Cashes)
+                    .HasForeignKey(d => d.CurrencyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Cash__CurrencyId__49C3F6B7");
             });
 
             modelBuilder.Entity<City>(entity =>
@@ -395,19 +435,19 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.Customers)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Customer__Accoun__5812160E");
+                    .HasConstraintName("FK__Customer__Accoun__5FB337D6");
 
                 entity.HasOne(d => d.Branch)
                     .WithMany(p => p.Customers)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Customer__Branch__571DF1D5");
+                    .HasConstraintName("FK__Customer__Branch__5EBF139D");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.Customers)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Customer__Busine__5629CD9C");
+                    .HasConstraintName("FK__Customer__Busine__5DCAEF64");
             });
 
             modelBuilder.Entity<District>(entity =>
@@ -463,25 +503,25 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Employee__Accoun__52593CB8");
+                    .HasConstraintName("FK__Employee__Accoun__59FA5E80");
 
                 entity.HasOne(d => d.Branch)
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Employee__Branch__5165187F");
+                    .HasConstraintName("FK__Employee__Branch__59063A47");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Employee__Busine__5070F446");
+                    .HasConstraintName("FK__Employee__Busine__5812160E");
 
                 entity.HasOne(d => d.EmployeeType)
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.EmployeeTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Employee__Employ__534D60F1");
+                    .HasConstraintName("FK__Employee__Employ__5AEE82B9");
             });
 
             modelBuilder.Entity<EmployeeType>(entity =>
@@ -505,35 +545,35 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.Flats)
                     .HasForeignKey(d => d.ApartmentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Flat__ApartmentI__75A278F5");
+                    .HasConstraintName("FK__Flat__ApartmentI__7D439ABD");
 
                 entity.HasOne(d => d.Branch)
                     .WithMany(p => p.Flats)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Flat__BranchId__778AC167");
+                    .HasConstraintName("FK__Flat__BranchId__7F2BE32F");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.Flats)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Flat__BusinessId__76969D2E");
+                    .HasConstraintName("FK__Flat__BusinessId__7E37BEF6");
 
                 entity.HasOne(d => d.HouseOwner)
                     .WithMany(p => p.Flats)
                     .HasForeignKey(d => d.HouseOwnerId)
-                    .HasConstraintName("FK__Flat__HouseOwner__787EE5A0");
+                    .HasConstraintName("FK__Flat__HouseOwner__00200768");
 
                 entity.HasOne(d => d.Section)
                     .WithMany(p => p.Flats)
                     .HasForeignKey(d => d.SectionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Flat__SectionId__74AE54BC");
+                    .HasConstraintName("FK__Flat__SectionId__7C4F7684");
 
                 entity.HasOne(d => d.Tenant)
                     .WithMany(p => p.Flats)
                     .HasForeignKey(d => d.TenantId)
-                    .HasConstraintName("FK__Flat__TenantId__797309D9");
+                    .HasConstraintName("FK__Flat__TenantId__01142BA1");
             });
 
             modelBuilder.Entity<FullAddress>(entity =>
@@ -595,19 +635,19 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.HouseOwners)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__HouseOwne__Accou__5CD6CB2B");
+                    .HasConstraintName("FK__HouseOwne__Accou__6477ECF3");
 
                 entity.HasOne(d => d.Branch)
                     .WithMany(p => p.HouseOwners)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__HouseOwne__Branc__5BE2A6F2");
+                    .HasConstraintName("FK__HouseOwne__Branc__6383C8BA");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.HouseOwners)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__HouseOwne__Busin__5AEE82B9");
+                    .HasConstraintName("FK__HouseOwne__Busin__628FA481");
             });
 
             modelBuilder.Entity<Manager>(entity =>
@@ -644,13 +684,13 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.Managers)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Manager__BranchI__4BAC3F29");
+                    .HasConstraintName("FK__Manager__BranchI__534D60F1");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.Managers)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Manager__Busines__4AB81AF0");
+                    .HasConstraintName("FK__Manager__Busines__52593CB8");
             });
 
             modelBuilder.Entity<OperationClaim>(entity =>
@@ -678,31 +718,31 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.Sections)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Section__BranchI__6A30C649");
+                    .HasConstraintName("FK__Section__BranchI__71D1E811");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.Sections)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Section__Busines__693CA210");
+                    .HasConstraintName("FK__Section__Busines__70DDC3D8");
 
                 entity.HasOne(d => d.FullAddress)
                     .WithMany(p => p.Sections)
                     .HasForeignKey(d => d.FullAddressId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Section__FullAdd__6C190EBB");
+                    .HasConstraintName("FK__Section__FullAdd__73BA3083");
 
                 entity.HasOne(d => d.Manager)
                     .WithMany(p => p.Sections)
                     .HasForeignKey(d => d.ManagerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Section__Manager__6B24EA82");
+                    .HasConstraintName("FK__Section__Manager__72C60C4A");
 
                 entity.HasOne(d => d.SectionGroup)
                     .WithMany(p => p.Sections)
                     .HasForeignKey(d => d.SectionGroupId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Section__Section__68487DD7");
+                    .HasConstraintName("FK__Section__Section__6FE99F9F");
             });
 
             modelBuilder.Entity<SectionGroup>(entity =>
@@ -717,13 +757,13 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.SectionGroups)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SectionGr__Branc__656C112C");
+                    .HasConstraintName("FK__SectionGr__Branc__6D0D32F4");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.SectionGroups)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__SectionGr__Busin__6477ECF3");
+                    .HasConstraintName("FK__SectionGr__Busin__6C190EBB");
             });
 
             modelBuilder.Entity<SystemUser>(entity =>
@@ -806,19 +846,19 @@ namespace BusinessManagement.Entities.DatabaseModels
                     .WithMany(p => p.Tenants)
                     .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Tenant__AccountI__619B8048");
+                    .HasConstraintName("FK__Tenant__AccountI__693CA210");
 
                 entity.HasOne(d => d.Branch)
                     .WithMany(p => p.Tenants)
                     .HasForeignKey(d => d.BranchId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Tenant__BranchId__60A75C0F");
+                    .HasConstraintName("FK__Tenant__BranchId__68487DD7");
 
                 entity.HasOne(d => d.Business)
                     .WithMany(p => p.Tenants)
                     .HasForeignKey(d => d.BusinessId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Tenant__Business__5FB337D6");
+                    .HasConstraintName("FK__Tenant__Business__6754599E");
             });
 
             OnModelCreatingPartial(modelBuilder);

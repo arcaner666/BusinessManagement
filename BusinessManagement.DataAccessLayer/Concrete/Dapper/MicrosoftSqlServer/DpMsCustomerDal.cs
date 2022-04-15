@@ -19,8 +19,8 @@ public class DpMsCustomerDal : ICustomerDal
     public Customer Add(Customer customer)
     {
         var sql = "INSERT INTO Customer (BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, AppointmentsMade, ProductsPurchased, LastPurchaseDate, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @AppointmentsMade, @ProductsPurchased, @LastPurchaseDate, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int)";
-        var id = _db.Query<int>(sql, customer).Single();
+            + " VALUES(@BusinessId, @BranchId, @AccountId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @AppointmentsMade, @ProductsPurchased, @LastPurchaseDate, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var id = _db.Query<long>(sql, customer).Single();
         customer.CustomerId = id;
         return customer;
     }

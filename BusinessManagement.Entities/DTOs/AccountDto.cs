@@ -6,7 +6,7 @@ public class AccountDto
     public int BusinessId { get; set; }
     public long BranchId { get; set; }
     public short AccountGroupId { get; set; }
-    public byte CurrencyId { get; set; }
+    public short AccountTypeId { get; set; }
     public int AccountOrder { get; set; }
     public string AccountName { get; set; }
     public string AccountCode { get; set; }

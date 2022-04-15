@@ -6,21 +6,21 @@ namespace BusinessManagement.Api.Controllers;
 
 [Route("api/[controller]/")]
 [ApiController]
-public class HouseOwnerExtsController : ControllerBase
+public class CashExtsController : ControllerBase
 {
-    private readonly IHouseOwnerExtBl _houseOwnerExtBl;
+    private readonly ICashExtBl _cashExtBl;
 
-    public HouseOwnerExtsController(
-        IHouseOwnerExtBl houseOwnerExtBl
+    public CashExtsController(
+        ICashExtBl cashExtBl
     )
     {
-        _houseOwnerExtBl = houseOwnerExtBl;
+        _cashExtBl = cashExtBl;
     }
 
     [HttpPost("addext")]
-    public IActionResult AddExt(HouseOwnerExtDto houseOwnerExtDto)
+    public IActionResult AddExt(CashExtDto cashExtDto)
     {
-        var result = _houseOwnerExtBl.AddExt(houseOwnerExtDto);
+        var result = _cashExtBl.AddExt(cashExtDto);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
@@ -29,7 +29,7 @@ public class HouseOwnerExtsController : ControllerBase
     [HttpDelete("deleteext/{id}")]
     public IActionResult DeleteExt(long id)
     {
-        var result = _houseOwnerExtBl.DeleteExt(id);
+        var result = _cashExtBl.DeleteExt(id);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
@@ -38,7 +38,7 @@ public class HouseOwnerExtsController : ControllerBase
     [HttpGet("getextbyid/{id}")]
     public IActionResult GetExtById(long id)
     {
-        var result = _houseOwnerExtBl.GetExtById(id);
+        var result = _cashExtBl.GetExtById(id);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
@@ -47,16 +47,16 @@ public class HouseOwnerExtsController : ControllerBase
     [HttpGet("getextsbybusinessid/{businessId}")]
     public IActionResult GetExtsByBusinessId(int businessId)
     {
-        var result = _houseOwnerExtBl.GetExtsByBusinessId(businessId);
+        var result = _cashExtBl.GetExtsByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);
     }
 
     [HttpPost("updateext")]
-    public IActionResult UpdateExt(HouseOwnerExtDto houseOwnerExtDto)
+    public IActionResult UpdateExt(CashExtDto cashExtDto)
     {
-        var result = _houseOwnerExtBl.UpdateExt(houseOwnerExtDto);
+        var result = _cashExtBl.UpdateExt(cashExtDto);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);

@@ -59,6 +59,17 @@ public class HouseOwnerBl : IHouseOwnerBl
         return new SuccessResult(Messages.HouseOwnerDeleted);
     }
 
+    public IDataResult<List<HouseOwnerDto>> GetByBusinessId(int businessId)
+    {
+        List<HouseOwner> searchedHouseOwners = _houseOwnerDal.GetByBusinessId(businessId);
+        if (searchedHouseOwners.Count == 0)
+            return new ErrorDataResult<List<HouseOwnerDto>>(Messages.HouseOwnersNotFound);
+
+        List<HouseOwnerDto> searchedHouseOwnerDtos = FillDtos(searchedHouseOwners);
+
+        return new SuccessDataResult<List<HouseOwnerDto>>(searchedHouseOwnerDtos, Messages.HouseOwnersListedByBusinessId);
+    }
+
     public IDataResult<HouseOwnerDto> GetById(long id)
     {
         HouseOwner searchedHouseOwner = _houseOwnerDal.GetById(id);

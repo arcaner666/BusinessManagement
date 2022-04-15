@@ -19,8 +19,8 @@ public class DpMsManagerDal : IManagerDal
     public Manager Add(Manager manager)
     {
         var sql = "INSERT INTO Manager (BusinessId, BranchId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int)";
-        var id = _db.Query<int>(sql, manager).Single();
+            + " VALUES(@BusinessId, @BranchId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var id = _db.Query<long>(sql, manager).Single();
         manager.ManagerId = id;
         return manager;
     }

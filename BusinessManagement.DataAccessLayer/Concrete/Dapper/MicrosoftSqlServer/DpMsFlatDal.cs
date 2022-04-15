@@ -19,8 +19,8 @@ public class DpMsFlatDal : IFlatDal
     public Flat Add(Flat flat)
     {
         var sql = "INSERT INTO Flat (SectionId, ApartmentId, BusinessId, BranchId, HouseOwnerId, TenantId, FlatCode, DoorNumber, CreatedAt, UpdatedAt)"
-            + " VALUES(@SectionId, @ApartmentId, @BusinessId, @BranchId, @HouseOwnerId, @TenantId, @FlatCode, @DoorNumber, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int);";
-        var id = _db.Query<int>(sql, flat).Single();
+            + " VALUES(@SectionId, @ApartmentId, @BusinessId, @BranchId, @HouseOwnerId, @TenantId, @FlatCode, @DoorNumber, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
+        var id = _db.Query<long>(sql, flat).Single();
         flat.FlatId = id;
         return flat;
     }

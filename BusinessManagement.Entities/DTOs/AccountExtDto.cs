@@ -6,7 +6,7 @@ public class AccountExtDto
     public int BusinessId { get; set; }
     public long BranchId { get; set; }
     public short AccountGroupId { get; set; }
-    public byte CurrencyId { get; set; }
+    public short AccountTypeId { get; set; }
     public int AccountOrder { get; set; }
     public string AccountName { get; set; }
     public string AccountCode { get; set; }
@@ -28,8 +28,8 @@ public class AccountExtDto
     public string AccountGroupName { get; set; }
     public string AccountGroupCode { get; set; }
 
-    // Extended With Currency
-    public string CurrencyName { get; set; }
+    // Extended With AccountType
+    public string AccountTypeName { get; set; }
 
     // Added Custom Fields
     public string NameSurname { get; set; }

@@ -19,8 +19,8 @@ public class DpMsSystemUserDal : ISystemUserDal
     public SystemUser Add(SystemUser systemUser)
     {
         var sql = "INSERT INTO SystemUser (Email, Phone, PasswordHash, PasswordSalt, Role, BusinessId, BranchId, Blocked, RefreshToken, RefreshTokenExpiryTime, CreatedAt, UpdatedAt)"
-            + " VALUES(@Email, @Phone, @PasswordHash, @PasswordSalt, @Role, @BusinessId, @BranchId, @Blocked, @RefreshToken, @RefreshTokenExpiryTime, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int)";
-        var id = _db.Query<int>(sql, systemUser).Single();
+            + " VALUES(@Email, @Phone, @PasswordHash, @PasswordSalt, @Role, @BusinessId, @BranchId, @Blocked, @RefreshToken, @RefreshTokenExpiryTime, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var id = _db.Query<long>(sql, systemUser).Single();
         systemUser.SystemUserId = id;
         return systemUser;
     }

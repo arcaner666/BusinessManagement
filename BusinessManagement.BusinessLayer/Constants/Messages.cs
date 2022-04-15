@@ -40,6 +40,14 @@ public static class Messages
     public const string AccountGroupsNotFound = "AccountGroupsNotFound";
     #endregion
 
+    #region AccountType
+    public const string AccountTypeListedByAccountTypeName = "AccountTypeListedByAccountTypeName";
+    public const string AccountTypeListedById = "AccountTypeListedById";
+    public const string AccountTypeNotFound = "AccountTypeNotFound";
+    public const string AccountTypesListed = "AccountTypesListed";
+    public const string AccountTypesNotFound = "AccountTypesNotFound";
+    #endregion
+
     #region Apartment
     public const string ApartmentAdded = "ApartmentAdded";
     public const string ApartmentAlreadyExists = "ApartmentAlreadyExists";
@@ -99,6 +107,21 @@ public static class Messages
     #region Business
     public const string BusinessAlreadyExists = "BusinessAlreadyExists";
     public const string BusinessAdded = "BusinessAdded";
+    #endregion
+
+    #region Cash
+    public const string CashAdded = "CashAdded";
+    public const string CashAlreadyExists = "CashAlreadyExists";
+    public const string CashDeleted = "CashDeleted";
+    public const string CashExtAdded = "CashExtAdded";
+    public const string CashExtDeleted = "CashExtDeleted";
+    public const string CashExtListedById = "CashExtListedById";
+    public const string CashExtsListedByBusinessId = "CashExtsListedByBusinessId";
+    public const string CashExtUpdated = "CashExtUpdated";
+    public const string CashListedByBusinessId = "CashListedByBusinessId";
+    public const string CashListedById = "CashListedById";
+    public const string CashNotFound = "CashNotFound";
+    public const string CashUpdated = "CashUpdated";
     #endregion
 
     #region City
@@ -189,6 +212,8 @@ public static class Messages
     public const string HouseOwnerAdded = "HouseOwnerAdded";
     public const string HouseOwnerAlreadyExists = "HouseOwnerAlreadyExists";
     public const string HouseOwnerDeleted = "HouseOwnerDeleted";
+    public const string HouseOwnerExtAdded = "HouseOwnerExtAdded";
+    public const string HouseOwnerExtDeleted = "HouseOwnerExtDeleted";
     public const string HouseOwnerExtListedById = "HouseOwnerExtListedById";
     public const string HouseOwnerExtsListedByBusinessId = "HouseOwnerExtsListedByBusinessId";
     public const string HouseOwnerExtUpdated = "HouseOwnerExtUpdated";

@@ -19,8 +19,8 @@ public class DpMsApartmentDal : IApartmentDal
     public Apartment Add(Apartment apartment)
     {
         var sql = "INSERT INTO Apartment (SectionId, BusinessId, BranchId, ManagerId, ApartmentName, ApartmentCode, BlockNumber, CreatedAt, UpdatedAt)"
-            + " VALUES(@SectionId, @BusinessId, @BranchId, @ManagerId, @ApartmentName, @ApartmentCode, @BlockNumber, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int)";
-        var id = _db.Query<int>(sql, apartment).Single();
+            + " VALUES(@SectionId, @BusinessId, @BranchId, @ManagerId, @ApartmentName, @ApartmentCode, @BlockNumber, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var id = _db.Query<long>(sql, apartment).Single();
         apartment.ApartmentId = id;
         return apartment;
     }

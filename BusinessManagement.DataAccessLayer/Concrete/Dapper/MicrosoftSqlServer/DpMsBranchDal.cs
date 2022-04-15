@@ -19,8 +19,8 @@ public class DpMsBranchDal : IBranchDal
     public Branch Add(Branch branch)
     {
         var sql = "INSERT INTO Branch (BusinessId, FullAddressId, BranchOrder, BranchName, BranchCode, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @FullAddressId, @BranchOrder, @BranchName, @BranchCode, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int);";
-        var id = _db.Query<int>(sql, branch).Single();
+            + " VALUES(@BusinessId, @FullAddressId, @BranchOrder, @BranchName, @BranchCode, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
+        var id = _db.Query<long>(sql, branch).Single();
         branch.BranchId = id;
         return branch;
     }

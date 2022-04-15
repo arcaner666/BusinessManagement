@@ -19,7 +19,7 @@ public class DpMsSectionDal : ISectionDal
     public Section Add(Section section)
     {
         var sql = "INSERT INTO Section (SectionGroupId, BusinessId, BranchId, ManagerId, FullAddressId, SectionName, SectionCode, CreatedAt, UpdatedAt)"
-            + " VALUES(@SectionGroupId, @BusinessId, @BranchId, @ManagerId, @FullAddressId, @SectionName, @SectionCode, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int);";
+            + " VALUES(@SectionGroupId, @BusinessId, @BranchId, @ManagerId, @FullAddressId, @SectionName, @SectionCode, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS INT);";
         var id = _db.Query<int>(sql, section).Single();
         section.SectionId = id;
         return section;

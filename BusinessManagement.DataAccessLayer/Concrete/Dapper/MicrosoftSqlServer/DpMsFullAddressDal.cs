@@ -20,8 +20,8 @@ public class DpMsFullAddressDal : IFullAddressDal
     public FullAddress Add(FullAddress fullAddress)
     {
         var sql = "INSERT INTO FullAddress (CityId, DistrictId, AddressTitle, PostalCode, AddressText, CreatedAt, UpdatedAt)"
-            + " VALUES(@CityId, @DistrictId, @AddressTitle, @PostalCode, @AddressText, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int);";
-        var id = _db.Query<int>(sql, fullAddress).Single();
+            + " VALUES(@CityId, @DistrictId, @AddressTitle, @PostalCode, @AddressText, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
+        var id = _db.Query<long>(sql, fullAddress).Single();
         fullAddress.FullAddressId = id;
         return fullAddress;
     }

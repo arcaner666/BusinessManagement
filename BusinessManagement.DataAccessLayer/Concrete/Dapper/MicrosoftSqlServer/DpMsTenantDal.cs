@@ -19,8 +19,8 @@ public class DpMsTenantDal : ITenantDal
     public Tenant Add(Tenant tenant)
     {
         var sql = "INSERT INTO Tenant (BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int)";
-        var id = _db.Query<int>(sql, tenant).Single();
+            + " VALUES(@BusinessId, @BranchId, @AccountId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var id = _db.Query<long>(sql, tenant).Single();
         tenant.TenantId = id;
         return tenant;
     }

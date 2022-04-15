@@ -13,39 +13,29 @@ public class AccountExtBl : IAccountExtBl
     private readonly IAccountDal _accountDal;
     private readonly IAccountGroupBl _accountGroupBl;
     private readonly IBranchBl _branchBl;
-    private readonly ICurrencyBl _currencyBl;
 
     public AccountExtBl(
         IAccountBl accountBl,
         IAccountDal accountDal,
         IAccountGroupBl accountGroupBl,
-        IBranchBl branchBl,
-        ICurrencyBl currencyBl
+        IBranchBl branchBl
     )
     {
         _accountBl = accountBl;
         _accountDal = accountDal;
         _accountGroupBl = accountGroupBl;
         _branchBl = branchBl;
-        _currencyBl = currencyBl;
     }
 
     public IResult AddExt(AccountExtDto accountExtDto)
     {
-        // Doviz cinsi getirilir.
-        var getCurrencyResult = _currencyBl.GetByCurrencyName("TL");
-        if (!getCurrencyResult.Success)
-        {
-            return getCurrencyResult;
-        }
-
         // Yeni bir cari hesap oluşturulur.
         AccountDto accountDto = new()
         {
             BusinessId = accountExtDto.BusinessId,
             BranchId = accountExtDto.BranchId,
             AccountGroupId = accountExtDto.AccountGroupId,
-            CurrencyId = getCurrencyResult.Data.CurrencyId,
+            AccountTypeId = accountExtDto.AccountTypeId,
             AccountOrder = accountExtDto.AccountOrder,
             AccountName = accountExtDto.AccountName,
             AccountCode = accountExtDto.AccountCode,
@@ -178,7 +168,7 @@ public class AccountExtBl : IAccountExtBl
             BusinessId = account.BusinessId,
             BranchId = account.BranchId,
             AccountGroupId = account.AccountGroupId,
-            CurrencyId = account.CurrencyId,
+            AccountTypeId = account.AccountTypeId,
             AccountOrder = account.AccountOrder,
             AccountName = account.AccountName,
             AccountCode = account.AccountCode,
@@ -196,7 +186,6 @@ public class AccountExtBl : IAccountExtBl
             BranchName = account.Branch.BranchName,
             AccountGroupName = account.AccountGroup.AccountGroupName,
             AccountGroupCode = account.AccountGroup.AccountGroupCode,
-            CurrencyName = account.Currency.CurrencyName,
         };
         return accountExtDto;
     }

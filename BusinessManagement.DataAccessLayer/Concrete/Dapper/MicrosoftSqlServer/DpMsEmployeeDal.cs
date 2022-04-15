@@ -19,8 +19,8 @@ public class DpMsEmployeeDal : IEmployeeDal
     public Employee Add(Employee employee)
     {
         var sql = "INSERT INTO Employee (BusinessId, BranchId, AccountId, EmployeeTypeId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, StillWorking, StartDate, QuitDate, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountId, @EmployeeTypeId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @StillWorking, @StartDate, @QuitDate, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int)";
-        var id = _db.Query<int>(sql, employee).Single();
+            + " VALUES(@BusinessId, @BranchId, @AccountId, @EmployeeTypeId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @StillWorking, @StartDate, @QuitDate, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var id = _db.Query<long>(sql, employee).Single();
         employee.EmployeeId = id;
         return employee;
     }

@@ -13,6 +13,7 @@ namespace BusinessManagement.Entities.DatabaseModels
             Apartments = new HashSet<Apartment>();
             Banks = new HashSet<Bank>();
             Branches = new HashSet<Branch>();
+            Cashes = new HashSet<Cash>();
             Customers = new HashSet<Customer>();
             Employees = new HashSet<Employee>();
             Flats = new HashSet<Flat>();
@@ -38,6 +39,7 @@ namespace BusinessManagement.Entities.DatabaseModels
         public virtual ICollection<Apartment> Apartments { get; set; }
         public virtual ICollection<Bank> Banks { get; set; }
         public virtual ICollection<Branch> Branches { get; set; }
+        public virtual ICollection<Cash> Cashes { get; set; }
         public virtual ICollection<Customer> Customers { get; set; }
         public virtual ICollection<Employee> Employees { get; set; }
         public virtual ICollection<Flat> Flats { get; set; }

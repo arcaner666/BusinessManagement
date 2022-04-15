@@ -19,8 +19,8 @@ public class DpMsBankDal : IBankDal
     public Bank Add(Bank bank)
     {
         var sql = "INSERT INTO Bank (BusinessId, BranchId, AccountId, FullAddressId, BankName, BankBranchName, BankCode, BankBranchCode, BankAccountCode, Iban, OfficerName, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountId, @FullAddressId, @BankName, @BankBranchName, @BankCode, @BankBranchCode, @BankAccountCode, @Iban, @OfficerName, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int)";
-        var id = _db.Query<int>(sql, bank).Single();
+            + " VALUES(@BusinessId, @BranchId, @AccountId, @FullAddressId, @BankName, @BankBranchName, @BankCode, @BankBranchCode, @BankAccountCode, @Iban, @OfficerName, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var id = _db.Query<long>(sql, bank).Single();
         bank.BankId = id;
         return bank;
     }

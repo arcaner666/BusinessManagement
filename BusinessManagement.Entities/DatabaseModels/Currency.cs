@@ -8,7 +8,7 @@ namespace BusinessManagement.Entities.DatabaseModels
         public Currency()
         {
             AccountOperationDetails = new HashSet<AccountOperationDetail>();
-            Accounts = new HashSet<Account>();
+            Cashes = new HashSet<Cash>();
         }
 
         public byte CurrencyId { get; set; }
@@ -16,6 +16,6 @@ namespace BusinessManagement.Entities.DatabaseModels
         public string CurrencySymbol { get; set; }
 
         public virtual ICollection<AccountOperationDetail> AccountOperationDetails { get; set; }
-        public virtual ICollection<Account> Accounts { get; set; }
+        public virtual ICollection<Cash> Cashes { get; set; }
     }
 }

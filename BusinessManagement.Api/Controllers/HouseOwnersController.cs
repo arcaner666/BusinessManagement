@@ -1,5 +1,4 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
@@ -17,4 +16,12 @@ public class HouseOwnersController : ControllerBase
         _houseOwnerBl = houseOwnerBl;
     }
 
+    [HttpGet("getbybusinessid/{businessId}")]
+    public IActionResult GetByBusinessId(int businessId)
+    {
+        var result = _houseOwnerBl.GetByBusinessId(businessId);
+        if (result.Success)
+            return Ok(result);
+        return BadRequest(result);
+    }
 }

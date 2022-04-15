@@ -19,8 +19,8 @@ public class DpMsSystemUserClaimDal : ISystemUserClaimDal
     public SystemUserClaim Add(SystemUserClaim systemUserClaim)
     {
         var sql = "INSERT INTO SystemUserClaim (SystemUserId, OperationClaimId, CreatedAt, UpdatedAt)"
-            + " VALUES(@SystemUserId, @OperationClaimId, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int)";
-        var id = _db.Query<int>(sql, systemUserClaim).Single();
+            + " VALUES(@SystemUserId, @OperationClaimId, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var id = _db.Query<long>(sql, systemUserClaim).Single();
         systemUserClaim.SystemUserClaimId = id;
         return systemUserClaim;
     }

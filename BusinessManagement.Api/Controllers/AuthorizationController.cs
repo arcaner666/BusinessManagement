@@ -58,9 +58,9 @@ public class AuthorizationController : ControllerBase
     }
 
     [HttpPost("registersectionmanager")]
-    public IActionResult RegisterSectionManager(ManagerExtDto managerExtDto)
+    public IActionResult RegisterSectionManager(RegisterSectionManagerDto registerSectionManagerDto)
     {
-        var result = _authorizationBl.RegisterSectionManager(managerExtDto);
+        var result = _authorizationBl.RegisterSectionManager(registerSectionManagerDto);
         if (result.Success) 
             return Ok(result);
         return BadRequest(result);

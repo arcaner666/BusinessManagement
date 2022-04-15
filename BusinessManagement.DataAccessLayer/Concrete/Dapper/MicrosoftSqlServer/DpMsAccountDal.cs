@@ -18,9 +18,9 @@ public class DpMsAccountDal : IAccountDal
 
     public Account Add(Account account)
     {
-        var sql = "INSERT INTO Account (BusinessId, BranchId, AccountGroupId, CurrencyId, AccountOrder, AccountName, AccountCode, TaxOffice, TaxNumber, IdentityNumber, DebitBalance, CreditBalance, Balance, Limit, StandartMaturity, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountGroupId, @CurrencyId, @AccountOrder, @AccountName, @AccountCode, @TaxOffice, @TaxNumber, @IdentityNumber, @DebitBalance, @CreditBalance, @Balance, @Limit, @StandartMaturity, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int)";
-        var id = _db.Query<int>(sql, account).Single();
+        var sql = "INSERT INTO Account (BusinessId, BranchId, AccountGroupId, AccountTypeId, AccountOrder, AccountName, AccountCode, TaxOffice, TaxNumber, IdentityNumber, DebitBalance, CreditBalance, Balance, Limit, StandartMaturity, CreatedAt, UpdatedAt)"
+            + " VALUES(@BusinessId, @BranchId, @AccountGroupId, @AccountTypeId, @AccountOrder, @AccountName, @AccountCode, @TaxOffice, @TaxNumber, @IdentityNumber, @DebitBalance, @CreditBalance, @Balance, @Limit, @StandartMaturity, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var id = _db.Query<long>(sql, account).Single();
         account.AccountId = id;
         return account;
     }
@@ -62,17 +62,17 @@ public class DpMsAccountDal : IAccountDal
         var sql = "SELECT * FROM Account a"
             + " INNER JOIN Branch b ON a.BranchId = b.BranchId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
-            + " INNER JOIN Currency c ON a.CurrencyId = c.CurrencyId"
+            + " INNER JOIN AccountType at ON a.AccountTypeId = at.AccountTypeId"
             + " WHERE a.AccountId = @AccountId";
-        return _db.Query<Account, Branch, AccountGroup, Currency, Account>(sql,
-            (account, branch, accountGroup, currency) =>
+        return _db.Query<Account, Branch, AccountGroup, AccountType, Account>(sql,
+            (account, branch, accountGroup, accountType) =>
             {
                 account.Branch = branch;
                 account.AccountGroup = accountGroup;
-                account.Currency = currency;
+                account.AccountType = accountType;
                 return account;
             }, new { @AccountId = id },
-            splitOn: "BranchId,AccountGroupId,CurrencyId").SingleOrDefault();
+            splitOn: "BranchId,AccountGroupId,AccountTypeId").SingleOrDefault();
     }
 
     public List<Account> GetExtsByBusinessId(int businessId)
@@ -80,17 +80,17 @@ public class DpMsAccountDal : IAccountDal
         var sql = "SELECT * FROM Account a"
             + " INNER JOIN Branch b ON a.BranchId = b.BranchId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
-            + " INNER JOIN Currency c ON a.CurrencyId = c.CurrencyId"
+            + " INNER JOIN AccountType at ON a.AccountTypeId = at.AccountTypeId"
             + " WHERE a.BusinessId = @BusinessId";
-        return _db.Query<Account, Branch, AccountGroup, Currency, Account>(sql,
-            (account, branch, accountGroup, currency) =>
+        return _db.Query<Account, Branch, AccountGroup, AccountType, Account>(sql,
+            (account, branch, accountGroup, accountType) =>
             {
                 account.Branch = branch;
                 account.AccountGroup = accountGroup;
-                account.Currency = currency;
+                account.AccountType = accountType;
                 return account;
             }, new { @BusinessId = businessId },
-            splitOn: "BranchId,AccountGroupId,CurrencyId").ToList();
+            splitOn: "BranchId,AccountGroupId,AccountTypeId").ToList();
     }
 
     public List<Account> GetExtsByBusinessIdAndAccountGroupCodes(int businessId, string[] accountGroupCodes)
@@ -98,21 +98,21 @@ public class DpMsAccountDal : IAccountDal
         var sql = "SELECT * FROM Account a"
             + " INNER JOIN Branch b ON a.BranchId = b.BranchId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
-            + " INNER JOIN Currency c ON a.CurrencyId = c.CurrencyId"
+            + " INNER JOIN AccountType at ON a.AccountTypeId = at.AccountTypeId"
             + " WHERE a.BusinessId = @BusinessId AND ag.AccountGroupCode IN @AccountGroupCodes";
-        return _db.Query<Account, Branch, AccountGroup, Currency, Account>(sql,
-            (account, branch, accountGroup, currency) =>
+        return _db.Query<Account, Branch, AccountGroup, AccountType, Account>(sql,
+            (account, branch, accountGroup, accountType) =>
             {
                 account.Branch = branch;
                 account.AccountGroup = accountGroup;
-                account.Currency = currency;
+                account.AccountType = accountType;
                 return account;
             }, new
             {
                 @BusinessId = businessId,
                 @AccountGroupCodes = accountGroupCodes,
             },
-            splitOn: "BranchId,AccountGroupId,CurrencyId").ToList();
+            splitOn: "BranchId,AccountGroupId,AccountTypeId").ToList();
     }
 
     public Account GetLastAccountOrderForAnAccountGroup(int businessId, long branchId, string accountGroupCode)
@@ -146,7 +146,7 @@ public class DpMsAccountDal : IAccountDal
 
     public void Update(Account account)
     {
-        var sql = "UPDATE Account SET BusinessId = @BusinessId, BranchId = @BranchId, AccountGroupId = @AccountGroupId, CurrencyId = @CurrencyId, AccountOrder = @AccountOrder, AccountName = @AccountName, AccountCode = @AccountCode, TaxOffice = @TaxOffice, TaxNumber = @TaxNumber, IdentityNumber = @IdentityNumber, DebitBalance = @DebitBalance, CreditBalance = @CreditBalance, Balance = @Balance, Limit = @Limit, StandartMaturity = @StandartMaturity, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Account SET BusinessId = @BusinessId, BranchId = @BranchId, AccountGroupId = @AccountGroupId, AccountTypeId = @AccountTypeId, AccountOrder = @AccountOrder, AccountName = @AccountName, AccountCode = @AccountCode, TaxOffice = @TaxOffice, TaxNumber = @TaxNumber, IdentityNumber = @IdentityNumber, DebitBalance = @DebitBalance, CreditBalance = @CreditBalance, Balance = @Balance, Limit = @Limit, StandartMaturity = @StandartMaturity, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
             + " WHERE AccountId = @AccountId";
         _db.Execute(sql, account);
     }

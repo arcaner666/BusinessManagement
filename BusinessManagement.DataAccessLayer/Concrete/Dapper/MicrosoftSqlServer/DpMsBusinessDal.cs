@@ -19,7 +19,7 @@ public class DpMsBusinessDal : IBusinessDal
     public Business Add(Business business)
     {
         var sql = "INSERT INTO Business (OwnerSystemUserId, BusinessOrder, BusinessName, BusinessCode, CreatedAt, UpdatedAt)"
-            + " VALUES(@OwnerSystemUserId, @BusinessOrder, @BusinessName, @BusinessCode, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int)";
+            + " VALUES(@OwnerSystemUserId, @BusinessOrder, @BusinessName, @BusinessCode, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS INT)";
         var id = _db.Query<int>(sql, business).Single();
         business.BusinessId = id;
         return business;

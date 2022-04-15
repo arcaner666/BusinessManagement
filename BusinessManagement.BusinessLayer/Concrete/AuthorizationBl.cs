@@ -11,10 +11,9 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 
 public class AuthorizationBl : IAuthorizationBl
 {
-    private readonly IAccountBl _accountBl;
-    private readonly IAccountGroupBl _accountGroupBl;
     private readonly IBranchBl _branchBl;
     private readonly IBusinessBl _businessBl;
+    private readonly ICashExtBl _cashExtBl;
     private readonly ICurrencyBl _currencyBl;
     private readonly IFullAddressBl _fullAddressBl;
     private readonly IManagerBl _managerBl;
@@ -25,10 +24,9 @@ public class AuthorizationBl : IAuthorizationBl
     private readonly ITokenService _tokenHelper;
 
     public AuthorizationBl(
-        IAccountBl accountBl,
-        IAccountGroupBl accountGroupBl,
         IBranchBl branchBl,
         IBusinessBl businessBl,
+        ICashExtBl cashExtBl,
         ICurrencyBl currencyBl,
         IFullAddressBl fullAddressBl,
         IManagerBl managerBl,
@@ -39,10 +37,9 @@ public class AuthorizationBl : IAuthorizationBl
         ITokenService tokenHelper
     )
     {
-        _accountBl = accountBl;
-        _accountGroupBl = accountGroupBl;
         _branchBl = branchBl;
         _businessBl = businessBl;
+        _cashExtBl = cashExtBl;
         _currencyBl = currencyBl;
         _fullAddressBl = fullAddressBl;
         _managerBl = managerBl;
@@ -129,12 +126,12 @@ public class AuthorizationBl : IAuthorizationBl
     }
 
     [TransactionScopeAspect]
-    public IResult RegisterSectionManager(ManagerExtDto managerExtDto)
+    public IResult RegisterSectionManager(RegisterSectionManagerDto registerSectionManagerDto)
     {
         // Yeni bir sistem kullanıcısı eklenir.
         SystemUserDto systemUserDto = new()
         {
-            Phone = managerExtDto.Phone,
+            Phone = registerSectionManagerDto.Phone,
             Role = "Manager",
         };
         var addSystemUserResult = _systemUserBl.Add(systemUserDto);
@@ -160,7 +157,7 @@ public class AuthorizationBl : IAuthorizationBl
         BusinessDto businessDto = new()
         {
             OwnerSystemUserId = addSystemUserResult.Data.SystemUserId,
-            BusinessName = managerExtDto.BusinessName,
+            BusinessName = registerSectionManagerDto.BusinessName,
         };
         var addBusinessResult = _businessBl.Add(businessDto);
         if (!addBusinessResult.Success) 
@@ -169,11 +166,11 @@ public class AuthorizationBl : IAuthorizationBl
         // İşletmenin merkez şubesinin adresi eklenir.
         FullAddressDto fullAddressDto = new()
         {
-            CityId = managerExtDto.CityId,
-            DistrictId = managerExtDto.DistrictId,
+            CityId = registerSectionManagerDto.CityId,
+            DistrictId = registerSectionManagerDto.DistrictId,
             AddressTitle = "Merkez",
             PostalCode = 0,
-            AddressText = managerExtDto.AddressText,
+            AddressText = registerSectionManagerDto.AddressText,
         };
         var addFullAddressResult = _fullAddressBl.Add(fullAddressDto);
         if (!addFullAddressResult.Success) 
@@ -199,40 +196,38 @@ public class AuthorizationBl : IAuthorizationBl
         if (!updateSystemUserResult.Success) 
             return updateSystemUserResult;
 
-        // Kasanın hesap grubunun id'si getirilir.
-        var getAccountGroupResult = _accountGroupBl.GetByAccountGroupCode("100");
-        if (!getAccountGroupResult.Success) 
-            return getAccountGroupResult;
-
         // Kasanın doviz cinsi getirilir.
         var getCurrencyResult = _currencyBl.GetByCurrencyName("TL");
-        if (!getCurrencyResult.Success) 
+        if (!getCurrencyResult.Success)
             return getCurrencyResult;
 
-        // İşletmenin kasa hesabı oluşturulur.
-        AccountDto accountDto = new()
+        // İşletmenin kasası oluşturulur.
+        CashExtDto cashExtDto = new()
         {
             BusinessId = addBusinessResult.Data.BusinessId,
             BranchId = addBranchResult.Data.BranchId,
-            AccountGroupId = getAccountGroupResult.Data.AccountGroupId,
             CurrencyId = getCurrencyResult.Data.CurrencyId,
+
+            TaxOffice = registerSectionManagerDto.TaxOffice,
+            TaxNumber = registerSectionManagerDto.TaxNumber,
+            IdentityNumber = registerSectionManagerDto.IdentityNumber,
             AccountOrder = 1,
             AccountName = "TL Kasası",
             AccountCode = "10000000100000001",
             Limit = 0,
             StandartMaturity = 0,
         };
-        var addAccountResult = _accountBl.Add(accountDto);
-        if (!addAccountResult.Success) 
-            return addAccountResult;
+        var addCashExtResult = _cashExtBl.AddExt(cashExtDto);
+        if (!addCashExtResult.Success)
+            return addCashExtResult;
 
         // Yeni bir yönetici eklenir.
         ManagerDto managerDto = new()
         {
             BusinessId = addBusinessResult.Data.BusinessId,
             BranchId = addBranchResult.Data.BranchId,
-            NameSurname = managerExtDto.NameSurname,
-            Phone = managerExtDto.Phone,
+            NameSurname = registerSectionManagerDto.NameSurname,
+            Phone = registerSectionManagerDto.Phone,
         };
         var addManagerResult = _managerBl.Add(managerDto);
         if (!addManagerResult.Success) 

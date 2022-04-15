@@ -19,8 +19,8 @@ public class DpMsSectionGroupDal : ISectionGroupDal
     public SectionGroup Add(SectionGroup sectionGroup)
     {
         var sql = "INSERT INTO SectionGroup (BusinessId, BranchId, SectionGroupName, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @SectionGroupName, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() as int);";
-        var id = _db.Query<int>(sql, sectionGroup).Single();
+            + " VALUES(@BusinessId, @BranchId, @SectionGroupName, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
+        var id = _db.Query<long>(sql, sectionGroup).Single();
         sectionGroup.SectionGroupId = id;
         return sectionGroup;
     }

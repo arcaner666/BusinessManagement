@@ -40,7 +40,7 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
             return getAccountGroupResult;
 
         // Kasanın hesap tipinin id'si getirilir.
-        var getAccountTypeResult = _accountTypeBl.GetByAccountTypeName("Kiracı");
+        var getAccountTypeResult = _accountTypeBl.GetByAccountTypeName("Mülk Sahibi");
         if (!getAccountTypeResult.Success)
             return getAccountTypeResult;
 

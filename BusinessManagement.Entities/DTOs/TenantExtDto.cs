@@ -15,4 +15,15 @@ public class TenantExtDto
     public string AvatarUrl { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
+
+    // Extended With Account
+    public short AccountGroupId { get; set; }
+    public int AccountOrder { get; set; }
+    public string AccountName { get; set; }
+    public string AccountCode { get; set; }
+    public string TaxOffice { get; set; }
+    public long? TaxNumber { get; set; }
+    public long? IdentityNumber { get; set; }
+    public decimal Limit { get; set; }
+    public short StandartMaturity { get; set; }
 }

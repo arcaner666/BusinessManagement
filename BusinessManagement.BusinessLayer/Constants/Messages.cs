@@ -268,11 +268,18 @@ public static class Messages
     #endregion
 
     #region Tenant
+    public const string TenantAdded = "TenantAdded";
     public const string TenantAlreadyExists = "TenantAlreadyExists";
+    public const string TenantDeleted = "TenantDeleted";
+    public const string TenantExtAdded = "TenantExtAdded";
+    public const string TenantExtDeleted = "TenantExtDeleted";
+    public const string TenantExtListedById = "TenantExtListedById";
     public const string TenantExtsListedByBusinessId = "TenantExtsListedByBusinessId";
     public const string TenantExtUpdated = "TenantExtUpdated";
+    public const string TenantListedById = "TenantListedById";
     public const string TenantNotFound = "TenantNotFound";
     public const string TenantsListedByBusinessId = "TenantsListedByBusinessId";
     public const string TenantsNotFound = "TenantsNotFound";
+    public const string TenantUpdated = "TenantUpdated";
     #endregion
 }

@@ -38,21 +38,8 @@ public class DpMsTenantDal : ITenantDal
             + " WHERE BusinessId = @BusinessId";
         return _db.Query<Tenant>(sql, new { @BusinessId = businessId }).ToList();
     }
-    public Tenant GetById(long id)
-    {
-        var sql = "SELECT * FROM Tenant"
-            + " WHERE TenantId = @TenantId";
-        return _db.Query<Tenant>(sql, new { @TenantId = id }).SingleOrDefault();
-    }
 
-    public List<Tenant> GetExtsByBusinessId(int businessId)
-    {
-        var sql = "SELECT * FROM Tenant"
-            + " WHERE BusinessId = @BusinessId";
-        return _db.Query<Tenant>(sql, new { @BusinessId = businessId }).ToList();
-    }
-
-    public Tenant GetIfAlreadyExist(int businessId, long accountId)
+    public Tenant GetByBusinessIdAndAccountId(int businessId, long accountId)
     {
         var sql = "SELECT * FROM Tenant"
             + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
@@ -61,6 +48,45 @@ public class DpMsTenantDal : ITenantDal
             @BusinessId = businessId,
             @AccountId = accountId,
         }).SingleOrDefault();
+    }
+
+    public Tenant GetById(long id)
+    {
+        var sql = "SELECT * FROM Tenant"
+            + " WHERE TenantId = @TenantId";
+        return _db.Query<Tenant>(sql, new { @TenantId = id }).SingleOrDefault();
+    }
+
+    public Tenant GetExtById(long id)
+    {
+        var sql = "SELECT * FROM Tenant t"
+            + " INNER JOIN Account a ON t.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " WHERE t.TenantId = @TenantId";
+        return _db.Query<Tenant, Account, AccountGroup, Tenant>(sql,
+            (tenant, account, accountGroup) =>
+            {
+                tenant.Account = account;
+                tenant.Account.AccountGroup = accountGroup;
+                return tenant;
+            }, new { @TenantId = id },
+            splitOn: "AccountId,AccountGroupId").SingleOrDefault();
+    }
+
+    public List<Tenant> GetExtsByBusinessId(int businessId)
+    {
+        var sql = "SELECT * FROM Tenant t"
+            + " INNER JOIN Account a ON t.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " WHERE t.BusinessId = @BusinessId";
+        return _db.Query<Tenant, Account, AccountGroup, Tenant>(sql,
+            (tenant, account, accountGroup) =>
+            {
+                tenant.Account = account;
+                tenant.Account.AccountGroup = accountGroup;
+                return tenant;
+            }, new { @BusinessId = businessId },
+            splitOn: "AccountId,AccountGroupId").ToList();
     }
 
     public void Update(Tenant tenant)

@@ -178,6 +178,17 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
             AvatarUrl = houseOwner.AvatarUrl,
             CreatedAt = houseOwner.CreatedAt,
             UpdatedAt = houseOwner.UpdatedAt,
+
+            // Extended With Account
+            AccountGroupId = houseOwner.Account.AccountGroupId,
+            AccountOrder = houseOwner.Account.AccountOrder,
+            AccountName = houseOwner.Account.AccountName,
+            AccountCode = houseOwner.Account.AccountCode,
+            TaxOffice = houseOwner.Account.TaxOffice,
+            TaxNumber = houseOwner.Account.TaxNumber,
+            IdentityNumber = houseOwner.Account.IdentityNumber,
+            Limit = houseOwner.Account.Limit,
+            StandartMaturity = houseOwner.Account.StandartMaturity,
         };
         return houseOwnerExtDto;
     }

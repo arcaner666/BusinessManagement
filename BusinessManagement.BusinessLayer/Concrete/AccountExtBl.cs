@@ -183,9 +183,15 @@ public class AccountExtBl : IAccountExtBl
             CreatedAt = account.CreatedAt,
             UpdatedAt = account.UpdatedAt,
 
+            // Extended With Branch
             BranchName = account.Branch.BranchName,
+
+            // Extended With AccountGroup
             AccountGroupName = account.AccountGroup.AccountGroupName,
             AccountGroupCode = account.AccountGroup.AccountGroupCode,
+
+            // Extended With AccountType
+            AccountTypeName = account.AccountType.AccountTypeName,
         };
         return accountExtDto;
     }

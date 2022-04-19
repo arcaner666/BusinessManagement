@@ -44,6 +44,15 @@ public class BranchExtsController : ControllerBase
         return BadRequest(result);
     }
 
+    [HttpGet("getextsbybusinessid/{businessId}")]
+    public IActionResult GetExtsByBusinessId(int businessId)
+    {
+        var result = _branchExtBl.GetExtsByBusinessId(businessId);
+        if (result.Success)
+            return Ok(result);
+        return BadRequest(result);
+    }
+
     [HttpPost("updateext")]
     public IActionResult UpdateExt(BranchExtDto branchExtDto)
     {

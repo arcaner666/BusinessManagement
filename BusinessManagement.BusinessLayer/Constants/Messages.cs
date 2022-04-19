@@ -100,7 +100,7 @@ public static class Messages
     public const string BranchListedById = "BranchListedById";
     public const string BranchNotFound = "BranchNotFound";
     public const string BranchOrderAndCodeGenerated = "BranchOrderAndCodeGenerated";
-    public const string BranchsListedByAccountId = "BranchsListedByAccountId";
+    public const string BranchsListedByBusinessId = "BranchsListedByBusinessId";
     public const string BranchUpdated = "BranchUpdated";
     #endregion
 

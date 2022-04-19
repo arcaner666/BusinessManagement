@@ -84,7 +84,7 @@ public class BranchBl : IBranchBl
 
         List<BranchDto> searchedBranchDtos = FillDtos(searchedBranches);
 
-        return new SuccessDataResult<List<BranchDto>>(searchedBranchDtos, Messages.BranchsListedByAccountId);
+        return new SuccessDataResult<List<BranchDto>>(searchedBranchDtos, Messages.BranchsListedByBusinessId);
     }
 
     public IDataResult<BranchDto> GetById(long id)

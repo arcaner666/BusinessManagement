@@ -31,12 +31,7 @@ public class AccountExtDto
     // Extended With AccountType
     public string AccountTypeName { get; set; }
 
-    // Added Custom Fields
+    // Added Custom Required Fields
     public string NameSurname { get; set; }
-    public string Email { get; set; }
     public string Phone { get; set; }
-    public DateTime? DateOfBirth { get; set; }
-    public string Gender { get; set; }
-    public string Notes { get; set; }
-    public string AvatarUrl { get; set; }
 }

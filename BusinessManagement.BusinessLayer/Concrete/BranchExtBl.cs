@@ -93,6 +93,17 @@ public class BranchExtBl : IBranchExtBl
         return new SuccessDataResult<BranchExtDto>(searchedBranchExtDto, Messages.BranchExtListedById);
     }
 
+    public IDataResult<List<BranchExtDto>> GetExtsByBusinessId(int businessId)
+    {
+        List<Branch> searchedBranches = _branchDal.GetExtsByBusinessId(businessId);
+        if (searchedBranches.Count == 0)
+            return new ErrorDataResult<List<BranchExtDto>>(Messages.BranchesNotFound);
+
+        List<BranchExtDto> searchedBranchExtDtos = FillExtDtos(searchedBranches);
+
+        return new SuccessDataResult<List<BranchExtDto>>(searchedBranchExtDtos, Messages.BranchExtsListedByBusinessId);
+    }
+
     [TransactionScopeAspect]
     public IResult UpdateExt(BranchExtDto branchExtDto)
     {

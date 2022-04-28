@@ -25,7 +25,7 @@ public class JwtHelper : ITokenService
 
     public string GenerateAccessToken(long systemUserId, List<SystemUserClaimExtDto> systemUserClaimExtDtos)
     {
-        _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
+        _accessTokenExpiration = DateTime.Now.AddSeconds(_tokenOptions.AccessTokenExpiration);
         var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
         var signingCredentials = SigningCredentialsHelper.CreateSigningCredentials(securityKey);
         var jwt = CreateJwtSecurityToken(_tokenOptions, systemUserId, signingCredentials, systemUserClaimExtDtos);

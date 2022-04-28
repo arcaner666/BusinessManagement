@@ -264,7 +264,7 @@ public class AuthorizationBl : IAuthorizationBl
 
         // Arayüzden gönderilen bilgilere göre üretilen tokenlar veri tabanına kaydedilir.
         systemUserDto.RefreshToken = refreshToken;
-        systemUserDto.RefreshTokenExpiryTime = DateTime.Now.AddHours(authorizationDto.RefreshTokenDuration);
+        systemUserDto.RefreshTokenExpiryTime = DateTime.Now.AddSeconds(authorizationDto.RefreshTokenDuration);
         systemUserDto.UpdatedAt = DateTimeOffset.Now;
         var updateSystemUserResult = _systemUserBl.Update(systemUserDto);
         if (!updateSystemUserResult.Success) 

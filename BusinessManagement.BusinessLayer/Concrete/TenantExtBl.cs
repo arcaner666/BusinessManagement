@@ -34,12 +34,12 @@ public class TenantExtBl : ITenantExtBl
     [TransactionScopeAspect]
     public IResult AddExt(TenantExtDto tenantExtDto)
     {
-        // Kasanın hesap grubunun id'si getirilir.
+        // Kiracının hesap grubunun id'si getirilir.
         var getAccountGroupResult = _accountGroupBl.GetByAccountGroupCode("120");
         if (!getAccountGroupResult.Success)
             return getAccountGroupResult;
 
-        // Kasanın hesap tipinin id'si getirilir.
+        // Kiracının hesap tipinin id'si getirilir.
         var getAccountTypeResult = _accountTypeBl.GetByAccountTypeName("Kiracı");
         if (!getAccountTypeResult.Success)
             return getAccountTypeResult;

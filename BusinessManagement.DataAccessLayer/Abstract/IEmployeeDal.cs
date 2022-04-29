@@ -7,8 +7,9 @@ public interface IEmployeeDal
     Employee Add(Employee employee);
     void Delete(long id);
     Employee GetByAccountId(long accountId);
+    Employee GetByBusinessIdAndAccountId(int businessId, long accountId);
     Employee GetById(long id);
+    Employee GetExtById(long id);
     List<Employee> GetExtsByBusinessId(int businessId);
-    Employee GetIfAlreadyExist(int businessId, long accountId);
     void Update(Employee employee);
 }

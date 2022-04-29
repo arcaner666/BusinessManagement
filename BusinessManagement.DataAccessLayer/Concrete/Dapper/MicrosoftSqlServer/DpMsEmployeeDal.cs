@@ -39,28 +39,7 @@ public class DpMsEmployeeDal : IEmployeeDal
         return _db.Query<Employee>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public Employee GetById(long id)
-    {
-        var sql = "SELECT * FROM Employee"
-            + " WHERE EmployeeId = @EmployeeId";
-        return _db.Query<Employee>(sql, new { @EmployeeId = id }).SingleOrDefault();
-    }
-
-    public List<Employee> GetExtsByBusinessId(int businessId)
-    {
-        var sql = "SELECT * FROM Employee e"
-            + " INNER JOIN EmployeeType et ON e.EmployeeTypeId = et.EmployeeTypeId"
-            + " WHERE e.BusinessId = @BusinessId";
-        return _db.Query<Employee, EmployeeType, Employee>(sql,
-            (employee, employeeType) =>
-            {
-                employee.EmployeeType = employeeType;
-                return employee;
-            }, new { @BusinessId = businessId },
-            splitOn: "EmployeeTypeId").ToList();
-    }
-
-    public Employee GetIfAlreadyExist(int businessId, long accountId)
+    public Employee GetByBusinessIdAndAccountId(int businessId, long accountId)
     {
         var sql = "SELECT * FROM Employee"
             + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
@@ -69,6 +48,49 @@ public class DpMsEmployeeDal : IEmployeeDal
             @BusinessId = businessId,
             @AccountId = accountId,
         }).SingleOrDefault();
+    }
+
+    public Employee GetById(long id)
+    {
+        var sql = "SELECT * FROM Employee"
+            + " WHERE EmployeeId = @EmployeeId";
+        return _db.Query<Employee>(sql, new { @EmployeeId = id }).SingleOrDefault();
+    }
+
+    public Employee GetExtById(long id)
+    {
+        var sql = "SELECT * FROM Employee e"
+            + " INNER JOIN Account a ON e.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " INNER JOIN EmployeeType et ON e.EmployeeTypeId = et.EmployeeTypeId"
+            + " WHERE e.EmployeeId = @EmployeeId";
+        return _db.Query<Employee, Account, AccountGroup, EmployeeType, Employee>(sql,
+            (employee, account, accountGroup, employeeType) =>
+            {
+                employee.Account = account;
+                employee.Account.AccountGroup = accountGroup;
+                employee.EmployeeType = employeeType;
+                return employee;
+            }, new { @EmployeeId = id },
+            splitOn: "AccountId,AccountGroupId,EmployeeTypeId").SingleOrDefault();
+    }
+
+    public List<Employee> GetExtsByBusinessId(int businessId)
+    {
+        var sql = "SELECT * FROM Employee e"
+            + " INNER JOIN Account a ON e.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " INNER JOIN EmployeeType et ON e.EmployeeTypeId = et.EmployeeTypeId"
+            + " WHERE e.BusinessId = @BusinessId";
+        return _db.Query<Employee, Account, AccountGroup, EmployeeType, Employee>(sql,
+            (employee, account, accountGroup, employeeType) =>
+            {
+                employee.Account = account;
+                employee.Account.AccountGroup = accountGroup;
+                employee.EmployeeType = employeeType;
+                return employee;
+            }, new { @BusinessId = businessId },
+            splitOn: "AccountId,AccountGroupId,EmployeeTypeId").ToList();
     }
 
     public void Update(Employee employee)

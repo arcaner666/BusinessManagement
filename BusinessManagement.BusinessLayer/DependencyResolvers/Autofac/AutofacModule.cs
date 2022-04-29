@@ -59,6 +59,13 @@ public class AutofacModule : Module
         builder.RegisterType<FullAddressBl>().As<IFullAddressBl>().SingleInstance();
         builder.RegisterType<DpMsFullAddressDal>().As<IFullAddressDal>().SingleInstance();
 
+        builder.RegisterType<EmployeeBl>().As<IEmployeeBl>().SingleInstance();
+        builder.RegisterType<EmployeeExtBl>().As<IEmployeeExtBl>().SingleInstance();
+        builder.RegisterType<DpMsEmployeeDal>().As<IEmployeeDal>().SingleInstance();
+
+        builder.RegisterType<EmployeeTypeBl>().As<IEmployeeTypeBl>().SingleInstance();
+        builder.RegisterType<DpMsEmployeeTypeDal>().As<IEmployeeTypeDal>().SingleInstance();
+
         builder.RegisterType<HouseOwnerBl>().As<IHouseOwnerBl>().SingleInstance();
         builder.RegisterType<HouseOwnerExtBl>().As<IHouseOwnerExtBl>().SingleInstance();
         builder.RegisterType<DpMsHouseOwnerDal>().As<IHouseOwnerDal>().SingleInstance();

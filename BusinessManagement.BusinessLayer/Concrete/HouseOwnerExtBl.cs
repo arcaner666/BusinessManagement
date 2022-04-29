@@ -34,12 +34,12 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
     [TransactionScopeAspect]
     public IResult AddExt(HouseOwnerExtDto houseOwnerExtDto)
     {
-        // Kasanın hesap grubunun id'si getirilir.
+        // Mülk sahibinin hesap grubunun id'si getirilir.
         var getAccountGroupResult = _accountGroupBl.GetByAccountGroupCode("120");
         if (!getAccountGroupResult.Success)
             return getAccountGroupResult;
 
-        // Kasanın hesap tipinin id'si getirilir.
+        // Mülk sahibinin hesap tipinin id'si getirilir.
         var getAccountTypeResult = _accountTypeBl.GetByAccountTypeName("Mülk Sahibi");
         if (!getAccountTypeResult.Success)
             return getAccountTypeResult;

@@ -155,11 +155,18 @@ public static class Messages
     #endregion
 
     #region Employee
+    public const string EmployeeAdded = "EmployeeAdded";
     public const string EmployeeAlreadyExists = "EmployeeAlreadyExists";
+    public const string EmployeeDeleted = "EmployeeDeleted";
+    public const string EmployeeExtAdded = "EmployeeExtAdded";
+    public const string EmployeeExtDeleted = "EmployeeExtDeleted";
+    public const string EmployeeExtListedById = "EmployeeExtListedById";
     public const string EmployeeExtsListedByBusinessId = "EmployeeExtsListedByBusinessId";
     public const string EmployeeExtUpdated = "EmployeeExtUpdated";
+    public const string EmployeeListedById = "EmployeeListedById";
     public const string EmployeeNotFound = "EmployeeNotFound";
     public const string EmployeesNotFound = "EmployeesNotFound";
+    public const string EmployeeUpdated = "EmployeeUpdated";
     #endregion
 
     #region EmployeeType

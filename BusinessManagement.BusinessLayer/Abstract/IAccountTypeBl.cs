@@ -7,5 +7,6 @@ public interface IAccountTypeBl
 {
     IDataResult<List<AccountTypeDto>> GetAll();
     IDataResult<AccountTypeDto> GetByAccountTypeName(string accountTypeName);
+    IDataResult<List<AccountTypeDto>> GetByAccountTypeNames(AccountTypeNamesDto accountTypeNamesDto);
     IDataResult<AccountTypeDto> GetById(short id);
 }

@@ -1,4 +1,5 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
+using BusinessManagement.Entities.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
@@ -25,10 +26,19 @@ public class AccountTypesController : ControllerBase
         return BadRequest(result);
     }
 
-    [HttpGet("getbyaccountgroupname")]
+    [HttpGet("getbyaccounttypename")]
     public IActionResult GetByAccountTypeName(string accountTypeName)
     {
         var result = _accountTypeBl.GetByAccountTypeName(accountTypeName);
+        if (result.Success)
+            return Ok(result);
+        return BadRequest(result);
+    }
+
+    [HttpPost("getbyaccounttypenames")]
+    public IActionResult GetByAccountTypeNames(AccountTypeNamesDto accountTypeNamesDto)
+    {
+        var result = _accountTypeBl.GetByAccountTypeNames(accountTypeNamesDto);
         if (result.Success)
             return Ok(result);
         return BadRequest(result);

@@ -29,6 +29,13 @@ public class DpMsAccountTypeDal : IAccountTypeDal
         return _db.Query<AccountType>(sql, new { @AccountTypeName = accountTypeName }).SingleOrDefault();
     }
 
+    public List<AccountType> GetByAccountTypeNames(string[] accountTypeNames)
+    {
+        var sql = "SELECT * FROM AccountType"
+            + " WHERE AccountTypeName IN @AccountTypeNames";
+        return _db.Query<AccountType>(sql, new { @AccountTypeNames = accountTypeNames }).ToList();
+    }
+
     public AccountType GetById(short id)
     {
         var sql = "SELECT * FROM AccountType"

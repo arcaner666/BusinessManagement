@@ -51,6 +51,17 @@ public class AccountTypeBl : IAccountTypeBl
         return new SuccessDataResult<AccountTypeDto>(searchedAccountTypeDto, Messages.AccountTypeListedByAccountTypeName);
     }
 
+    public IDataResult<List<AccountTypeDto>> GetByAccountTypeNames(AccountTypeNamesDto accountTypeNamesDto)
+    {
+        List<AccountType> searchedAccountTypes = _accountTypeDal.GetByAccountTypeNames(accountTypeNamesDto.AccountTypeNames);
+        if (searchedAccountTypes.Count() == 0)
+            return new ErrorDataResult<List<AccountTypeDto>>(Messages.AccountTypesNotFound);
+
+        List<AccountTypeDto> searchedAccountTypeDtos = FillDtos(searchedAccountTypes);
+
+        return new SuccessDataResult<List<AccountTypeDto>>(searchedAccountTypeDtos, Messages.AccountTypesListedByAccountTypeNames);
+    }
+
     private AccountTypeDto FillDto(AccountType accountType)
     {
         AccountTypeDto accountTypeDto = new()

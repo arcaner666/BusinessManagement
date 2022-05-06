@@ -45,6 +45,7 @@ public static class Messages
     public const string AccountTypeListedById = "AccountTypeListedById";
     public const string AccountTypeNotFound = "AccountTypeNotFound";
     public const string AccountTypesListed = "AccountTypesListed";
+    public const string AccountTypesListedByAccountTypeNames = "AccountTypesListedByAccountTypeNames";
     public const string AccountTypesNotFound = "AccountTypesNotFound";
     #endregion
 

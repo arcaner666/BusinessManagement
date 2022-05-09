@@ -7,6 +7,7 @@ public class BankExtDto
     public long BranchId { get; set; }
     public long AccountId { get; set; }
     public long FullAddressId { get; set; }
+    public byte CurrencyId { get; set; }
     public string BankName { get; set; }
     public string BankBranchName { get; set; }
     public string BankCode { get; set; }
@@ -14,6 +15,7 @@ public class BankExtDto
     public string BankAccountCode { get; set; }
     public string Iban { get; set; }
     public string OfficerName { get; set; }
+    public short StandartMaturity { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
@@ -22,19 +24,19 @@ public class BankExtDto
 
     // Extended With Account
     public short AccountGroupId { get; set; }
-    public byte CurrencyId { get; set; }
     public int AccountOrder { get; set; }
     public string AccountName { get; set; }
     public string AccountCode { get; set; }
+    public decimal Limit { get; set; }
 
     // Extended With Account + AccountGroup
     public string AccountGroupName { get; set; }
-
-    // Extended With Account + Currency
-    public string CurrencyName { get; set; }
 
     // Extended With FullAddress
     public short CityId { get; set; }
     public int DistrictId { get; set; }
     public string AddressText { get; set; }
+
+    // Extended With Currency
+    public string CurrencyName { get; set; }
 }

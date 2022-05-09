@@ -18,8 +18,8 @@ public class DpMsEmployeeDal : IEmployeeDal
 
     public Employee Add(Employee employee)
     {
-        var sql = "INSERT INTO Employee (BusinessId, BranchId, AccountId, EmployeeTypeId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, StillWorking, StartDate, QuitDate, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountId, @EmployeeTypeId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @StillWorking, @StartDate, @QuitDate, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var sql = "INSERT INTO Employee (BusinessId, BranchId, AccountId, EmployeeTypeId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, IdentityNumber, StillWorking, StartDate, QuitDate, CreatedAt, UpdatedAt)"
+            + " VALUES(@BusinessId, @BranchId, @AccountId, @EmployeeTypeId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @IdentityNumber, @StillWorking, @StartDate, @QuitDate, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
         var id = _db.Query<long>(sql, employee).Single();
         employee.EmployeeId = id;
         return employee;
@@ -95,7 +95,7 @@ public class DpMsEmployeeDal : IEmployeeDal
 
     public void Update(Employee employee)
     {
-        var sql = "UPDATE Employee SET BusinessId = @BusinessId, BranchId = @BranchId, AccountId = @AccountId, EmployeeTypeId = @EmployeeTypeId, NameSurname = @NameSurname, Email = @Email, Phone = @Phone, DateOfBirth = @DateOfBirth, Gender = @Gender, Notes = @Notes, AvatarUrl = @AvatarUrl, StillWorking = @StillWorking, StartDate = @StartDate, QuitDate = @QuitDate, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Employee SET BusinessId = @BusinessId, BranchId = @BranchId, AccountId = @AccountId, EmployeeTypeId = @EmployeeTypeId, NameSurname = @NameSurname, Email = @Email, Phone = @Phone, DateOfBirth = @DateOfBirth, Gender = @Gender, Notes = @Notes, AvatarUrl = @AvatarUrl, IdentityNumber = @IdentityNumber, StillWorking = @StillWorking, StartDate = @StartDate, QuitDate = @QuitDate, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
             + " WHERE EmployeeId = @EmployeeId";
         _db.Execute(sql, employee);
     }

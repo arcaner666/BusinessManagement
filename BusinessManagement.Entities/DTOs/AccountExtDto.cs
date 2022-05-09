@@ -10,14 +10,10 @@ public class AccountExtDto
     public int AccountOrder { get; set; }
     public string AccountName { get; set; }
     public string AccountCode { get; set; }
-    public string TaxOffice { get; set; }
-    public long? TaxNumber { get; set; }
-    public long? IdentityNumber { get; set; }
     public decimal DebitBalance { get; set; }
     public decimal CreditBalance { get; set; }
     public decimal Balance { get; set; }
     public decimal Limit { get; set; }
-    public short StandartMaturity { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
@@ -33,5 +29,14 @@ public class AccountExtDto
 
     // Added Custom Required Fields
     public string NameSurname { get; set; }
+    public string Email { get; set; }
     public string Phone { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public string Gender { get; set; }
+    public string Notes { get; set; }
+    public string AvatarUrl { get; set; }
+    public string TaxOffice { get; set; }
+    public long? TaxNumber { get; set; }
+    public long? IdentityNumber { get; set; }
+    public short StandartMaturity { get; set; }
 }

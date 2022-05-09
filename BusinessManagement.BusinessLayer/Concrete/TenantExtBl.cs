@@ -54,11 +54,7 @@ public class TenantExtBl : ITenantExtBl
             AccountOrder = tenantExtDto.AccountOrder,
             AccountName = tenantExtDto.AccountName,
             AccountCode = tenantExtDto.AccountCode,
-            TaxOffice = tenantExtDto.TaxOffice,
-            TaxNumber = tenantExtDto.TaxNumber,
-            IdentityNumber = tenantExtDto.IdentityNumber,
             Limit = tenantExtDto.Limit,
-            StandartMaturity = tenantExtDto.StandartMaturity,
         };
         var addAccountResult = _accountBl.Add(accountDto);
         if (!addAccountResult.Success)
@@ -77,6 +73,10 @@ public class TenantExtBl : ITenantExtBl
             Gender = tenantExtDto.Gender,
             Notes = tenantExtDto.Notes,
             AvatarUrl = tenantExtDto.AvatarUrl,
+            TaxOffice = tenantExtDto.TaxOffice,
+            TaxNumber = tenantExtDto.TaxNumber,
+            IdentityNumber = tenantExtDto.IdentityNumber,
+            StandartMaturity = tenantExtDto.StandartMaturity,
         };
         var addTenantResult = _tenantBl.Add(addedTenantDto);
         if (!addTenantResult.Success)
@@ -133,11 +133,7 @@ public class TenantExtBl : ITenantExtBl
         {
             AccountId = tenantExtDto.AccountId,
             AccountName = tenantExtDto.AccountName,
-            TaxOffice = tenantExtDto.TaxOffice,
-            TaxNumber = tenantExtDto.TaxNumber,
-            IdentityNumber = tenantExtDto.IdentityNumber,
             Limit = tenantExtDto.Limit,
-            StandartMaturity = tenantExtDto.StandartMaturity,
          };
         var updateAccountResult = _accountBl.Update(updatedAccountDto);
         if (!updateAccountResult.Success)
@@ -153,6 +149,10 @@ public class TenantExtBl : ITenantExtBl
             Gender = tenantExtDto.Gender,
             Notes = tenantExtDto.Notes,
             AvatarUrl = tenantExtDto.AvatarUrl,
+            TaxOffice = tenantExtDto.TaxOffice,
+            TaxNumber = tenantExtDto.TaxNumber,
+            IdentityNumber = tenantExtDto.IdentityNumber,
+            StandartMaturity = tenantExtDto.StandartMaturity,
         };
         var updateTenantResult = _tenantBl.Update(updatedTenantDto);
         if (!updateTenantResult.Success)
@@ -176,6 +176,10 @@ public class TenantExtBl : ITenantExtBl
             Gender = tenant.Gender,
             Notes = tenant.Notes,
             AvatarUrl = tenant.AvatarUrl,
+            TaxOffice = tenant.TaxOffice,
+            TaxNumber = tenant.TaxNumber,
+            IdentityNumber = tenant.IdentityNumber,
+            StandartMaturity = tenant.StandartMaturity,
             CreatedAt = tenant.CreatedAt,
             UpdatedAt = tenant.UpdatedAt,
 
@@ -184,11 +188,7 @@ public class TenantExtBl : ITenantExtBl
             AccountOrder = tenant.Account.AccountOrder,
             AccountName = tenant.Account.AccountName,
             AccountCode = tenant.Account.AccountCode,
-            TaxOffice = tenant.Account.TaxOffice,
-            TaxNumber = tenant.Account.TaxNumber,
-            IdentityNumber = tenant.Account.IdentityNumber,
             Limit = tenant.Account.Limit,
-            StandartMaturity = tenant.Account.StandartMaturity,
         };
         return tenantExtDto;
     }

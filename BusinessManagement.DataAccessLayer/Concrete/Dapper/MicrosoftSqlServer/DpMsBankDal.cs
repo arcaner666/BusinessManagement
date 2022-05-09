@@ -18,8 +18,8 @@ public class DpMsBankDal : IBankDal
 
     public Bank Add(Bank bank)
     {
-        var sql = "INSERT INTO Bank (BusinessId, BranchId, AccountId, FullAddressId, BankName, BankBranchName, BankCode, BankBranchCode, BankAccountCode, Iban, OfficerName, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountId, @FullAddressId, @BankName, @BankBranchName, @BankCode, @BankBranchCode, @BankAccountCode, @Iban, @OfficerName, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var sql = "INSERT INTO Bank (BusinessId, BranchId, AccountId, FullAddressId, CurrencyId, BankName, BankBranchName, BankCode, BankBranchCode, BankAccountCode, Iban, OfficerName, StandartMaturity, CreatedAt, UpdatedAt)"
+            + " VALUES(@BusinessId, @BranchId, @AccountId, @FullAddressId, @CurrencyId, @BankName, @BankBranchName, @BankCode, @BankBranchCode, @BankAccountCode, @Iban, @OfficerName, @StandartMaturity, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
         var id = _db.Query<long>(sql, bank).Single();
         bank.BankId = id;
         return bank;
@@ -72,7 +72,7 @@ public class DpMsBankDal : IBankDal
 
     public void Update(Bank bank)
     {
-        var sql = "UPDATE Bank SET BusinessId = @BusinessId, BranchId = @BranchId, AccountId = @AccountId, FullAddressId = @FullAddressId, BankName = @BankName, BankBranchName = @BankBranchName, BankCode = @BankCode, BankBranchCode = @BankBranchCode, BankAccountCode = @BankAccountCode, Iban = @Iban, OfficerName = @OfficerName, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Bank SET BusinessId = @BusinessId, BranchId = @BranchId, AccountId = @AccountId, FullAddressId = @FullAddressId, CurrencyId = @CurrencyId, BankName = @BankName, BankBranchName = @BankBranchName, BankCode = @BankCode, BankBranchCode = @BankBranchCode, BankAccountCode = @BankAccountCode, Iban = @Iban, OfficerName = @OfficerName, StandartMaturity = @StandartMaturity, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
             + " WHERE BankId = @BankId";
         _db.Execute(sql, bank);
     }

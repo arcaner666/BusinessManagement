@@ -54,11 +54,7 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
             AccountOrder = houseOwnerExtDto.AccountOrder,
             AccountName = houseOwnerExtDto.AccountName,
             AccountCode = houseOwnerExtDto.AccountCode,
-            TaxOffice = houseOwnerExtDto.TaxOffice,
-            TaxNumber = houseOwnerExtDto.TaxNumber,
-            IdentityNumber = houseOwnerExtDto.IdentityNumber,
             Limit = houseOwnerExtDto.Limit,
-            StandartMaturity = houseOwnerExtDto.StandartMaturity,
         };
         var addAccountResult = _accountBl.Add(accountDto);
         if (!addAccountResult.Success)
@@ -77,6 +73,10 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
             Gender = houseOwnerExtDto.Gender,
             Notes = houseOwnerExtDto.Notes,
             AvatarUrl = houseOwnerExtDto.AvatarUrl,
+            TaxOffice = houseOwnerExtDto.TaxOffice,
+            TaxNumber = houseOwnerExtDto.TaxNumber,
+            IdentityNumber = houseOwnerExtDto.IdentityNumber,
+            StandartMaturity = houseOwnerExtDto.StandartMaturity,
         };
         var addHouseOwnerResult = _houseOwnerBl.Add(addedHouseOwnerDto);
         if (!addHouseOwnerResult.Success)
@@ -133,11 +133,7 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
         {
             AccountId = houseOwnerExtDto.AccountId,
             AccountName = houseOwnerExtDto.AccountName,
-            TaxOffice = houseOwnerExtDto.TaxOffice,
-            TaxNumber = houseOwnerExtDto.TaxNumber,
-            IdentityNumber = houseOwnerExtDto.IdentityNumber,
             Limit = houseOwnerExtDto.Limit,
-            StandartMaturity = houseOwnerExtDto.StandartMaturity,
          };
         var updateAccountResult = _accountBl.Update(updatedAccountDto);
         if (!updateAccountResult.Success)
@@ -153,6 +149,10 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
             Gender = houseOwnerExtDto.Gender,
             Notes = houseOwnerExtDto.Notes,
             AvatarUrl = houseOwnerExtDto.AvatarUrl,
+            TaxOffice = houseOwnerExtDto.TaxOffice,
+            TaxNumber = houseOwnerExtDto.TaxNumber,
+            IdentityNumber = houseOwnerExtDto.IdentityNumber,
+            StandartMaturity = houseOwnerExtDto.StandartMaturity,
         };
         var updateHouseOwnerResult = _houseOwnerBl.Update(updatedHouseOwnerDto);
         if (!updateHouseOwnerResult.Success)
@@ -176,6 +176,10 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
             Gender = houseOwner.Gender,
             Notes = houseOwner.Notes,
             AvatarUrl = houseOwner.AvatarUrl,
+            TaxOffice = houseOwner.TaxOffice,
+            TaxNumber = houseOwner.TaxNumber,
+            IdentityNumber = houseOwner.IdentityNumber,
+            StandartMaturity = houseOwner.StandartMaturity,
             CreatedAt = houseOwner.CreatedAt,
             UpdatedAt = houseOwner.UpdatedAt,
 
@@ -184,11 +188,7 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
             AccountOrder = houseOwner.Account.AccountOrder,
             AccountName = houseOwner.Account.AccountName,
             AccountCode = houseOwner.Account.AccountCode,
-            TaxOffice = houseOwner.Account.TaxOffice,
-            TaxNumber = houseOwner.Account.TaxNumber,
-            IdentityNumber = houseOwner.Account.IdentityNumber,
             Limit = houseOwner.Account.Limit,
-            StandartMaturity = houseOwner.Account.StandartMaturity,
         };
         return houseOwnerExtDto;
     }

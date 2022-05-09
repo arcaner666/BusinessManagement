@@ -39,11 +39,7 @@ public class AccountExtBl : IAccountExtBl
             AccountOrder = accountExtDto.AccountOrder,
             AccountName = accountExtDto.AccountName,
             AccountCode = accountExtDto.AccountCode,
-            TaxOffice = accountExtDto.TaxOffice,
-            TaxNumber = accountExtDto.TaxNumber,
-            IdentityNumber = accountExtDto.IdentityNumber,
             Limit = accountExtDto.Limit,
-            StandartMaturity = accountExtDto.StandartMaturity,
         };
         var addAccountResult = _accountBl.Add(accountDto);
         if (!addAccountResult.Success)
@@ -144,14 +140,10 @@ public class AccountExtBl : IAccountExtBl
         {
             AccountId = accountExtDto.AccountId,
             AccountName = accountExtDto.AccountName,
-            TaxOffice = accountExtDto.TaxOffice,
-            TaxNumber = accountExtDto.TaxNumber,
-            IdentityNumber = accountExtDto.IdentityNumber,
             DebitBalance = accountExtDto.DebitBalance,
             CreditBalance = accountExtDto.CreditBalance,
             Balance = accountExtDto.Balance,
             Limit = accountExtDto.Limit,
-            StandartMaturity = accountExtDto.StandartMaturity,
         };
         var updateAccountResult = _accountBl.Update(accountDto);
         if (!updateAccountResult.Success)
@@ -172,14 +164,10 @@ public class AccountExtBl : IAccountExtBl
             AccountOrder = account.AccountOrder,
             AccountName = account.AccountName,
             AccountCode = account.AccountCode,
-            TaxOffice = account.TaxOffice,
-            TaxNumber = account.TaxNumber,
-            IdentityNumber = account.IdentityNumber,
             DebitBalance = account.DebitBalance,
             CreditBalance = account.CreditBalance,
             Balance = account.Balance,
             Limit = account.Limit,
-            StandartMaturity = account.StandartMaturity,
             CreatedAt = account.CreatedAt,
             UpdatedAt = account.UpdatedAt,
 

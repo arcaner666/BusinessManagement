@@ -54,11 +54,7 @@ public class EmployeeExtBl : IEmployeeExtBl
             AccountOrder = employeeExtDto.AccountOrder,
             AccountName = employeeExtDto.AccountName,
             AccountCode = employeeExtDto.AccountCode,
-            TaxOffice = employeeExtDto.TaxOffice,
-            TaxNumber = employeeExtDto.TaxNumber,
-            IdentityNumber = employeeExtDto.IdentityNumber,
             Limit = employeeExtDto.Limit,
-            StandartMaturity = employeeExtDto.StandartMaturity,
         };
         var addAccountResult = _accountBl.Add(accountDto);
         if (!addAccountResult.Success)
@@ -78,6 +74,7 @@ public class EmployeeExtBl : IEmployeeExtBl
             Gender = employeeExtDto.Gender,
             Notes = employeeExtDto.Notes,
             AvatarUrl = employeeExtDto.AvatarUrl,
+            IdentityNumber = employeeExtDto.IdentityNumber,
         };
         var addEmployeeResult = _employeeBl.Add(addedEmployeeDto);
         if (!addEmployeeResult.Success)
@@ -134,11 +131,7 @@ public class EmployeeExtBl : IEmployeeExtBl
         {
             AccountId = employeeExtDto.AccountId,
             AccountName = employeeExtDto.AccountName,
-            TaxOffice = employeeExtDto.TaxOffice,
-            TaxNumber = employeeExtDto.TaxNumber,
-            IdentityNumber = employeeExtDto.IdentityNumber,
             Limit = employeeExtDto.Limit,
-            StandartMaturity = employeeExtDto.StandartMaturity,
          };
         var updateAccountResult = _accountBl.Update(updatedAccountDto);
         if (!updateAccountResult.Success)
@@ -155,6 +148,7 @@ public class EmployeeExtBl : IEmployeeExtBl
             Gender = employeeExtDto.Gender,
             Notes = employeeExtDto.Notes,
             AvatarUrl = employeeExtDto.AvatarUrl,
+            IdentityNumber = employeeExtDto.IdentityNumber,
             StillWorking = employeeExtDto.StillWorking,
             StartDate = employeeExtDto.StartDate,
             QuitDate = employeeExtDto.QuitDate,
@@ -182,6 +176,7 @@ public class EmployeeExtBl : IEmployeeExtBl
             Gender = employee.Gender,
             Notes = employee.Notes,
             AvatarUrl = employee.AvatarUrl,
+            IdentityNumber = employee.IdentityNumber,
             StillWorking = employee.StillWorking,
             StartDate = employee.StartDate,
             QuitDate = employee.QuitDate,
@@ -193,11 +188,7 @@ public class EmployeeExtBl : IEmployeeExtBl
             AccountOrder = employee.Account.AccountOrder,
             AccountName = employee.Account.AccountName,
             AccountCode = employee.Account.AccountCode,
-            TaxOffice = employee.Account.TaxOffice,
-            TaxNumber = employee.Account.TaxNumber,
-            IdentityNumber = employee.Account.IdentityNumber,
             Limit = employee.Account.Limit,
-            StandartMaturity = employee.Account.StandartMaturity,
 
             // Extended With EmployeeType
             EmployeeTypeName = employee.EmployeeType.EmployeeTypeName,

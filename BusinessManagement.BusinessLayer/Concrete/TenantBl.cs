@@ -38,6 +38,10 @@ public class TenantBl : ITenantBl
             Gender = tenantDto.Gender,
             Notes = tenantDto.Notes,
             AvatarUrl = tenantDto.AvatarUrl,
+            TaxOffice = tenantDto.TaxOffice,
+            TaxNumber = tenantDto.TaxNumber,
+            IdentityNumber = tenantDto.IdentityNumber,
+            StandartMaturity = tenantDto.StandartMaturity,
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now,
         };
@@ -93,6 +97,10 @@ public class TenantBl : ITenantBl
         searchedTenant.Gender = tenantDto.Gender;
         searchedTenant.Notes = tenantDto.Notes;
         searchedTenant.AvatarUrl = tenantDto.AvatarUrl;
+        searchedTenant.TaxOffice = tenantDto.TaxOffice;
+        searchedTenant.TaxNumber = tenantDto.TaxNumber;
+        searchedTenant.IdentityNumber = tenantDto.IdentityNumber;
+        searchedTenant.StandartMaturity = tenantDto.StandartMaturity;
         searchedTenant.UpdatedAt = DateTimeOffset.Now;
         _tenantDal.Update(searchedTenant);
 
@@ -114,6 +122,10 @@ public class TenantBl : ITenantBl
             Gender = tenant.Gender,
             Notes = tenant.Notes,
             AvatarUrl = tenant.AvatarUrl,
+            TaxOffice = tenant.TaxOffice,
+            TaxNumber = tenant.TaxNumber,
+            IdentityNumber = tenant.IdentityNumber,
+            StandartMaturity = tenant.StandartMaturity,
             CreatedAt = tenant.CreatedAt,
             UpdatedAt = tenant.UpdatedAt,
         };

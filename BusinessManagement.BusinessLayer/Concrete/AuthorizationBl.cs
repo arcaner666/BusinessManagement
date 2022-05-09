@@ -228,6 +228,13 @@ public class AuthorizationBl : IAuthorizationBl
             BranchId = addBranchResult.Data.BranchId,
             NameSurname = registerSectionManagerDto.NameSurname,
             Phone = registerSectionManagerDto.Phone,
+            Email = "",
+            Gender = "",
+            Notes = "",
+            AvatarUrl = "",
+            TaxOffice = registerSectionManagerDto.TaxOffice,
+            TaxNumber = registerSectionManagerDto.TaxNumber,
+            IdentityNumber = registerSectionManagerDto.IdentityNumber,
         };
         var addManagerResult = _managerBl.Add(managerDto);
         if (!addManagerResult.Success) 

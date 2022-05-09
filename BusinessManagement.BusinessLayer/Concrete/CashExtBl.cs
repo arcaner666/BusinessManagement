@@ -52,11 +52,7 @@ public class CashExtBl : ICashExtBl
             AccountOrder = cashExtDto.AccountOrder,
             AccountName = cashExtDto.AccountName,
             AccountCode = cashExtDto.AccountCode,
-            TaxOffice = cashExtDto.TaxOffice,
-            TaxNumber = cashExtDto.TaxNumber,
-            IdentityNumber = cashExtDto.IdentityNumber,
             Limit = cashExtDto.Limit,
-            StandartMaturity = cashExtDto.StandartMaturity,
         };
         var addAccountResult = _accountBl.Add(accountDto);
         if (!addAccountResult.Success)
@@ -123,11 +119,7 @@ public class CashExtBl : ICashExtBl
         {
             AccountId = cashExtDto.AccountId,
             AccountName = cashExtDto.AccountName,
-            TaxOffice = cashExtDto.TaxOffice,
-            TaxNumber = cashExtDto.TaxNumber,
-            IdentityNumber = cashExtDto.IdentityNumber,
             Limit = cashExtDto.Limit,
-            StandartMaturity = cashExtDto.StandartMaturity,
          };
         var updateAccountResult = _accountBl.Update(updatedAccountDto);
         if (!updateAccountResult.Success)

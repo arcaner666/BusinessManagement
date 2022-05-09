@@ -22,6 +22,7 @@ namespace BusinessManagement.Entities.DatabaseModels
         public string Gender { get; set; }
         public string Notes { get; set; }
         public string AvatarUrl { get; set; }
+        public long IdentityNumber { get; set; }
         public bool StillWorking { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? QuitDate { get; set; }

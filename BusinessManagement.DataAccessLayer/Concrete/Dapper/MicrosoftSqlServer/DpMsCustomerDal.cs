@@ -18,8 +18,8 @@ public class DpMsCustomerDal : ICustomerDal
 
     public Customer Add(Customer customer)
     {
-        var sql = "INSERT INTO Customer (BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, AppointmentsMade, ProductsPurchased, LastPurchaseDate, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @AppointmentsMade, @ProductsPurchased, @LastPurchaseDate, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var sql = "INSERT INTO Customer (BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, TaxOffice, TaxNumber, IdentityNumber, StandartMaturity, AppointmentsMade, ProductsPurchased, LastPurchaseDate, CreatedAt, UpdatedAt)"
+            + " VALUES(@BusinessId, @BranchId, @AccountId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @TaxOffice, @TaxNumber, @IdentityNumber, @StandartMaturity, @AppointmentsMade, @ProductsPurchased, @LastPurchaseDate, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
         var id = _db.Query<long>(sql, customer).Single();
         customer.CustomerId = id;
         return customer;
@@ -59,7 +59,7 @@ public class DpMsCustomerDal : ICustomerDal
 
     public void Update(Customer customer)
     {
-        var sql = "UPDATE Customer SET BusinessId = @BusinessId, BranchId = @BranchId, AccountId = @AccountId, NameSurname = @NameSurname, Email = @Email, Phone = @Phone, DateOfBirth = @DateOfBirth, Gender = @Gender, Notes = @Notes, AvatarUrl = @AvatarUrl, AppointmentsMade = @AppointmentsMade, ProductsPurchased = @ProductsPurchased, LastPurchaseDate = @LastPurchaseDate, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Customer SET BusinessId = @BusinessId, BranchId = @BranchId, AccountId = @AccountId, NameSurname = @NameSurname, Email = @Email, Phone = @Phone, DateOfBirth = @DateOfBirth, Gender = @Gender, Notes = @Notes, AvatarUrl = @AvatarUrl, TaxOffice = @TaxOffice, TaxNumber = @TaxNumber, IdentityNumber = @IdentityNumber, StandartMaturity = @StandartMaturity, AppointmentsMade = @AppointmentsMade, ProductsPurchased = @ProductsPurchased, LastPurchaseDate = @LastPurchaseDate, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
             + " WHERE CustomerId = @CustomerId";
         _db.Execute(sql, customer);
     }

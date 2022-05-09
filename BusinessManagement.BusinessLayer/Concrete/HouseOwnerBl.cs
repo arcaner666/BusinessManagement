@@ -38,6 +38,10 @@ public class HouseOwnerBl : IHouseOwnerBl
             Gender = houseOwnerDto.Gender,
             Notes = houseOwnerDto.Notes,
             AvatarUrl = houseOwnerDto.AvatarUrl,
+            TaxOffice = houseOwnerDto.TaxOffice,
+            TaxNumber = houseOwnerDto.TaxNumber,
+            IdentityNumber = houseOwnerDto.IdentityNumber,
+            StandartMaturity = houseOwnerDto.StandartMaturity,
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now,
         };
@@ -57,6 +61,17 @@ public class HouseOwnerBl : IHouseOwnerBl
         _houseOwnerDal.Delete(id);
 
         return new SuccessResult(Messages.HouseOwnerDeleted);
+    }
+
+    public IDataResult<HouseOwnerDto> GetByAccountId(long accountId)
+    {
+        HouseOwner searchedHouseOwner = _houseOwnerDal.GetByAccountId(accountId);
+        if (searchedHouseOwner is null)
+            return new ErrorDataResult<HouseOwnerDto>(Messages.HouseOwnerNotFound);
+
+        HouseOwnerDto searchedHouseOwnerDto = FillDto(searchedHouseOwner);
+
+        return new SuccessDataResult<HouseOwnerDto>(searchedHouseOwnerDto, Messages.HouseOwnerListedByAccountId);
     }
 
     public IDataResult<List<HouseOwnerDto>> GetByBusinessId(int businessId)
@@ -93,6 +108,10 @@ public class HouseOwnerBl : IHouseOwnerBl
         searchedHouseOwner.Gender = houseOwnerDto.Gender;
         searchedHouseOwner.Notes = houseOwnerDto.Notes;
         searchedHouseOwner.AvatarUrl = houseOwnerDto.AvatarUrl;
+        searchedHouseOwner.TaxOffice = houseOwnerDto.TaxOffice;
+        searchedHouseOwner.TaxNumber = houseOwnerDto.TaxNumber;
+        searchedHouseOwner.IdentityNumber = houseOwnerDto.IdentityNumber;
+        searchedHouseOwner.StandartMaturity = houseOwnerDto.StandartMaturity;
         searchedHouseOwner.UpdatedAt = DateTimeOffset.Now;
         _houseOwnerDal.Update(searchedHouseOwner);
 
@@ -114,6 +133,10 @@ public class HouseOwnerBl : IHouseOwnerBl
             Gender = houseOwner.Gender,
             Notes = houseOwner.Notes,
             AvatarUrl = houseOwner.AvatarUrl,
+            TaxOffice = houseOwner.TaxOffice,
+            TaxNumber = houseOwner.TaxNumber,
+            IdentityNumber = houseOwner.IdentityNumber,
+            StandartMaturity = houseOwner.StandartMaturity,
             CreatedAt = houseOwner.CreatedAt,
             UpdatedAt = houseOwner.UpdatedAt,
         };

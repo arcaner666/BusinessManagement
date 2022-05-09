@@ -29,11 +29,14 @@ public class ManagerBl : IManagerBl
             BusinessId = managerDto.BusinessId,
             BranchId = managerDto.BranchId,
             NameSurname = managerDto.NameSurname,
-            Email = "",
+            Email = managerDto.Email,
             Phone = managerDto.Phone,
-            Gender = "",
-            Notes = "",
-            AvatarUrl = "",
+            Gender = managerDto.Gender,
+            Notes = managerDto.Notes,
+            AvatarUrl = managerDto.AvatarUrl,
+            TaxOffice = managerDto.TaxOffice,
+            TaxNumber = managerDto.TaxNumber,
+            IdentityNumber = managerDto.IdentityNumber,
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now,
         };
@@ -69,6 +72,9 @@ public class ManagerBl : IManagerBl
             Gender = manager.Gender,
             Notes = manager.Notes,
             AvatarUrl = manager.AvatarUrl,
+            TaxOffice = manager.TaxOffice,
+            TaxNumber = manager.TaxNumber,
+            IdentityNumber = manager.IdentityNumber,
             CreatedAt = manager.CreatedAt,
             UpdatedAt = manager.UpdatedAt,
         };
@@ -81,37 +87,5 @@ public class ManagerBl : IManagerBl
         List<ManagerDto> managerDtos = managers.Select(manager => FillDto(manager)).ToList();
 
         return managerDtos;
-    }
-
-    private ManagerExtDto FillExtDto(Manager manager)
-    {
-        ManagerExtDto managerExtDto = new()
-        {
-            ManagerId = manager.ManagerId,
-            BusinessId = manager.BusinessId,
-            BranchId = manager.BranchId,
-            NameSurname = manager.NameSurname,
-            Email = manager.Email,
-            Phone = manager.Phone,
-            DateOfBirth = manager.DateOfBirth,
-            Gender = manager.Gender,
-            Notes = manager.Notes,
-            AvatarUrl = manager.AvatarUrl,
-            CreatedAt = manager.CreatedAt,
-            UpdatedAt = manager.UpdatedAt,
-
-            BusinessName = manager.Business.BusinessName,
-            CityId = manager.Branch.FullAddress.CityId,
-            DistrictId = manager.Branch.FullAddress.DistrictId,
-            AddressText = manager.Branch.FullAddress.AddressText,
-        };
-        return managerExtDto;
-    }
-
-    private List<ManagerExtDto> FillExtDtos(List<Manager> managers)
-    {
-        List<ManagerExtDto> managerExtDtos = managers.Select(manager => FillExtDto(manager)).ToList();
-
-        return managerExtDtos;
     }
 }

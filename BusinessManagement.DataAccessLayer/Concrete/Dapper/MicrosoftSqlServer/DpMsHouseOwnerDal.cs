@@ -18,8 +18,8 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
 
     public HouseOwner Add(HouseOwner houseOwner)
     {
-        var sql = "INSERT INTO HouseOwner (BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var sql = "INSERT INTO HouseOwner (BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, TaxOffice, TaxNumber, IdentityNumber, StandartMaturity, CreatedAt, UpdatedAt)"
+            + " VALUES(@BusinessId, @BranchId, @AccountId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @TaxOffice, @TaxNumber, @IdentityNumber, @StandartMaturity, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
         var id = _db.Query<long>(sql, houseOwner).Single();
         houseOwner.HouseOwnerId = id;
         return houseOwner;
@@ -30,6 +30,13 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
         var sql = "DELETE FROM HouseOwner"
             + " WHERE HouseOwnerId = @HouseOwnerId";
         _db.Execute(sql, new { @HouseOwnerId = id });
+    }
+
+    public HouseOwner GetByAccountId(long accountId)
+    {
+        var sql = "SELECT * FROM HouseOwner"
+            + " WHERE AccountId = @AccountId";
+        return _db.Query<HouseOwner>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
     public List<HouseOwner> GetByBusinessId(int businessId)
@@ -91,7 +98,7 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
 
     public void Update(HouseOwner houseOwner)
     {
-        var sql = "UPDATE HouseOwner SET BusinessId = @BusinessId, BranchId = @BranchId, AccountId = @AccountId, NameSurname = @NameSurname, Email = @Email, Phone = @Phone, DateOfBirth = @DateOfBirth, Gender = @Gender, Notes = @Notes, AvatarUrl = @AvatarUrl, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE HouseOwner SET BusinessId = @BusinessId, BranchId = @BranchId, AccountId = @AccountId, NameSurname = @NameSurname, Email = @Email, Phone = @Phone, DateOfBirth = @DateOfBirth, Gender = @Gender, Notes = @Notes, AvatarUrl = @AvatarUrl, TaxOffice = @TaxOffice, TaxNumber = @TaxNumber, IdentityNumber = @IdentityNumber, StandartMaturity = @StandartMaturity, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
             + " WHERE HouseOwnerId = @HouseOwnerId";
         _db.Execute(sql, houseOwner);
     }

@@ -13,6 +13,10 @@ public class HouseOwnerExtDto
     public string Gender { get; set; }
     public string Notes { get; set; }
     public string AvatarUrl { get; set; }
+    public string TaxOffice { get; set; }
+    public long? TaxNumber { get; set; }
+    public long? IdentityNumber { get; set; }
+    public short StandartMaturity { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
@@ -21,9 +25,5 @@ public class HouseOwnerExtDto
     public int AccountOrder { get; set; }
     public string AccountName { get; set; }
     public string AccountCode { get; set; }
-    public string TaxOffice { get; set; }
-    public long? TaxNumber { get; set; }
-    public long? IdentityNumber { get; set; }
     public decimal Limit { get; set; }
-    public short StandartMaturity { get; set; }
 }

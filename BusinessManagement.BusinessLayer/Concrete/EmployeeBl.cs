@@ -39,6 +39,7 @@ public class EmployeeBl : IEmployeeBl
             Gender = employeeDto.Gender,
             Notes = employeeDto.Notes,
             AvatarUrl = employeeDto.AvatarUrl,
+            IdentityNumber = employeeDto.IdentityNumber,
             StillWorking = true,
             StartDate = DateTime.Now,
             QuitDate = null,
@@ -87,6 +88,7 @@ public class EmployeeBl : IEmployeeBl
         searchedEmployee.Gender = employeeDto.Gender;
         searchedEmployee.Notes = employeeDto.Notes;
         searchedEmployee.AvatarUrl = employeeDto.AvatarUrl;
+        searchedEmployee.IdentityNumber = employeeDto.IdentityNumber;
         searchedEmployee.StillWorking = employeeDto.StillWorking;
         searchedEmployee.StartDate = employeeDto.StartDate;
         searchedEmployee.QuitDate = employeeDto.QuitDate;
@@ -112,6 +114,7 @@ public class EmployeeBl : IEmployeeBl
             Gender = employee.Gender,
             Notes = employee.Notes,
             AvatarUrl = employee.AvatarUrl,
+            IdentityNumber = employee.IdentityNumber,
             StillWorking = employee.StillWorking,
             StartDate = employee.StartDate,
             QuitDate = employee.QuitDate,

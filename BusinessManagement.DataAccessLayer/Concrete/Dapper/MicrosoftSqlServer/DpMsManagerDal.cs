@@ -18,11 +18,18 @@ public class DpMsManagerDal : IManagerDal
 
     public Manager Add(Manager manager)
     {
-        var sql = "INSERT INTO Manager (BusinessId, BranchId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var sql = "INSERT INTO Manager (BusinessId, BranchId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, TaxOffice, TaxNumber, IdentityNumber, CreatedAt, UpdatedAt)"
+            + " VALUES(@BusinessId, @BranchId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @TaxOffice, @TaxNumber, @IdentityNumber, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
         var id = _db.Query<long>(sql, manager).Single();
         manager.ManagerId = id;
         return manager;
+    }
+
+    public void Delete(long id)
+    {
+        var sql = "DELETE FROM Manager"
+            + " WHERE ManagerId = @ManagerId";
+        _db.Execute(sql, new { @ManagerId = id });
     }
 
     public List<Manager> GetByBusinessId(int businessId)
@@ -43,6 +50,13 @@ public class DpMsManagerDal : IManagerDal
         }).SingleOrDefault();
     }
 
+    public Manager GetById(long id)
+    {
+        var sql = "SELECT * FROM Manager"
+            + " WHERE ManagerId = @ManagerId";
+        return _db.Query<Manager>(sql, new { @ManagerId = id }).SingleOrDefault();
+    }
+
     public List<Manager> GetExtsByBusinessId(int businessId)
     {
         var sql = "SELECT * FROM Manager m"
@@ -59,5 +73,12 @@ public class DpMsManagerDal : IManagerDal
                 return manager;
             }, new { @BusinessId = businessId },
             splitOn: "BusinessId,BranchId,FullAddressId").ToList();
+    }
+
+    public void Update(Manager manager)
+    {
+        var sql = "UPDATE Manager SET BusinessId = @BusinessId, BranchId = @BranchId, NameSurname = @NameSurname, Email = @Email, Phone = @Phone, DateOfBirth = @DateOfBirth, Gender = @Gender, Notes = @Notes, AvatarUrl = @AvatarUrl, TaxOffice = @TaxOffice, TaxNumber = @TaxNumber, IdentityNumber = @IdentityNumber, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+            + " WHERE ManagerId = @ManagerId";
+        _db.Execute(sql, manager);
     }
 }

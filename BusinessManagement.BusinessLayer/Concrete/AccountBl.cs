@@ -35,14 +35,10 @@ public class AccountBl : IAccountBl
             AccountOrder = accountDto.AccountOrder,
             AccountName = accountDto.AccountName,
             AccountCode = accountDto.AccountCode,
-            TaxOffice = accountDto.TaxOffice,
-            TaxNumber = accountDto.TaxNumber,
-            IdentityNumber = accountDto.IdentityNumber,
             DebitBalance = 0,
             CreditBalance = 0,
             Balance = 0,
             Limit = accountDto.Limit,
-            StandartMaturity = accountDto.StandartMaturity,
             CreatedAt = DateTimeOffset.Now,
             UpdatedAt = DateTimeOffset.Now,
         };
@@ -82,14 +78,10 @@ public class AccountBl : IAccountBl
             return new ErrorDataResult<AccountDto>(Messages.AccountNotFound);
 
         searchedAccount.AccountName = accountDto.AccountName;
-        searchedAccount.TaxOffice = accountDto.TaxOffice;
-        searchedAccount.TaxNumber = accountDto.TaxNumber;
-        searchedAccount.IdentityNumber = accountDto.IdentityNumber;
         searchedAccount.DebitBalance = accountDto.DebitBalance;
         searchedAccount.CreditBalance = accountDto.CreditBalance;
         searchedAccount.Balance = accountDto.Balance;
         searchedAccount.Limit = accountDto.Limit;
-        searchedAccount.StandartMaturity = accountDto.StandartMaturity;
         searchedAccount.UpdatedAt = DateTimeOffset.Now;
         _accountDal.Update(searchedAccount);
 
@@ -108,14 +100,10 @@ public class AccountBl : IAccountBl
             AccountOrder = account.AccountOrder,
             AccountName = account.AccountName,
             AccountCode = account.AccountCode,
-            TaxOffice = account.TaxOffice,
-            TaxNumber = account.TaxNumber,
-            IdentityNumber = account.IdentityNumber,
             DebitBalance = account.DebitBalance,
             CreditBalance = account.CreditBalance,
             Balance = account.Balance,
             Limit = account.Limit,
-            StandartMaturity = account.StandartMaturity,
             CreatedAt = account.CreatedAt,
             UpdatedAt = account.UpdatedAt,
         };

@@ -21,6 +21,10 @@ namespace BusinessManagement.Entities.DatabaseModels
         public string Gender { get; set; }
         public string Notes { get; set; }
         public string AvatarUrl { get; set; }
+        public string TaxOffice { get; set; }
+        public long? TaxNumber { get; set; }
+        public long? IdentityNumber { get; set; }
+        public short StandartMaturity { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 

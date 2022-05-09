@@ -10,6 +10,7 @@ namespace BusinessManagement.Entities.DatabaseModels
         public long BranchId { get; set; }
         public long AccountId { get; set; }
         public long FullAddressId { get; set; }
+        public byte CurrencyId { get; set; }
         public string BankName { get; set; }
         public string BankBranchName { get; set; }
         public string BankCode { get; set; }
@@ -17,12 +18,14 @@ namespace BusinessManagement.Entities.DatabaseModels
         public string BankAccountCode { get; set; }
         public string Iban { get; set; }
         public string OfficerName { get; set; }
+        public short StandartMaturity { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
 
         public virtual Account Account { get; set; }
         public virtual Branch Branch { get; set; }
         public virtual Business Business { get; set; }
+        public virtual Currency Currency { get; set; }
         public virtual FullAddress FullAddress { get; set; }
     }
 }

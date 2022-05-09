@@ -7,6 +7,7 @@ public class BankDto
     public long BranchId { get; set; }
     public long AccountId { get; set; }
     public long FullAddressId { get; set; }
+    public byte CurrencyId { get; set; }
     public string BankName { get; set; }
     public string BankBranchName { get; set; }
     public string BankCode { get; set; }
@@ -14,6 +15,7 @@ public class BankDto
     public string BankAccountCode { get; set; }
     public string Iban { get; set; }
     public string OfficerName { get; set; }
+    public short StandartMaturity { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 }

@@ -18,8 +18,8 @@ public class DpMsAccountDal : IAccountDal
 
     public Account Add(Account account)
     {
-        var sql = "INSERT INTO Account (BusinessId, BranchId, AccountGroupId, AccountTypeId, AccountOrder, AccountName, AccountCode, TaxOffice, TaxNumber, IdentityNumber, DebitBalance, CreditBalance, Balance, Limit, StandartMaturity, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountGroupId, @AccountTypeId, @AccountOrder, @AccountName, @AccountCode, @TaxOffice, @TaxNumber, @IdentityNumber, @DebitBalance, @CreditBalance, @Balance, @Limit, @StandartMaturity, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        var sql = "INSERT INTO Account (BusinessId, BranchId, AccountGroupId, AccountTypeId, AccountOrder, AccountName, AccountCode, DebitBalance, CreditBalance, Balance, Limit, CreatedAt, UpdatedAt)"
+            + " VALUES(@BusinessId, @BranchId, @AccountGroupId, @AccountTypeId, @AccountOrder, @AccountName, @AccountCode, @DebitBalance, @CreditBalance, @Balance, @Limit, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
         var id = _db.Query<long>(sql, account).Single();
         account.AccountId = id;
         return account;
@@ -146,7 +146,7 @@ public class DpMsAccountDal : IAccountDal
 
     public void Update(Account account)
     {
-        var sql = "UPDATE Account SET BusinessId = @BusinessId, BranchId = @BranchId, AccountGroupId = @AccountGroupId, AccountTypeId = @AccountTypeId, AccountOrder = @AccountOrder, AccountName = @AccountName, AccountCode = @AccountCode, TaxOffice = @TaxOffice, TaxNumber = @TaxNumber, IdentityNumber = @IdentityNumber, DebitBalance = @DebitBalance, CreditBalance = @CreditBalance, Balance = @Balance, Limit = @Limit, StandartMaturity = @StandartMaturity, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Account SET BusinessId = @BusinessId, BranchId = @BranchId, AccountGroupId = @AccountGroupId, AccountTypeId = @AccountTypeId, AccountOrder = @AccountOrder, AccountName = @AccountName, AccountCode = @AccountCode, DebitBalance = @DebitBalance, CreditBalance = @CreditBalance, Balance = @Balance, Limit = @Limit, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
             + " WHERE AccountId = @AccountId";
         _db.Execute(sql, account);
     }

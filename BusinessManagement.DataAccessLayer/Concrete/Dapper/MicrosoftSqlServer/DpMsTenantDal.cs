@@ -57,6 +57,22 @@ public class DpMsTenantDal : ITenantDal
         return _db.Query<Tenant>(sql, new { @TenantId = id }).SingleOrDefault();
     }
 
+    public Tenant GetExtByAccountId(long accountId)
+    {
+        var sql = "SELECT * FROM Tenant t"
+            + " INNER JOIN Account a ON t.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " WHERE t.AccountId = @AccountId";
+        return _db.Query<Tenant, Account, AccountGroup, Tenant>(sql,
+            (tenant, account, accountGroup) =>
+            {
+                tenant.Account = account;
+                tenant.Account.AccountGroup = accountGroup;
+                return tenant;
+            }, new { @AccountId = accountId },
+            splitOn: "AccountId,AccountGroupId").SingleOrDefault();
+    }
+
     public Tenant GetExtById(long id)
     {
         var sql = "SELECT * FROM Tenant t"

@@ -161,6 +161,7 @@ public static class Messages
     public const string EmployeeDeleted = "EmployeeDeleted";
     public const string EmployeeExtAdded = "EmployeeExtAdded";
     public const string EmployeeExtDeleted = "EmployeeExtDeleted";
+    public const string EmployeeExtListedByAccountId = "EmployeeExtListedByAccountId";
     public const string EmployeeExtListedById = "EmployeeExtListedById";
     public const string EmployeeExtsListedByBusinessId = "EmployeeExtsListedByBusinessId";
     public const string EmployeeExtUpdated = "EmployeeExtUpdated";
@@ -282,6 +283,7 @@ public static class Messages
     public const string TenantDeleted = "TenantDeleted";
     public const string TenantExtAdded = "TenantExtAdded";
     public const string TenantExtDeleted = "TenantExtDeleted";
+    public const string TenantExtListedByAccountId = "TenantExtListedByAccountId";
     public const string TenantExtListedById = "TenantExtListedById";
     public const string TenantExtsListedByBusinessId = "TenantExtsListedByBusinessId";
     public const string TenantExtUpdated = "TenantExtUpdated";

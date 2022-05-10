@@ -7,6 +7,7 @@ public interface IEmployeeExtBl
 {
     IResult AddExt(EmployeeExtDto employeeExtDto);
     IResult DeleteExt(long id);
+    IDataResult<EmployeeExtDto> GetExtByAccountId(long accountId);
     IDataResult<EmployeeExtDto> GetExtById(long id);
     IDataResult<List<EmployeeExtDto>> GetExtsByBusinessId(int businessId);
     IResult UpdateExt(EmployeeExtDto employeeExtDto);

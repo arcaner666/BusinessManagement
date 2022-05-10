@@ -7,6 +7,7 @@ public interface ITenantExtBl
 {
     IResult AddExt(TenantExtDto tenantExtDto);
     IResult DeleteExt(long id);
+    IDataResult<TenantExtDto> GetExtByAccountId(long accountId);
     IDataResult<TenantExtDto> GetExtById(long id);
     IDataResult<List<TenantExtDto>> GetExtsByBusinessId(int businessId);
     IResult UpdateExt(TenantExtDto tenantExtDto);

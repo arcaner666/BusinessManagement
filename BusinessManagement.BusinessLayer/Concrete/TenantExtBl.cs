@@ -103,6 +103,17 @@ public class TenantExtBl : ITenantExtBl
         return new SuccessResult(Messages.TenantExtDeleted);
     }
 
+    public IDataResult<TenantExtDto> GetExtByAccountId(long accountId)
+    {
+        Tenant searchedTenant = _tenantDal.GetExtByAccountId(accountId);
+        if (searchedTenant is null)
+            return new ErrorDataResult<TenantExtDto>(Messages.TenantNotFound);
+
+        TenantExtDto searchedTenantExtDto = FillExtDto(searchedTenant);
+
+        return new SuccessDataResult<TenantExtDto>(searchedTenantExtDto, Messages.TenantExtListedByAccountId);
+    }
+
     public IDataResult<TenantExtDto> GetExtById(long id)
     {
         Tenant searchedTenant = _tenantDal.GetExtById(id);

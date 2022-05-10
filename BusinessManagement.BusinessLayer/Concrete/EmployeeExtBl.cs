@@ -101,6 +101,17 @@ public class EmployeeExtBl : IEmployeeExtBl
         return new SuccessResult(Messages.EmployeeExtDeleted);
     }
 
+    public IDataResult<EmployeeExtDto> GetExtByAccountId(long accountId)
+    {
+        Employee searchedEmployee = _employeeDal.GetExtByAccountId(accountId);
+        if (searchedEmployee is null)
+            return new ErrorDataResult<EmployeeExtDto>(Messages.EmployeeNotFound);
+
+        EmployeeExtDto searchedEmployeeExtDto = FillExtDto(searchedEmployee);
+
+        return new SuccessDataResult<EmployeeExtDto>(searchedEmployeeExtDto, Messages.EmployeeExtListedByAccountId);
+    }
+
     public IDataResult<EmployeeExtDto> GetExtById(long id)
     {
         Employee searchedEmployee = _employeeDal.GetExtById(id);

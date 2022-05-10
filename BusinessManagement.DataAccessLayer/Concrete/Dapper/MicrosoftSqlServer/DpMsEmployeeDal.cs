@@ -57,6 +57,24 @@ public class DpMsEmployeeDal : IEmployeeDal
         return _db.Query<Employee>(sql, new { @EmployeeId = id }).SingleOrDefault();
     }
 
+    public Employee GetExtByAccountId(long accountId)
+    {
+        var sql = "SELECT * FROM Employee e"
+            + " INNER JOIN Account a ON e.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " INNER JOIN EmployeeType et ON e.EmployeeTypeId = et.EmployeeTypeId"
+            + " WHERE e.AccountId = @AccountId";
+        return _db.Query<Employee, Account, AccountGroup, EmployeeType, Employee>(sql,
+            (employee, account, accountGroup, employeeType) =>
+            {
+                employee.Account = account;
+                employee.Account.AccountGroup = accountGroup;
+                employee.EmployeeType = employeeType;
+                return employee;
+            }, new { @AccountId = accountId },
+            splitOn: "AccountId,AccountGroupId,EmployeeTypeId").SingleOrDefault();
+    }
+
     public Employee GetExtById(long id)
     {
         var sql = "SELECT * FROM Employee e"

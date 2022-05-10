@@ -9,6 +9,7 @@ public interface ITenantDal
     List<Tenant> GetByBusinessId(int businessId);
     Tenant GetByBusinessIdAndAccountId(int businessId, long accountId);
     Tenant GetById(long id);
+    Tenant GetExtByAccountId(long accountId);
     Tenant GetExtById(long id);
     List<Tenant> GetExtsByBusinessId(int businessId);
     void Update(Tenant tenant);

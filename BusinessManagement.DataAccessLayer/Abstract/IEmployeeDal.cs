@@ -9,6 +9,7 @@ public interface IEmployeeDal
     Employee GetByAccountId(long accountId);
     Employee GetByBusinessIdAndAccountId(int businessId, long accountId);
     Employee GetById(long id);
+    Employee GetExtByAccountId(long accountId);
     Employee GetExtById(long id);
     List<Employee> GetExtsByBusinessId(int businessId);
     void Update(Employee employee);

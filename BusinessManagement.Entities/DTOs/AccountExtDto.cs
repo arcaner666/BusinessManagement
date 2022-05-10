@@ -26,17 +26,4 @@ public class AccountExtDto
 
     // Extended With AccountType
     public string AccountTypeName { get; set; }
-
-    // Added Custom Required Fields
-    public string NameSurname { get; set; }
-    public string Email { get; set; }
-    public string Phone { get; set; }
-    public DateTime? DateOfBirth { get; set; }
-    public string Gender { get; set; }
-    public string Notes { get; set; }
-    public string AvatarUrl { get; set; }
-    public string TaxOffice { get; set; }
-    public long? TaxNumber { get; set; }
-    public long? IdentityNumber { get; set; }
-    public short StandartMaturity { get; set; }
 }

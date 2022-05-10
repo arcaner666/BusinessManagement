@@ -63,17 +63,6 @@ public class HouseOwnerBl : IHouseOwnerBl
         return new SuccessResult(Messages.HouseOwnerDeleted);
     }
 
-    public IDataResult<HouseOwnerDto> GetByAccountId(long accountId)
-    {
-        HouseOwner searchedHouseOwner = _houseOwnerDal.GetByAccountId(accountId);
-        if (searchedHouseOwner is null)
-            return new ErrorDataResult<HouseOwnerDto>(Messages.HouseOwnerNotFound);
-
-        HouseOwnerDto searchedHouseOwnerDto = FillDto(searchedHouseOwner);
-
-        return new SuccessDataResult<HouseOwnerDto>(searchedHouseOwnerDto, Messages.HouseOwnerListedByAccountId);
-    }
-
     public IDataResult<List<HouseOwnerDto>> GetByBusinessId(int businessId)
     {
         List<HouseOwner> searchedHouseOwners = _houseOwnerDal.GetByBusinessId(businessId);

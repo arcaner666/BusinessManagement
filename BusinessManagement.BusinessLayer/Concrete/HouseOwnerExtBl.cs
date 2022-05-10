@@ -103,6 +103,17 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
         return new SuccessResult(Messages.HouseOwnerExtDeleted);
     }
 
+    public IDataResult<HouseOwnerExtDto> GetExtByAccountId(long accountId)
+    {
+        HouseOwner searchedHouseOwner = _houseOwnerDal.GetExtByAccountId(accountId);
+        if (searchedHouseOwner is null)
+            return new ErrorDataResult<HouseOwnerExtDto>(Messages.HouseOwnerNotFound);
+
+        HouseOwnerExtDto searchedHouseOwnerExtDto = FillExtDto(searchedHouseOwner);
+
+        return new SuccessDataResult<HouseOwnerExtDto>(searchedHouseOwnerExtDto, Messages.HouseOwnerExtListedByAccountId);
+    }
+
     public IDataResult<HouseOwnerExtDto> GetExtById(long id)
     {
         HouseOwner searchedHouseOwner = _houseOwnerDal.GetExtById(id);

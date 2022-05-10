@@ -32,13 +32,6 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
         _db.Execute(sql, new { @HouseOwnerId = id });
     }
 
-    public HouseOwner GetByAccountId(long accountId)
-    {
-        var sql = "SELECT * FROM HouseOwner"
-            + " WHERE AccountId = @AccountId";
-        return _db.Query<HouseOwner>(sql, new { @AccountId = accountId }).SingleOrDefault();
-    }
-
     public List<HouseOwner> GetByBusinessId(int businessId)
     {
         var sql = "SELECT * FROM HouseOwner"
@@ -62,6 +55,22 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
         var sql = "SELECT * FROM HouseOwner"
             + " WHERE HouseOwnerId = @HouseOwnerId";
         return _db.Query<HouseOwner>(sql, new { @HouseOwnerId = id }).SingleOrDefault();
+    }
+
+    public HouseOwner GetExtByAccountId(long accountId)
+    {
+        var sql = "SELECT * FROM HouseOwner ho"
+            + " INNER JOIN Account a ON ho.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " WHERE ho.AccountId = @AccountId";
+        return _db.Query<HouseOwner, Account, AccountGroup, HouseOwner>(sql,
+            (houseOwner, account, accountGroup) =>
+            {
+                houseOwner.Account = account;
+                houseOwner.Account.AccountGroup = accountGroup;
+                return houseOwner;
+            }, new { @AccountId = accountId },
+            splitOn: "AccountId,AccountGroupId").SingleOrDefault();
     }
 
     public HouseOwner GetExtById(long id)

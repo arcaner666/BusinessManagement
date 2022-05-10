@@ -29,7 +29,6 @@ public class AccountExtBl : IAccountExtBl
 
     public IResult AddExt(AccountExtDto accountExtDto)
     {
-        // Yeni bir cari hesap oluşturulur.
         AccountDto accountDto = new()
         {
             BusinessId = accountExtDto.BusinessId,

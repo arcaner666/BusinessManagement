@@ -222,10 +222,10 @@ public static class Messages
     public const string HouseOwnerDeleted = "HouseOwnerDeleted";
     public const string HouseOwnerExtAdded = "HouseOwnerExtAdded";
     public const string HouseOwnerExtDeleted = "HouseOwnerExtDeleted";
+    public const string HouseOwnerExtListedByAccountId = "HouseOwnerExtListedByAccountId";
     public const string HouseOwnerExtListedById = "HouseOwnerExtListedById";
     public const string HouseOwnerExtsListedByBusinessId = "HouseOwnerExtsListedByBusinessId";
     public const string HouseOwnerExtUpdated = "HouseOwnerExtUpdated";
-    public const string HouseOwnerListedByAccountId = "HouseOwnerListedByAccountId";
     public const string HouseOwnerListedById = "HouseOwnerListedById";
     public const string HouseOwnerNotFound = "HouseOwnerNotFound";
     public const string HouseOwnersListedByBusinessId = "HouseOwnersListedByBusinessId";

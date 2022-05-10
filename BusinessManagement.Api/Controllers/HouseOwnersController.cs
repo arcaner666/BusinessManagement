@@ -16,15 +16,6 @@ public class HouseOwnersController : ControllerBase
         _houseOwnerBl = houseOwnerBl;
     }
 
-    [HttpGet("getbyaccountid/{accountId}")]
-    public IActionResult GetByAccountId(long accountId)
-    {
-        var result = _houseOwnerBl.GetByAccountId(accountId);
-        if (result.Success)
-            return Ok(result);
-        return BadRequest(result);
-    }
-
     [HttpGet("getbybusinessid/{businessId}")]
     public IActionResult GetByBusinessId(int businessId)
     {

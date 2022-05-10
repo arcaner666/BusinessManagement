@@ -116,6 +116,7 @@ public static class Messages
     public const string CashDeleted = "CashDeleted";
     public const string CashExtAdded = "CashExtAdded";
     public const string CashExtDeleted = "CashExtDeleted";
+    public const string CashExtListedByAccountId = "CashExtListedByAccountId";
     public const string CashExtListedById = "CashExtListedById";
     public const string CashExtsListedByBusinessId = "CashExtsListedByBusinessId";
     public const string CashExtUpdated = "CashExtUpdated";

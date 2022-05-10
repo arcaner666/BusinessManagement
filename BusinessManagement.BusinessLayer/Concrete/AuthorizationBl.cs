@@ -207,15 +207,10 @@ public class AuthorizationBl : IAuthorizationBl
             BusinessId = addBusinessResult.Data.BusinessId,
             BranchId = addBranchResult.Data.BranchId,
             CurrencyId = getCurrencyResult.Data.CurrencyId,
-
-            TaxOffice = registerSectionManagerDto.TaxOffice,
-            TaxNumber = registerSectionManagerDto.TaxNumber,
-            IdentityNumber = registerSectionManagerDto.IdentityNumber,
             AccountOrder = 1,
             AccountName = "TL Kasası",
             AccountCode = "10000000100000001",
             Limit = 0,
-            StandartMaturity = 0,
         };
         var addCashExtResult = _cashExtBl.AddExt(cashExtDto);
         if (!addCashExtResult.Success)

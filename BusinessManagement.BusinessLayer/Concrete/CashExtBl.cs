@@ -90,6 +90,17 @@ public class CashExtBl : ICashExtBl
         return new SuccessResult(Messages.CashExtDeleted);
     }
 
+    public IDataResult<CashExtDto> GetExtByAccountId(long accountId)
+    {
+        Cash searchedCash = _cashDal.GetExtByAccountId(accountId);
+        if (searchedCash is null)
+            return new ErrorDataResult<CashExtDto>(Messages.CashNotFound);
+
+        CashExtDto searchedCashExtDto = FillExtDto(searchedCash);
+
+        return new SuccessDataResult<CashExtDto>(searchedCashExtDto, Messages.CashExtListedByAccountId);
+    }
+
     public IDataResult<CashExtDto> GetExtById(long id)
     {
         Cash searchedCash = _cashDal.GetExtById(id);
@@ -148,6 +159,16 @@ public class CashExtBl : ICashExtBl
             CurrencyId = cash.CurrencyId,
             CreatedAt = cash.CreatedAt,
             UpdatedAt = cash.UpdatedAt,
+
+            // Extended With Account
+            AccountGroupId = cash.Account.AccountGroupId,
+            AccountOrder = cash.Account.AccountOrder,
+            AccountName = cash.Account.AccountName,
+            AccountCode = cash.Account.AccountCode,
+            Limit = cash.Account.Limit,
+
+            // Extended With Currency
+            CurrencyName = cash.Currency.CurrencyName,
         };
         return cashExtDto;
     }

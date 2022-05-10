@@ -9,6 +9,7 @@ public interface ICashDal
     List<Cash> GetByBusinessId(int businessId);
     Cash GetByBusinessIdAndAccountId(int businessId, long accountId);
     Cash GetById(long id);
+    Cash GetExtByAccountId(long accountId);
     Cash GetExtById(long id);
     List<Cash> GetExtsByBusinessId(int businessId);
     void Update(Cash cash);

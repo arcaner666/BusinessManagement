@@ -35,6 +35,15 @@ public class CashExtsController : ControllerBase
         return BadRequest(result);
     }
 
+    [HttpGet("getextbyaccountid/{accountId}")]
+    public IActionResult GetExtByAccountId(long accountId)
+    {
+        var result = _cashExtBl.GetExtByAccountId(accountId);
+        if (result.Success)
+            return Ok(result);
+        return BadRequest(result);
+    }
+
     [HttpGet("getextbyid/{id}")]
     public IActionResult GetExtById(long id)
     {

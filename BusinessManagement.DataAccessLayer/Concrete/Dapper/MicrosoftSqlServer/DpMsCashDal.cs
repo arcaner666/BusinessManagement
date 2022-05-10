@@ -57,20 +57,40 @@ public class DpMsCashDal : ICashDal
         return _db.Query<Cash>(sql, new { @CashId = id }).SingleOrDefault();
     }
 
+    public Cash GetExtByAccountId(long accountId)
+    {
+        var sql = "SELECT * FROM Cash c"
+            + " INNER JOIN Account a ON c.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " INNER JOIN Currency cu ON c.CurrencyId = cu.CurrencyId"
+            + " WHERE c.AccountId = @AccountId";
+        return _db.Query<Cash, Account, AccountGroup, Currency, Cash>(sql,
+            (cash, account, accountGroup, currency) =>
+            {
+                cash.Account = account;
+                cash.Account.AccountGroup = accountGroup;
+                cash.Currency = currency;
+                return cash;
+            }, new { @AccountId = accountId },
+            splitOn: "AccountId,AccountGroupId,CurrencyId").SingleOrDefault();
+    }
+
     public Cash GetExtById(long id)
     {
         var sql = "SELECT * FROM Cash c"
             + " INNER JOIN Account a ON c.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " INNER JOIN Currency cu ON c.CurrencyId = cu.CurrencyId"
             + " WHERE c.CashId = @CashId";
-        return _db.Query<Cash, Account, AccountGroup, Cash>(sql,
-            (cash, account, accountGroup) =>
+        return _db.Query<Cash, Account, AccountGroup, Currency, Cash>(sql,
+            (cash, account, accountGroup, currency) =>
             {
                 cash.Account = account;
                 cash.Account.AccountGroup = accountGroup;
+                cash.Currency = currency;
                 return cash;
             }, new { @CashId = id },
-            splitOn: "AccountId,AccountGroupId").SingleOrDefault();
+            splitOn: "AccountId,AccountGroupId,CurrencyId").SingleOrDefault();
     }
 
     public List<Cash> GetExtsByBusinessId(int businessId)
@@ -78,15 +98,17 @@ public class DpMsCashDal : ICashDal
         var sql = "SELECT * FROM Cash c"
             + " INNER JOIN Account a ON c.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
+            + " INNER JOIN Currency cu ON c.CurrencyId = cu.CurrencyId"
             + " WHERE c.BusinessId = @BusinessId";
-        return _db.Query<Cash, Account, AccountGroup, Cash>(sql,
-            (cash, account, accountGroup) =>
+        return _db.Query<Cash, Account, AccountGroup, Currency, Cash>(sql,
+            (cash, account, accountGroup, currency) =>
             {
                 cash.Account = account;
                 cash.Account.AccountGroup = accountGroup;
+                cash.Currency = currency;
                 return cash;
             }, new { @BusinessId = businessId },
-            splitOn: "AccountId,AccountGroupId").ToList();
+            splitOn: "AccountId,AccountGroupId,CurrencyId").ToList();
     }
 
     public void Update(Cash cash)

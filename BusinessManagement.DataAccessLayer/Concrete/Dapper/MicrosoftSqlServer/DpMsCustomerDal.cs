@@ -25,6 +25,13 @@ public class DpMsCustomerDal : ICustomerDal
         return customer;
     }
 
+    public Customer GetByAccountId(long accountId)
+    {
+        var sql = "SELECT * FROM Customer"
+            + " WHERE AccountId = @AccountId";
+        return _db.Query<Customer>(sql, new { @AccountId = accountId }).SingleOrDefault();
+    }
+
     public List<Customer> GetByBusinessId(int businessId)
     {
         var sql = "SELECT * FROM Customer"

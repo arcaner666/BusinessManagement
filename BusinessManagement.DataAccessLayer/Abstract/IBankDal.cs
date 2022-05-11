@@ -6,6 +6,7 @@ public interface IBankDal
 {
     Bank Add(Bank bank);
     void Delete(long id);
+    Bank GetByAccountId(long accountId);
     Bank GetById(long id);
     List<Bank> GetExtsByBusinessId(int businessId);
     Bank GetIfAlreadyExist(int businessId, string iban);

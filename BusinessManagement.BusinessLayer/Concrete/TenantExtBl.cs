@@ -103,6 +103,24 @@ public class TenantExtBl : ITenantExtBl
         return new SuccessResult(Messages.TenantExtDeleted);
     }
 
+    [TransactionScopeAspect]
+    public IResult DeleteExtByAccountId(long accountId)
+    {
+        var searchedTenantResult = _tenantBl.GetByAccountId(accountId);
+        if (!searchedTenantResult.Success)
+            return searchedTenantResult;
+
+        var deleteTenantResult = _tenantBl.Delete(searchedTenantResult.Data.TenantId);
+        if (!deleteTenantResult.Success)
+            return deleteTenantResult;
+
+        var deleteAccountResult = _accountBl.Delete(searchedTenantResult.Data.AccountId);
+        if (!deleteAccountResult.Success)
+            return deleteAccountResult;
+
+        return new SuccessResult(Messages.TenantExtDeletedByAccountId);
+    }
+
     public IDataResult<TenantExtDto> GetExtByAccountId(long accountId)
     {
         Tenant searchedTenant = _tenantDal.GetExtByAccountId(accountId);

@@ -101,6 +101,24 @@ public class EmployeeExtBl : IEmployeeExtBl
         return new SuccessResult(Messages.EmployeeExtDeleted);
     }
 
+    [TransactionScopeAspect]
+    public IResult DeleteExtByAccountId(long accountId)
+    {
+        var searchedEmployeeResult = _employeeBl.GetByAccountId(accountId);
+        if (!searchedEmployeeResult.Success)
+            return searchedEmployeeResult;
+
+        var deleteEmployeeResult = _employeeBl.Delete(searchedEmployeeResult.Data.EmployeeId);
+        if (!deleteEmployeeResult.Success)
+            return deleteEmployeeResult;
+
+        var deleteAccountResult = _accountBl.Delete(searchedEmployeeResult.Data.AccountId);
+        if (!deleteAccountResult.Success)
+            return deleteAccountResult;
+
+        return new SuccessResult(Messages.EmployeeExtDeletedByAccountId);
+    }
+
     public IDataResult<EmployeeExtDto> GetExtByAccountId(long accountId)
     {
         Employee searchedEmployee = _employeeDal.GetExtByAccountId(accountId);

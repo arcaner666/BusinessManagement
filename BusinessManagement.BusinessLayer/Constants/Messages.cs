@@ -116,10 +116,12 @@ public static class Messages
     public const string CashDeleted = "CashDeleted";
     public const string CashExtAdded = "CashExtAdded";
     public const string CashExtDeleted = "CashExtDeleted";
+    public const string CashExtDeletedByAccountId = "CashExtDeletedByAccountId";
     public const string CashExtListedByAccountId = "CashExtListedByAccountId";
     public const string CashExtListedById = "CashExtListedById";
     public const string CashExtsListedByBusinessId = "CashExtsListedByBusinessId";
     public const string CashExtUpdated = "CashExtUpdated";
+    public const string CashListedByAccountId = "CashListedByAccountId";
     public const string CashListedByBusinessId = "CashListedByBusinessId";
     public const string CashListedById = "CashListedById";
     public const string CashNotFound = "CashNotFound";
@@ -162,10 +164,12 @@ public static class Messages
     public const string EmployeeDeleted = "EmployeeDeleted";
     public const string EmployeeExtAdded = "EmployeeExtAdded";
     public const string EmployeeExtDeleted = "EmployeeExtDeleted";
+    public const string EmployeeExtDeletedByAccountId = "EmployeeExtDeletedByAccountId";
     public const string EmployeeExtListedByAccountId = "EmployeeExtListedByAccountId";
     public const string EmployeeExtListedById = "EmployeeExtListedById";
     public const string EmployeeExtsListedByBusinessId = "EmployeeExtsListedByBusinessId";
     public const string EmployeeExtUpdated = "EmployeeExtUpdated";
+    public const string EmployeeListedByAccountId = "EmployeeListedByAccountId";
     public const string EmployeeListedById = "EmployeeListedById";
     public const string EmployeeNotFound = "EmployeeNotFound";
     public const string EmployeesNotFound = "EmployeesNotFound";
@@ -204,6 +208,25 @@ public static class Messages
     public const string FullAddressUpdated = "FullAddressUpdated";
     #endregion
 
+    #region HouseOwner
+    public const string HouseOwnerAdded = "HouseOwnerAdded";
+    public const string HouseOwnerAlreadyExists = "HouseOwnerAlreadyExists";
+    public const string HouseOwnerDeleted = "HouseOwnerDeleted";
+    public const string HouseOwnerExtAdded = "HouseOwnerExtAdded";
+    public const string HouseOwnerExtDeleted = "HouseOwnerExtDeleted";
+    public const string HouseOwnerExtDeletedByAccountId = "HouseOwnerExtDeletedByAccountId";
+    public const string HouseOwnerExtListedByAccountId = "HouseOwnerExtListedByAccountId";
+    public const string HouseOwnerExtListedById = "HouseOwnerExtListedById";
+    public const string HouseOwnerExtsListedByBusinessId = "HouseOwnerExtsListedByBusinessId";
+    public const string HouseOwnerExtUpdated = "HouseOwnerExtUpdated";
+    public const string HouseOwnerListedByAccountId = "HouseOwnerListedByAccountId";
+    public const string HouseOwnerListedById = "HouseOwnerListedById";
+    public const string HouseOwnerNotFound = "HouseOwnerNotFound";
+    public const string HouseOwnersListedByBusinessId = "HouseOwnersListedByBusinessId";
+    public const string HouseOwnersNotFound = "HouseOwnersNotFound";
+    public const string HouseOwnerUpdated = "HouseOwnerUpdated";
+    #endregion
+
     #region Manager
     public const string ManagerAdded = "ManagerAdded";
     public const string ManagerAlreadyExists = "ManagerAlreadyExists";
@@ -216,23 +239,6 @@ public static class Messages
     public const string OperationClaimNotFound = "OperationClaimNotFound";
     public const string OperationClaimsListed = "OperationClaimsListed";
     public const string OperationClaimsNotFound = "OperationClaimsNotFound";
-    #endregion
-
-    #region HouseOwner
-    public const string HouseOwnerAdded = "HouseOwnerAdded";
-    public const string HouseOwnerAlreadyExists = "HouseOwnerAlreadyExists";
-    public const string HouseOwnerDeleted = "HouseOwnerDeleted";
-    public const string HouseOwnerExtAdded = "HouseOwnerExtAdded";
-    public const string HouseOwnerExtDeleted = "HouseOwnerExtDeleted";
-    public const string HouseOwnerExtListedByAccountId = "HouseOwnerExtListedByAccountId";
-    public const string HouseOwnerExtListedById = "HouseOwnerExtListedById";
-    public const string HouseOwnerExtsListedByBusinessId = "HouseOwnerExtsListedByBusinessId";
-    public const string HouseOwnerExtUpdated = "HouseOwnerExtUpdated";
-    public const string HouseOwnerListedById = "HouseOwnerListedById";
-    public const string HouseOwnerNotFound = "HouseOwnerNotFound";
-    public const string HouseOwnersListedByBusinessId = "HouseOwnersListedByBusinessId";
-    public const string HouseOwnersNotFound = "HouseOwnersNotFound";
-    public const string HouseOwnerUpdated = "HouseOwnerUpdated";
     #endregion
     
     #region Section
@@ -284,10 +290,12 @@ public static class Messages
     public const string TenantDeleted = "TenantDeleted";
     public const string TenantExtAdded = "TenantExtAdded";
     public const string TenantExtDeleted = "TenantExtDeleted";
+    public const string TenantExtDeletedByAccountId = "TenantExtDeletedByAccountId";
     public const string TenantExtListedByAccountId = "TenantExtListedByAccountId";
     public const string TenantExtListedById = "TenantExtListedById";
     public const string TenantExtsListedByBusinessId = "TenantExtsListedByBusinessId";
     public const string TenantExtUpdated = "TenantExtUpdated";
+    public const string TenantListedByAccountId = "TenantListedByAccountId";
     public const string TenantListedById = "TenantListedById";
     public const string TenantNotFound = "TenantNotFound";
     public const string TenantsListedByBusinessId = "TenantsListedByBusinessId";

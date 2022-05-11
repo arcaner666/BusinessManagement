@@ -32,6 +32,13 @@ public class DpMsCashDal : ICashDal
         _db.Execute(sql, new { @CashId = id });
     }
 
+    public Cash GetByAccountId(long accountId)
+    {
+        var sql = "SELECT * FROM Cash"
+            + " WHERE AccountId = @AccountId";
+        return _db.Query<Cash>(sql, new { @AccountId = accountId }).SingleOrDefault();
+    }
+
     public List<Cash> GetByBusinessId(int businessId)
     {
         var sql = "SELECT * FROM Cash"

@@ -32,6 +32,13 @@ public class DpMsBankDal : IBankDal
         _db.Execute(sql, new { @BankId = id });
     }
 
+    public Bank GetByAccountId(long accountId)
+    {
+        var sql = "SELECT * FROM Bank"
+            + " WHERE AccountId = @AccountId";
+        return _db.Query<Bank>(sql, new { @AccountId = accountId }).SingleOrDefault();
+    }
+
     public Bank GetById(long id)
     {
         var sql = "SELECT * FROM Bank"

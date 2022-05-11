@@ -6,6 +6,7 @@ public interface IHouseOwnerDal
 {
     HouseOwner Add(HouseOwner houseOwner);
     void Delete(long id);
+    HouseOwner GetByAccountId(long accountId);
     List<HouseOwner> GetByBusinessId(int businessId);
     HouseOwner GetByBusinessIdAndAccountId(int businessId, long accountId);
     HouseOwner GetById(long id);

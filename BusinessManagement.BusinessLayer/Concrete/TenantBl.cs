@@ -63,6 +63,17 @@ public class TenantBl : ITenantBl
         return new SuccessResult(Messages.TenantDeleted);
     }
 
+    public IDataResult<TenantDto> GetByAccountId(long accountId)
+    {
+        Tenant searchedTenant = _tenantDal.GetByAccountId(accountId);
+        if (searchedTenant is null)
+            return new ErrorDataResult<TenantDto>(Messages.TenantNotFound);
+
+        TenantDto searchedTenantDto = FillDto(searchedTenant);
+
+        return new SuccessDataResult<TenantDto>(searchedTenantDto, Messages.TenantListedByAccountId);
+    }
+
     public IDataResult<List<TenantDto>> GetByBusinessId(int businessId)
     {
         List<Tenant> searchedTenants = _tenantDal.GetByBusinessId(businessId);

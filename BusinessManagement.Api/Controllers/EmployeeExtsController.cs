@@ -35,6 +35,15 @@ public class EmployeeExtsController : ControllerBase
         return BadRequest(result);
     }
 
+    [HttpDelete("deleteextbyaccountid/{accountId}")]
+    public IActionResult DeleteExtByAccountId(long accountId)
+    {
+        var result = _employeeExtBl.DeleteExtByAccountId(accountId);
+        if (result.Success)
+            return Ok(result);
+        return BadRequest(result);
+    }
+
     [HttpGet("getextbyaccountid/{accountId}")]
     public IActionResult GetExtByAccountId(long accountId)
     {

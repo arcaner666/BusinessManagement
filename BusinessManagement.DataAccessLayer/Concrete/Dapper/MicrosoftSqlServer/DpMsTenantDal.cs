@@ -32,6 +32,13 @@ public class DpMsTenantDal : ITenantDal
         _db.Execute(sql, new { @TenantId = id });
     }
 
+    public Tenant GetByAccountId(long accountId)
+    {
+        var sql = "SELECT * FROM Tenant"
+            + " WHERE AccountId = @AccountId";
+        return _db.Query<Tenant>(sql, new { @AccountId = accountId }).SingleOrDefault();
+    }
+
     public List<Tenant> GetByBusinessId(int businessId)
     {
         var sql = "SELECT * FROM Tenant"

@@ -53,6 +53,17 @@ public class CashBl : ICashBl
         return new SuccessResult(Messages.CashDeleted);
     }
 
+    public IDataResult<CashDto> GetByAccountId(long accountId)
+    {
+        Cash searchedCash = _cashDal.GetByAccountId(accountId);
+        if (searchedCash is null)
+            return new ErrorDataResult<CashDto>(Messages.CashNotFound);
+
+        CashDto searchedCashDto = FillDto(searchedCash);
+
+        return new SuccessDataResult<CashDto>(searchedCashDto, Messages.CashListedByAccountId);
+    }
+
     public IDataResult<List<CashDto>> GetByBusinessId(int businessId)
     {
         List<Cash> searchedCash = _cashDal.GetByBusinessId(businessId);

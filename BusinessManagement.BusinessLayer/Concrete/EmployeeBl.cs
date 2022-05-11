@@ -64,6 +64,17 @@ public class EmployeeBl : IEmployeeBl
         return new SuccessResult(Messages.EmployeeDeleted);
     }
 
+    public IDataResult<EmployeeDto> GetByAccountId(long accountId)
+    {
+        Employee searchedEmployee = _employeeDal.GetByAccountId(accountId);
+        if (searchedEmployee is null)
+            return new ErrorDataResult<EmployeeDto>(Messages.EmployeeNotFound);
+
+        EmployeeDto searchedEmployeeDto = FillDto(searchedEmployee);
+
+        return new SuccessDataResult<EmployeeDto>(searchedEmployeeDto, Messages.EmployeeListedByAccountId);
+    }
+
     public IDataResult<EmployeeDto> GetById(long id)
     {
         Employee searchedEmployee = _employeeDal.GetById(id);

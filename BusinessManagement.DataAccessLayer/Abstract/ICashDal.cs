@@ -6,6 +6,7 @@ public interface ICashDal
 {
     Cash Add(Cash cash);
     void Delete(long id);
+    Cash GetByAccountId(long accountId);
     List<Cash> GetByBusinessId(int businessId);
     Cash GetByBusinessIdAndAccountId(int businessId, long accountId);
     Cash GetById(long id);

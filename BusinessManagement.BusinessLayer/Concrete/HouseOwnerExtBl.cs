@@ -103,6 +103,24 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
         return new SuccessResult(Messages.HouseOwnerExtDeleted);
     }
 
+    [TransactionScopeAspect]
+    public IResult DeleteExtByAccountId(long accountId)
+    {
+        var searchedHouseOwnerResult = _houseOwnerBl.GetByAccountId(accountId);
+        if (!searchedHouseOwnerResult.Success)
+            return searchedHouseOwnerResult;
+
+        var deleteHouseOwnerResult = _houseOwnerBl.Delete(searchedHouseOwnerResult.Data.HouseOwnerId);
+        if (!deleteHouseOwnerResult.Success)
+            return deleteHouseOwnerResult;
+
+        var deleteAccountResult = _accountBl.Delete(searchedHouseOwnerResult.Data.AccountId);
+        if (!deleteAccountResult.Success)
+            return deleteAccountResult;
+
+        return new SuccessResult(Messages.HouseOwnerExtDeletedByAccountId);
+    }
+
     public IDataResult<HouseOwnerExtDto> GetExtByAccountId(long accountId)
     {
         HouseOwner searchedHouseOwner = _houseOwnerDal.GetExtByAccountId(accountId);

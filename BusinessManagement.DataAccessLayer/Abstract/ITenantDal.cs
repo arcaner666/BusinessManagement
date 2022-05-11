@@ -6,6 +6,7 @@ public interface ITenantDal
 {
     Tenant Add(Tenant tenant);
     void Delete(long id);
+    Tenant GetByAccountId(long accountId);
     List<Tenant> GetByBusinessId(int businessId);
     Tenant GetByBusinessIdAndAccountId(int businessId, long accountId);
     Tenant GetById(long id);

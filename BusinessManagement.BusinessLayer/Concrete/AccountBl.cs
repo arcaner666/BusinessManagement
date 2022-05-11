@@ -52,7 +52,7 @@ public class AccountBl : IAccountBl
     public IResult Delete(long id)
     {
         var getAccountResult = GetById(id);
-        if (getAccountResult is null)
+        if (!getAccountResult.Success)
             return getAccountResult;
 
         _accountDal.Delete(id);

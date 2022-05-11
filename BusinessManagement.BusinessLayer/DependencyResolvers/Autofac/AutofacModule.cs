@@ -32,6 +32,10 @@ public class AutofacModule : Module
 
         builder.RegisterType<AuthorizationBl>().As<IAuthorizationBl>().SingleInstance();
 
+        builder.RegisterType<BankBl>().As<IBankBl>().SingleInstance();
+        builder.RegisterType<BankExtBl>().As<IBankExtBl>().SingleInstance();
+        builder.RegisterType<DpMsBankDal>().As<IBankDal>().SingleInstance();
+
         builder.RegisterType<BranchBl>().As<IBranchBl>().SingleInstance();
         builder.RegisterType<BranchExtBl>().As<IBranchExtBl>().SingleInstance();
         builder.RegisterType<DpMsBranchDal>().As<IBranchDal>().SingleInstance();

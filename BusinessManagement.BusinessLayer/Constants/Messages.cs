@@ -81,9 +81,19 @@ public static class Messages
     #region Bank
     public const string BankAdded = "BankAdded";
     public const string BankAlreadyExists = "BankAlreadyExists";
+    public const string BankDeleted = "BankDeleted";
+    public const string BankExtAdded = "BankExtAdded";
+    public const string BankExtDeleted = "BankExtDeleted";
+    public const string BankExtDeletedByAccountId = "BankExtDeletedByAccountId";
+    public const string BankExtListedByAccountId = "BankExtListedByAccountId";
+    public const string BankExtListedById = "BankExtListedById";
     public const string BankExtsListedByBusinessId = "BankExtsListedByBusinessId";
+    public const string BankExtUpdated = "BankExtUpdated";
+    public const string BankListedByAccountId = "BankListedByAccountId";
+    public const string BankListedByBusinessId = "BankListedByBusinessId";
+    public const string BankListedById = "BankListedById";
     public const string BankNotFound = "BankNotFound";
-    public const string BanksNotFound = "BanksNotFound";
+    public const string BankUpdated = "BankUpdated";
     #endregion
 
     #region Branch

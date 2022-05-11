@@ -39,11 +39,73 @@ public class DpMsBankDal : IBankDal
         return _db.Query<Bank>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
+    public List<Bank> GetByBusinessId(int businessId)
+    {
+        var sql = "SELECT * FROM Bank"
+            + " WHERE BusinessId = @BusinessId";
+        return _db.Query<Bank>(sql, new { @BusinessId = businessId }).ToList();
+    }
+
+    public Bank GetByBusinessIdAndIban(int businessId, string iban)
+    {
+        var sql = "SELECT * FROM Bank"
+            + " WHERE BusinessId = @BusinessId AND Iban = @Iban";
+        return _db.Query<Bank>(sql, new
+        {
+            @BusinessId = businessId,
+            @Iban = iban,
+        }).SingleOrDefault();
+    }
+
     public Bank GetById(long id)
     {
         var sql = "SELECT * FROM Bank"
             + " WHERE BankId = @BankId";
         return _db.Query<Bank>(sql, new { @BankId = id }).SingleOrDefault();
+    }
+
+    public Bank GetExtByAccountId(long accountId)
+    {
+        var sql = "SELECT * FROM Bank b"
+            + " INNER JOIN Branch br ON b.BranchId = br.BranchId"
+            + " INNER JOIN FullAddress fa ON b.FullAddressId = fa.FullAddressId"
+            + " INNER JOIN City c ON fa.CityId = c.CityId"
+            + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
+            + " INNER JOIN Currency cu ON b.CurrencyId = cu.CurrencyId"
+            + " WHERE b.AccountId = @AccountId;";
+        return _db.Query<Bank, Branch, FullAddress, City, District, Currency, Bank>(sql,
+            (bank, branch, fullAddress, city, district, currency) =>
+            {
+                bank.Branch = branch;
+                bank.FullAddress = fullAddress;
+                bank.FullAddress.City = city;
+                bank.FullAddress.District = district;
+                bank.Currency = currency;
+                return bank;
+            }, new { @AccountId = accountId },
+            splitOn: "BranchId,FullAddressId,CityId,DistrictId,CurrencyId").SingleOrDefault();
+    }
+
+    public Bank GetExtById(long id)
+    {
+        var sql = "SELECT * FROM Bank b"
+            + " INNER JOIN Branch br ON b.BranchId = br.BranchId"
+            + " INNER JOIN FullAddress fa ON b.FullAddressId = fa.FullAddressId"
+            + " INNER JOIN City c ON fa.CityId = c.CityId"
+            + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
+            + " INNER JOIN Currency cu ON b.CurrencyId = cu.CurrencyId"
+            + " WHERE b.BankId = @BankId;";
+        return _db.Query<Bank, Branch, FullAddress, City, District, Currency, Bank>(sql,
+            (bank, branch, fullAddress, city, district, currency) =>
+            {
+                bank.Branch = branch;
+                bank.FullAddress = fullAddress;
+                bank.FullAddress.City = city;
+                bank.FullAddress.District = district;
+                bank.Currency = currency;
+                return bank;
+            }, new { @BankId = id },
+            splitOn: "BranchId,FullAddressId,CityId,DistrictId,CurrencyId").SingleOrDefault();
     }
 
     public List<Bank> GetExtsByBusinessId(int businessId)
@@ -53,28 +115,19 @@ public class DpMsBankDal : IBankDal
             + " INNER JOIN FullAddress fa ON b.FullAddressId = fa.FullAddressId"
             + " INNER JOIN City c ON fa.CityId = c.CityId"
             + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
+            + " INNER JOIN Currency cu ON b.CurrencyId = cu.CurrencyId"
             + " WHERE b.BusinessId = @BusinessId;";
-        return _db.Query<Bank, Branch, FullAddress, City, District, Bank>(sql,
-            (bank, branch, fullAddress, city, district) =>
+        return _db.Query<Bank, Branch, FullAddress, City, District, Currency, Bank>(sql,
+            (bank, branch, fullAddress, city, district, currency) =>
             {
                 bank.Branch = branch;
                 bank.FullAddress = fullAddress;
                 bank.FullAddress.City = city;
                 bank.FullAddress.District = district;
+                bank.Currency = currency;
                 return bank;
             }, new { @BusinessId = businessId },
-            splitOn: "BranchId,FullAddressId,CityId,DistrictId").ToList();
-    }
-
-    public Bank GetIfAlreadyExist(int businessId, string iban)
-    {
-        var sql = "SELECT * FROM Bank"
-            + " WHERE BusinessId = @BusinessId AND Iban = @Iban";
-        return _db.Query<Bank>(sql, new
-        {
-            @BusinessId = businessId,
-            @Iban = iban,
-        }).SingleOrDefault();
+            splitOn: "BranchId,FullAddressId,CityId,DistrictId,CurrencyId").ToList();
     }
 
     public void Update(Bank bank)

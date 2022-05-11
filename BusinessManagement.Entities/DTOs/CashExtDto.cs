@@ -10,6 +10,9 @@ public class CashExtDto
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
+    // Extended With Branch
+    public string BranchName { get; set; }
+
     // Extended With Account
     public short AccountGroupId { get; set; }
     public int AccountOrder { get; set; }

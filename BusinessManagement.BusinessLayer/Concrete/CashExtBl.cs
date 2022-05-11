@@ -122,13 +122,22 @@ public class CashExtBl : ICashExtBl
         return new SuccessDataResult<CashExtDto>(searchedCashExtDto, Messages.CashExtListedByAccountId);
     }
 
+    //public IDataResult<CashExtDto> GetExtById(long id)
+    //{
+    //    Cash searchedCash = _cashDal.GetExtById(id);
+    //    if (searchedCash is null)
+    //        return new ErrorDataResult<CashExtDto>(Messages.CashNotFound);
+
+    //    CashExtDto searchedCashExtDto = FillExtDto(searchedCash);
+
+    //    return new SuccessDataResult<CashExtDto>(searchedCashExtDto, Messages.CashExtListedById);
+    //}
+
     public IDataResult<CashExtDto> GetExtById(long id)
     {
-        Cash searchedCash = _cashDal.GetExtById(id);
-        if (searchedCash is null)
+        CashExtDto searchedCashExtDto = _cashDal.GetExtById(id);
+        if (searchedCashExtDto is null)
             return new ErrorDataResult<CashExtDto>(Messages.CashNotFound);
-
-        CashExtDto searchedCashExtDto = FillExtDto(searchedCash);
 
         return new SuccessDataResult<CashExtDto>(searchedCashExtDto, Messages.CashExtListedById);
     }

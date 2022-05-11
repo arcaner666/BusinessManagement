@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -82,22 +83,30 @@ public class DpMsCashDal : ICashDal
             splitOn: "AccountId,AccountGroupId,CurrencyId").SingleOrDefault();
     }
 
-    public Cash GetExtById(long id)
+    public CashExtDto GetExtById(long id)
     {
-        var sql = "SELECT * FROM Cash c"
+        var sql = "SELECT"
+            + " c.CashId,"
+            + " c.BusinessId,"
+            + " c.BranchId,"
+            + " c.AccountId,"
+            + " c.CurrencyId,"
+            + " c.CreatedAt,"
+            + " c.UpdatedAt,"
+            + " b.BranchName,"
+            + " a.AccountGroupId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.Limit,"
+            + " cu.CurrencyName"
+            + " FROM Cash c"
+            + " INNER JOIN Branch b ON c.BranchId = b.BranchId"
             + " INNER JOIN Account a ON c.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN Currency cu ON c.CurrencyId = cu.CurrencyId"
             + " WHERE c.CashId = @CashId";
-        return _db.Query<Cash, Account, AccountGroup, Currency, Cash>(sql,
-            (cash, account, accountGroup, currency) =>
-            {
-                cash.Account = account;
-                cash.Account.AccountGroup = accountGroup;
-                cash.Currency = currency;
-                return cash;
-            }, new { @CashId = id },
-            splitOn: "AccountId,AccountGroupId,CurrencyId").SingleOrDefault();
+        return _db.Query<CashExtDto>(sql, new { @CashId = id }).SingleOrDefault();
     }
 
     public List<Cash> GetExtsByBusinessId(int businessId)

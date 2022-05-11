@@ -1,4 +1,5 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
@@ -11,7 +12,7 @@ public interface ICashDal
     Cash GetByBusinessIdAndAccountId(int businessId, long accountId);
     Cash GetById(long id);
     Cash GetExtByAccountId(long accountId);
-    Cash GetExtById(long id);
+    CashExtDto GetExtById(long id);
     List<Cash> GetExtsByBusinessId(int businessId);
     void Update(Cash cash);
 }

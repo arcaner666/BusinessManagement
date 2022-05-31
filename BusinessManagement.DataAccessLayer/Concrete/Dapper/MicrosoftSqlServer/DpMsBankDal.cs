@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,13 +17,42 @@ public class DpMsBankDal : IBankDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public Bank Add(Bank bank)
+    public long Add(BankDto bankDto)
     {
-        var sql = "INSERT INTO Bank (BusinessId, BranchId, AccountId, FullAddressId, CurrencyId, BankName, BankBranchName, BankCode, BankBranchCode, BankAccountCode, Iban, OfficerName, StandartMaturity, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountId, @FullAddressId, @CurrencyId, @BankName, @BankBranchName, @BankCode, @BankBranchCode, @BankAccountCode, @Iban, @OfficerName, @StandartMaturity, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        var id = _db.Query<long>(sql, bank).Single();
-        bank.BankId = id;
-        return bank;
+        var sql = "INSERT INTO Bank (" 
+            + " BusinessId," 
+            + " BranchId,"
+            + " AccountId,"
+            + " FullAddressId,"
+            + " CurrencyId,"
+            + " BankName,"
+            + " BankBranchName,"
+            + " BankCode,"
+            + " BankBranchCode,"
+            + " BankAccountCode,"
+            + " Iban,"
+            + " OfficerName,"
+            + " StandartMaturity,"
+            + " CreatedAt,"
+            + " UpdatedAt)"
+            + " VALUES("
+            + " @BusinessId," 
+            + " @BranchId,"
+            + " @AccountId,"
+            + " @FullAddressId,"
+            + " @CurrencyId,"
+            + " @BankName,"
+            + " @BankBranchName,"
+            + " @BankCode,"
+            + " @BankBranchCode,"
+            + " @BankAccountCode,"
+            + " @Iban,"
+            + " @OfficerName,"
+            + " @StandartMaturity,"
+            + " @CreatedAt,"
+            + " @UpdatedAt)"
+            + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        return _db.Query<long>(sql, bankDto).Single();
     }
 
     public void Delete(long id)
@@ -32,108 +62,251 @@ public class DpMsBankDal : IBankDal
         _db.Execute(sql, new { @BankId = id });
     }
 
-    public Bank GetByAccountId(long accountId)
+    public BankDto GetByAccountId(long accountId)
     {
-        var sql = "SELECT * FROM Bank"
+        var sql = "SELECT"
+            + " BankId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " FullAddressId,"
+            + " CurrencyId,"
+            + " BankName,"
+            + " BankBranchName,"
+            + " BankCode,"
+            + " BankBranchCode,"
+            + " BankAccountCode,"
+            + " Iban,"
+            + " OfficerName,"
+            + " StandartMaturity,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Bank"
             + " WHERE AccountId = @AccountId";
-        return _db.Query<Bank>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return _db.Query<BankDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public List<Bank> GetByBusinessId(int businessId)
+    public List<BankDto> GetByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Bank"
+        var sql = "SELECT"
+            + " BankId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " FullAddressId,"
+            + " CurrencyId,"
+            + " BankName,"
+            + " BankBranchName,"
+            + " BankCode,"
+            + " BankBranchCode,"
+            + " BankAccountCode,"
+            + " Iban,"
+            + " OfficerName,"
+            + " StandartMaturity,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Bank"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<Bank>(sql, new { @BusinessId = businessId }).ToList();
+        return _db.Query<BankDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public Bank GetByBusinessIdAndIban(int businessId, string iban)
+    public BankDto GetByBusinessIdAndIban(int businessId, string iban)
     {
-        var sql = "SELECT * FROM Bank"
+        var sql = "SELECT"
+            + " BankId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " FullAddressId,"
+            + " CurrencyId,"
+            + " BankName,"
+            + " BankBranchName,"
+            + " BankCode,"
+            + " BankBranchCode,"
+            + " BankAccountCode,"
+            + " Iban,"
+            + " OfficerName,"
+            + " StandartMaturity,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Bank"
             + " WHERE BusinessId = @BusinessId AND Iban = @Iban";
-        return _db.Query<Bank>(sql, new
+        return _db.Query<BankDto>(sql, new
         {
             @BusinessId = businessId,
             @Iban = iban,
         }).SingleOrDefault();
     }
 
-    public Bank GetById(long id)
+    public BankDto GetById(long id)
     {
-        var sql = "SELECT * FROM Bank"
+        var sql = "SELECT"
+            + " BankId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " FullAddressId,"
+            + " CurrencyId,"
+            + " BankName,"
+            + " BankBranchName,"
+            + " BankCode,"
+            + " BankBranchCode,"
+            + " BankAccountCode,"
+            + " Iban,"
+            + " OfficerName,"
+            + " StandartMaturity,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Bank"
             + " WHERE BankId = @BankId";
-        return _db.Query<Bank>(sql, new { @BankId = id }).SingleOrDefault();
+        return _db.Query<BankDto>(sql, new { @BankId = id }).SingleOrDefault();
     }
 
-    public Bank GetExtByAccountId(long accountId)
+    public BankExtDto GetExtByAccountId(long accountId)
     {
-        var sql = "SELECT * FROM Bank b"
+        var sql = "SELECT" 
+            + " b.BankId,"
+            + " b.BusinessId,"
+            + " b.BranchId,"
+            + " b.AccountId,"
+            + " b.FullAddressId,"
+            + " b.CurrencyId,"
+            + " b.BankName,"
+            + " b.BankBranchName,"
+            + " b.BankCode,"
+            + " b.BankBranchCode,"
+            + " b.BankAccountCode,"
+            + " b.Iban,"
+            + " b.OfficerName,"
+            + " b.StandartMaturity,"
+            + " b.CreatedAt,"
+            + " b.UpdatedAt,"
+            + " br.BranchName,"
+            + " a.AccountGroupId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.Limit,"
+            + " ag.AccountGroupName,"
+            + " fa.CityId,"
+            + " fa.DistrictId,"
+            + " fa.AddressText,"
+            + " cu.CurrencyName"
+            + " FROM Bank b"
             + " INNER JOIN Branch br ON b.BranchId = br.BranchId"
+            + " INNER JOIN Account a ON b.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN FullAddress fa ON b.FullAddressId = fa.FullAddressId"
             + " INNER JOIN City c ON fa.CityId = c.CityId"
             + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
             + " INNER JOIN Currency cu ON b.CurrencyId = cu.CurrencyId"
             + " WHERE b.AccountId = @AccountId;";
-        return _db.Query<Bank, Branch, FullAddress, City, District, Currency, Bank>(sql,
-            (bank, branch, fullAddress, city, district, currency) =>
-            {
-                bank.Branch = branch;
-                bank.FullAddress = fullAddress;
-                bank.FullAddress.City = city;
-                bank.FullAddress.District = district;
-                bank.Currency = currency;
-                return bank;
-            }, new { @AccountId = accountId },
-            splitOn: "BranchId,FullAddressId,CityId,DistrictId,CurrencyId").SingleOrDefault();
+        return _db.Query<BankExtDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public Bank GetExtById(long id)
+    public BankExtDto GetExtById(long id)
     {
-        var sql = "SELECT * FROM Bank b"
+        var sql = "SELECT"
+            + " b.BankId,"
+            + " b.BusinessId,"
+            + " b.BranchId,"
+            + " b.AccountId,"
+            + " b.FullAddressId,"
+            + " b.CurrencyId,"
+            + " b.BankName,"
+            + " b.BankBranchName,"
+            + " b.BankCode,"
+            + " b.BankBranchCode,"
+            + " b.BankAccountCode,"
+            + " b.Iban,"
+            + " b.OfficerName,"
+            + " b.StandartMaturity,"
+            + " b.CreatedAt,"
+            + " b.UpdatedAt,"
+            + " br.BranchName,"
+            + " a.AccountGroupId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.Limit,"
+            + " ag.AccountGroupName,"
+            + " fa.CityId,"
+            + " fa.DistrictId,"
+            + " fa.AddressText,"
+            + " cu.CurrencyName"
+            + " FROM Bank b"
             + " INNER JOIN Branch br ON b.BranchId = br.BranchId"
+            + " INNER JOIN Account a ON b.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN FullAddress fa ON b.FullAddressId = fa.FullAddressId"
             + " INNER JOIN City c ON fa.CityId = c.CityId"
             + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
             + " INNER JOIN Currency cu ON b.CurrencyId = cu.CurrencyId"
             + " WHERE b.BankId = @BankId;";
-        return _db.Query<Bank, Branch, FullAddress, City, District, Currency, Bank>(sql,
-            (bank, branch, fullAddress, city, district, currency) =>
-            {
-                bank.Branch = branch;
-                bank.FullAddress = fullAddress;
-                bank.FullAddress.City = city;
-                bank.FullAddress.District = district;
-                bank.Currency = currency;
-                return bank;
-            }, new { @BankId = id },
-            splitOn: "BranchId,FullAddressId,CityId,DistrictId,CurrencyId").SingleOrDefault();
+        return _db.Query<BankExtDto>(sql, new { @BankId = id }).SingleOrDefault();
     }
 
-    public List<Bank> GetExtsByBusinessId(int businessId)
+    public List<BankExtDto> GetExtsByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Bank b"
+        var sql = "SELECT"
+            + " b.BankId,"
+            + " b.BusinessId,"
+            + " b.BranchId,"
+            + " b.AccountId,"
+            + " b.FullAddressId,"
+            + " b.CurrencyId,"
+            + " b.BankName,"
+            + " b.BankBranchName,"
+            + " b.BankCode,"
+            + " b.BankBranchCode,"
+            + " b.BankAccountCode,"
+            + " b.Iban,"
+            + " b.OfficerName,"
+            + " b.StandartMaturity,"
+            + " b.CreatedAt,"
+            + " b.UpdatedAt,"
+            + " br.BranchName,"
+            + " a.AccountGroupId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.Limit,"
+            + " ag.AccountGroupName,"
+            + " fa.CityId,"
+            + " fa.DistrictId,"
+            + " fa.AddressText,"
+            + " cu.CurrencyName"
+            + " FROM Bank b"
             + " INNER JOIN Branch br ON b.BranchId = br.BranchId"
+            + " INNER JOIN Account a ON b.AccountId = a.AccountId"
+            + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN FullAddress fa ON b.FullAddressId = fa.FullAddressId"
             + " INNER JOIN City c ON fa.CityId = c.CityId"
             + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
             + " INNER JOIN Currency cu ON b.CurrencyId = cu.CurrencyId"
             + " WHERE b.BusinessId = @BusinessId;";
-        return _db.Query<Bank, Branch, FullAddress, City, District, Currency, Bank>(sql,
-            (bank, branch, fullAddress, city, district, currency) =>
-            {
-                bank.Branch = branch;
-                bank.FullAddress = fullAddress;
-                bank.FullAddress.City = city;
-                bank.FullAddress.District = district;
-                bank.Currency = currency;
-                return bank;
-            }, new { @BusinessId = businessId },
-            splitOn: "BranchId,FullAddressId,CityId,DistrictId,CurrencyId").ToList();
+        return _db.Query<BankExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(Bank bank)
+    public void Update(BankDto bankDto)
     {
-        var sql = "UPDATE Bank SET BusinessId = @BusinessId, BranchId = @BranchId, AccountId = @AccountId, FullAddressId = @FullAddressId, CurrencyId = @CurrencyId, BankName = @BankName, BankBranchName = @BankBranchName, BankCode = @BankCode, BankBranchCode = @BankBranchCode, BankAccountCode = @BankAccountCode, Iban = @Iban, OfficerName = @OfficerName, StandartMaturity = @StandartMaturity, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Bank SET" 
+            + " BusinessId = @BusinessId,"
+            + " BranchId = @BranchId,"
+            + " AccountId = @AccountId,"
+            + " FullAddressId = @FullAddressId,"
+            + " CurrencyId = @CurrencyId,"
+            + " BankName = @BankName,"
+            + " BankBranchName = @BankBranchName,"
+            + " BankCode = @BankCode,"
+            + " BankBranchCode = @BankBranchCode,"
+            + " BankAccountCode = @BankAccountCode,"
+            + " Iban = @Iban,"
+            + " OfficerName = @OfficerName,"
+            + " StandartMaturity = @StandartMaturity,"
+            + " CreatedAt = @CreatedAt,"
+            + " UpdatedAt = @UpdatedAt"
             + " WHERE BankId = @BankId";
-        _db.Execute(sql, bank);
+        _db.Execute(sql, bankDto);
     }
 }

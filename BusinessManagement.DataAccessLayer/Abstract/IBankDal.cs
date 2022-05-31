@@ -1,17 +1,18 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IBankDal
 {
-    Bank Add(Bank bank);
+    long Add(BankDto bankDto);
     void Delete(long id);
-    Bank GetByAccountId(long accountId);
-    public List<Bank> GetByBusinessId(int businessId);
-    Bank GetByBusinessIdAndIban(int businessId, string iban);
-    Bank GetById(long id);
-    Bank GetExtByAccountId(long accountId);
-    Bank GetExtById(long id);
-    List<Bank> GetExtsByBusinessId(int businessId);
-    void Update(Bank bank);
+    BankDto GetByAccountId(long accountId);
+    public List<BankDto> GetByBusinessId(int businessId);
+    BankDto GetByBusinessIdAndIban(int businessId, string iban);
+    BankDto GetById(long id);
+    BankExtDto GetExtByAccountId(long accountId);
+    BankExtDto GetExtById(long id);
+    List<BankExtDto> GetExtsByBusinessId(int businessId);
+    void Update(BankDto bankDto);
 }

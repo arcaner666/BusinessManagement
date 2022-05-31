@@ -20,25 +20,16 @@ public class FullAddressBl : IFullAddressBl
 
     public IDataResult<FullAddressDto> Add(FullAddressDto fullAddressDto)
     {
-        FullAddress searchedFullAddress = _fullAddressDal.GetByAddressText(fullAddressDto.AddressText);
-        if (searchedFullAddress is not null)
+        FullAddressDto searchedFullAddressDto = _fullAddressDal.GetByAddressText(fullAddressDto.AddressText);
+        if (searchedFullAddressDto is not null)
             return new ErrorDataResult<FullAddressDto>(Messages.FullAddressAlreadyExists);
 
-        FullAddress addedFullAddress = new()
-        {
-            CityId = fullAddressDto.CityId,
-            DistrictId = fullAddressDto.DistrictId,
-            AddressTitle = fullAddressDto.AddressTitle,
-            PostalCode = fullAddressDto.PostalCode,
-            AddressText = fullAddressDto.AddressText,
-            CreatedAt = DateTimeOffset.Now,
-            UpdatedAt = DateTimeOffset.Now,
-        };
-        _fullAddressDal.Add(addedFullAddress);
+        fullAddressDto.CreatedAt = DateTimeOffset.Now;
+        fullAddressDto.UpdatedAt = DateTimeOffset.Now;
+        long id = _fullAddressDal.Add(fullAddressDto);
+        fullAddressDto.FullAddressId = id;
 
-        FullAddressDto addedFullAddressDto = FillDto(addedFullAddress);
-
-        return new SuccessDataResult<FullAddressDto>(addedFullAddressDto, Messages.FullAddressAdded);
+        return new SuccessDataResult<FullAddressDto>(fullAddressDto, Messages.FullAddressAdded);
     }
 
     public IResult Delete(long id)
@@ -54,54 +45,27 @@ public class FullAddressBl : IFullAddressBl
 
     public IDataResult<FullAddressDto> GetById(long id)
     {
-        FullAddress searchedFullAddress = _fullAddressDal.GetById(id);
-        if (searchedFullAddress is null)
+        FullAddressDto fullAddressDto = _fullAddressDal.GetById(id);
+        if (fullAddressDto is null)
             return new ErrorDataResult<FullAddressDto>(Messages.FullAddressNotFound);
 
-        FullAddressDto searchedFullAddressDto = FillDto(searchedFullAddress);
-
-        return new SuccessDataResult<FullAddressDto>(searchedFullAddressDto, Messages.FullAddressListedById);
+        return new SuccessDataResult<FullAddressDto>(fullAddressDto, Messages.FullAddressListedById);
     }
 
     public IResult Update(FullAddressDto fullAddressDto)
     {
-        FullAddress searchedFullAddress = _fullAddressDal.GetById(fullAddressDto.FullAddressId);
-        if (searchedFullAddress is null)
-            return new ErrorDataResult<FullAddressDto>(Messages.FullAddressNotFound);
+        var searchedFullAddressResult = GetById(fullAddressDto.FullAddressId);
+        if (!searchedFullAddressResult.Success)
+            return searchedFullAddressResult;
 
-        searchedFullAddress.CityId = fullAddressDto.CityId;
-        searchedFullAddress.DistrictId = fullAddressDto.DistrictId;
-        searchedFullAddress.AddressTitle = fullAddressDto.AddressTitle;
-        searchedFullAddress.PostalCode = fullAddressDto.PostalCode;
-        searchedFullAddress.AddressText = fullAddressDto.AddressText;
-        searchedFullAddress.UpdatedAt = DateTimeOffset.Now;
-
-        _fullAddressDal.Update(searchedFullAddress);
+        searchedFullAddressResult.Data.CityId = fullAddressDto.CityId;
+        searchedFullAddressResult.Data.DistrictId = fullAddressDto.DistrictId;
+        searchedFullAddressResult.Data.AddressTitle = fullAddressDto.AddressTitle;
+        searchedFullAddressResult.Data.PostalCode = fullAddressDto.PostalCode;
+        searchedFullAddressResult.Data.AddressText = fullAddressDto.AddressText;
+        searchedFullAddressResult.Data.UpdatedAt = DateTimeOffset.Now;
+        _fullAddressDal.Update(searchedFullAddressResult.Data);
 
         return new SuccessResult(Messages.FullAddressUpdated);
-    }
-
-    private FullAddressDto FillDto(FullAddress fullAddress)
-    {
-        FullAddressDto fullAddressDto = new()
-        {
-            FullAddressId = fullAddress.FullAddressId,
-            CityId = fullAddress.CityId,
-            DistrictId = fullAddress.DistrictId,
-            AddressTitle = fullAddress.AddressTitle,
-            PostalCode = fullAddress.PostalCode,
-            AddressText = fullAddress.AddressText,
-            CreatedAt = fullAddress.CreatedAt,
-            UpdatedAt = fullAddress.UpdatedAt,
-        };
-
-        return fullAddressDto;
-    }
-
-    private List<FullAddressDto> FillDtos(List<FullAddress> fullAddresses)
-    {
-        List<FullAddressDto> fullAddressDtos = fullAddresses.Select(fullAddress => FillDto(fullAddress)).ToList();
-
-        return fullAddressDtos;
     }
 }

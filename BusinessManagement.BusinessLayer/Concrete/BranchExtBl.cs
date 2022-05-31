@@ -84,24 +84,20 @@ public class BranchExtBl : IBranchExtBl
 
     public IDataResult<BranchExtDto> GetExtById(long id)
     {
-        Branch searchedBranch = _branchDal.GetExtById(id);
-        if (searchedBranch is null)
+        BranchExtDto branchExtDto = _branchDal.GetExtById(id);
+        if (branchExtDto is null)
             return new ErrorDataResult<BranchExtDto>(Messages.BranchNotFound);
 
-        BranchExtDto searchedBranchExtDto = FillExtDto(searchedBranch);
-
-        return new SuccessDataResult<BranchExtDto>(searchedBranchExtDto, Messages.BranchExtListedById);
+        return new SuccessDataResult<BranchExtDto>(branchExtDto, Messages.BranchExtListedById);
     }
 
     public IDataResult<List<BranchExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<Branch> searchedBranches = _branchDal.GetExtsByBusinessId(businessId);
-        if (searchedBranches.Count == 0)
+        List<BranchExtDto> branchExtDtos = _branchDal.GetExtsByBusinessId(businessId);
+        if (branchExtDtos.Count == 0)
             return new ErrorDataResult<List<BranchExtDto>>(Messages.BranchesNotFound);
 
-        List<BranchExtDto> searchedBranchExtDtos = FillExtDtos(searchedBranches);
-
-        return new SuccessDataResult<List<BranchExtDto>>(searchedBranchExtDtos, Messages.BranchExtsListedByBusinessId);
+        return new SuccessDataResult<List<BranchExtDto>>(branchExtDtos, Messages.BranchExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]
@@ -130,35 +126,5 @@ public class BranchExtBl : IBranchExtBl
             return updateBranchResult;
 
         return new SuccessResult(Messages.BranchExtUpdated);
-    }
-
-    private BranchExtDto FillExtDto(Branch branch)
-    {
-        BranchExtDto branchExtDto = new()
-        {
-            BranchId = branch.BranchId,
-            BusinessId = branch.BusinessId,
-            FullAddressId = branch.FullAddressId,
-            BranchOrder = branch.BranchOrder,
-            BranchName = branch.BranchName,
-            BranchCode = branch.BranchCode,
-            CreatedAt = branch.CreatedAt,
-            UpdatedAt = branch.UpdatedAt,
-
-            CityId = branch.FullAddress.CityId,
-            DistrictId = branch.FullAddress.DistrictId,
-            AddressTitle = branch.FullAddress.AddressTitle,
-            PostalCode = branch.FullAddress.PostalCode,
-            AddressText = branch.FullAddress.AddressText,
-        };
-
-        return branchExtDto;
-    }
-
-    private List<BranchExtDto> FillExtDtos(List<Branch> branches)
-    {
-        List<BranchExtDto> branchExtDtos = branches.Select(branch => FillExtDto(branch)).ToList();
-
-        return branchExtDtos;
     }
 }

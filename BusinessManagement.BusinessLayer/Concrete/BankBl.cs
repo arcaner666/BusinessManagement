@@ -20,42 +20,23 @@ public class BankBl : IBankBl
 
     public IDataResult<BankDto> Add(BankDto bankDto)
     {
-        Bank searchedBank = _bankDal.GetByBusinessIdAndIban(bankDto.BusinessId, bankDto.Iban);
-        if (searchedBank is not null)
-        {
+        BankDto searchedBankDto = _bankDal.GetByBusinessIdAndIban(bankDto.BusinessId, bankDto.Iban);
+        if (searchedBankDto is not null)
             return new ErrorDataResult<BankDto>(Messages.BankAlreadyExists);
-        }
 
-        Bank addedBank = new()
-        {
-            BusinessId = bankDto.BusinessId,
-            BranchId = bankDto.BranchId,
-            AccountId = bankDto.AccountId,
-            FullAddressId = bankDto.FullAddressId,
-            CurrencyId = bankDto.CurrencyId,
-            BankName = bankDto.BankName,
-            BankBranchName = bankDto.BankBranchName,
-            BankCode = bankDto.BankCode,
-            BankBranchCode = bankDto.BankBranchCode,
-            BankAccountCode = bankDto.BankAccountCode,
-            Iban = bankDto.Iban,
-            OfficerName = bankDto.OfficerName,
-            StandartMaturity = bankDto.StandartMaturity,
-            CreatedAt = DateTimeOffset.Now,
-            UpdatedAt = DateTimeOffset.Now,
-        };
-        _bankDal.Add(addedBank);
+        bankDto.CreatedAt = DateTimeOffset.Now;
+        bankDto.UpdatedAt = DateTimeOffset.Now;
+        long id = _bankDal.Add(bankDto);
+        bankDto.BankId = id;
 
-        BankDto addedBankDto = FillDto(addedBank);
-
-        return new SuccessDataResult<BankDto>(addedBankDto, Messages.BankAdded);
+        return new SuccessDataResult<BankDto>(bankDto, Messages.BankAdded);
     }
 
     public IResult Delete(long id)
     {
-        var getBankResult = GetById(id);
-        if (getBankResult is null)
-            return getBankResult;
+        var getBankDtoResult = GetById(id);
+        if (getBankDtoResult is null)
+            return getBankDtoResult;
 
         _bankDal.Delete(id);
 
@@ -64,86 +45,48 @@ public class BankBl : IBankBl
 
     public IDataResult<BankDto> GetByAccountId(long accountId)
     {
-        Bank searchedBank = _bankDal.GetByAccountId(accountId);
-        if (searchedBank is null)
+        BankDto bankDto = _bankDal.GetByAccountId(accountId);
+        if (bankDto is null)
             return new ErrorDataResult<BankDto>(Messages.BankNotFound);
 
-        BankDto searchedBankDto = FillDto(searchedBank);
-
-        return new SuccessDataResult<BankDto>(searchedBankDto, Messages.BankListedByAccountId);
+        return new SuccessDataResult<BankDto>(bankDto, Messages.BankListedByAccountId);
     }
 
     public IDataResult<List<BankDto>> GetByBusinessId(int businessId)
     {
-        List<Bank> searchedBank = _bankDal.GetByBusinessId(businessId);
-        if (searchedBank.Count == 0)
+        List<BankDto> bankDtos = _bankDal.GetByBusinessId(businessId);
+        if (bankDtos.Count == 0)
             return new ErrorDataResult<List<BankDto>>(Messages.BankNotFound);
 
-        List<BankDto> searchedBankDtos = FillDtos(searchedBank);
-
-        return new SuccessDataResult<List<BankDto>>(searchedBankDtos, Messages.BankListedByBusinessId);
+        return new SuccessDataResult<List<BankDto>>(bankDtos, Messages.BankListedByBusinessId);
     }
 
     public IDataResult<BankDto> GetById(long id)
     {
-        Bank searchedBank = _bankDal.GetById(id);
-        if (searchedBank is null)
+        BankDto bankDto = _bankDal.GetById(id);
+        if (bankDto is null)
             return new ErrorDataResult<BankDto>(Messages.BankNotFound);
 
-        BankDto searchedBankDto = FillDto(searchedBank);
-
-        return new SuccessDataResult<BankDto>(searchedBankDto, Messages.BankListedById);
+        return new SuccessDataResult<BankDto>(bankDto, Messages.BankListedById);
     }
 
     public IResult Update(BankDto bankDto)
     {
-        Bank searchedBank = _bankDal.GetById(bankDto.BankId);
-        if (searchedBank is null)
-            return new ErrorDataResult<AccountDto>(Messages.BankNotFound);
+        var searchedBankDtoResult = GetById(bankDto.BankId);
+        if (!searchedBankDtoResult.Success)
+            return searchedBankDtoResult;
 
-        searchedBank.BankName = bankDto.BankName;
-        searchedBank.BankBranchName = bankDto.BankBranchName;
-        searchedBank.BankCode = bankDto.BankCode;
-        searchedBank.BankBranchCode = bankDto.BankBranchCode;
-        searchedBank.BankAccountCode = bankDto.BankAccountCode;
-        searchedBank.Iban = bankDto.Iban;
-        searchedBank.OfficerName = bankDto.OfficerName;
-        searchedBank.StandartMaturity = bankDto.StandartMaturity;
-        searchedBank.UpdatedAt = DateTimeOffset.Now;
-        _bankDal.Update(searchedBank);
+        searchedBankDtoResult.Data.BankName = bankDto.BankName;
+        searchedBankDtoResult.Data.BankBranchName = bankDto.BankBranchName;
+        searchedBankDtoResult.Data.BankCode = bankDto.BankCode;
+        searchedBankDtoResult.Data.BankBranchCode = bankDto.BankBranchCode;
+        searchedBankDtoResult.Data.BankAccountCode = bankDto.BankAccountCode;
+        searchedBankDtoResult.Data.Iban = bankDto.Iban;
+        searchedBankDtoResult.Data.OfficerName = bankDto.OfficerName;
+        searchedBankDtoResult.Data.StandartMaturity = bankDto.StandartMaturity;
+        searchedBankDtoResult.Data.UpdatedAt = DateTimeOffset.Now;
+        _bankDal.Update(searchedBankDtoResult.Data);
 
         return new SuccessResult(Messages.BankUpdated);
-    }
-
-    private BankDto FillDto(Bank bank)
-    {
-        BankDto bankDto = new()
-        {
-            BankId = bank.BankId,
-            BusinessId = bank.BusinessId,
-            BranchId = bank.BranchId,
-            AccountId = bank.AccountId,
-            FullAddressId = bank.FullAddressId,
-            CurrencyId = bank.CurrencyId,
-            BankName = bank.BankName,
-            BankBranchName = bank.BankBranchName,
-            BankCode = bank.BankCode,
-            BankBranchCode = bank.BankBranchCode,
-            BankAccountCode = bank.BankAccountCode,
-            Iban = bank.Iban,
-            OfficerName = bank.OfficerName,
-            StandartMaturity = bank.StandartMaturity,
-            CreatedAt = bank.CreatedAt,
-            UpdatedAt = bank.UpdatedAt,
-        };
-
-        return bankDto;
-    }
-
-    private List<BankDto> FillDtos(List<Bank> bank)
-    {
-        List<BankDto> bankDtos = bank.Select(bank => FillDto(bank)).ToList();
-
-        return bankDtos;
     }
 }

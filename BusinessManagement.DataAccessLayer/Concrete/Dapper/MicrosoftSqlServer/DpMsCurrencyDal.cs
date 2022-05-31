@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,16 +17,24 @@ public class DpMsCurrencyDal : ICurrencyDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public List<Currency> GetAll()
+    public List<CurrencyDto> GetAll()
     {
-        var sql = "SELECT * FROM Currency";
-        return _db.Query<Currency>(sql).ToList();
+        var sql = "SELECT"
+            + " CurrencyId,"
+            + " CurrencyName,"
+            + " CurrencySymbol"
+            + " FROM Currency";
+        return _db.Query<CurrencyDto>(sql).ToList();
     }        
     
-    public Currency GetByCurrencyName(string currencyName)
+    public CurrencyDto GetByCurrencyName(string currencyName)
     {
-        var sql = "SELECT * FROM Currency"
+        var sql = "SELECT"
+            + " CurrencyId,"
+            + " CurrencyName,"
+            + " CurrencySymbol"
+            + " FROM Currency"
             + " WHERE CurrencyName = @CurrencyName";
-        return _db.Query<Currency>(sql, new { @CurrencyName = currencyName }).SingleOrDefault();
+        return _db.Query<CurrencyDto>(sql, new { @CurrencyName = currencyName }).SingleOrDefault();
     }
 }

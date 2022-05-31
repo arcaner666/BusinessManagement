@@ -1,11 +1,12 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface ISystemUserClaimDal
 {
-    SystemUserClaim Add(SystemUserClaim systemUserClaim);
+    long Add(SystemUserClaimDto systemUserClaimDto);
     void Delete(long id);
-    SystemUserClaim GetBySystemUserIdAndOperationClaimId(long systemUserId, int operationClaimId);
-    List<SystemUserClaim> GetExtsBySystemUserId(long systemUserId);
+    SystemUserClaimDto GetBySystemUserIdAndOperationClaimId(long systemUserId, int operationClaimId);
+    List<SystemUserClaimExtDto> GetExtsBySystemUserId(long systemUserId);
 }

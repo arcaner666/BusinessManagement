@@ -17,13 +17,26 @@ public class DpMsFullAddressDal : IFullAddressDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public FullAddress Add(FullAddress fullAddress)
+    public long Add(FullAddressDto fullAddressDto)
     {
-        var sql = "INSERT INTO FullAddress (CityId, DistrictId, AddressTitle, PostalCode, AddressText, CreatedAt, UpdatedAt)"
-            + " VALUES(@CityId, @DistrictId, @AddressTitle, @PostalCode, @AddressText, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
-        var id = _db.Query<long>(sql, fullAddress).Single();
-        fullAddress.FullAddressId = id;
-        return fullAddress;
+        var sql = "INSERT INTO FullAddress ("
+            + " CityId,"
+            + " DistrictId,"
+            + " AddressTitle,"
+            + " PostalCode,"
+            + " AddressText,"
+            + " CreatedAt,"
+            + " UpdatedAt)"
+            + " VALUES("
+            + " @CityId,"
+            + " @DistrictId,"
+            + " @AddressTitle,"
+            + " @PostalCode,"
+            + " @AddressText,"
+            + " @CreatedAt,"
+            + " @UpdatedAt)"
+            + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
+        return _db.Query<long>(sql, fullAddressDto).Single();
     }
 
     public void Delete(long id)
@@ -33,24 +46,49 @@ public class DpMsFullAddressDal : IFullAddressDal
         _db.Execute(sql, new { @FullAddressId = id });
     }
 
-    public FullAddress GetByAddressText(string addressText)
+    public FullAddressDto GetByAddressText(string addressText)
     {
-        var sql = "SELECT * FROM FullAddress"
+        var sql = "SELECT"
+            + " FullAddressId,"
+            + " CityId,"
+            + " DistrictId,"
+            + " AddressTitle,"
+            + " PostalCode,"
+            + " AddressText,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM FullAddress"
             + " WHERE AddressText = @AddressText";
-        return _db.Query<FullAddress>(sql, new { @AddressText = addressText }).SingleOrDefault();
+        return _db.Query<FullAddressDto>(sql, new { @AddressText = addressText }).SingleOrDefault();
     }
 
-    public FullAddress GetById(long id)
+    public FullAddressDto GetById(long id)
     {
-        var sql = "SELECT * FROM FullAddress"
+        var sql = "SELECT"
+            + " FullAddressId,"
+            + " CityId,"
+            + " DistrictId,"
+            + " AddressTitle,"
+            + " PostalCode,"
+            + " AddressText,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM FullAddress"
             + " WHERE FullAddressId = @FullAddressId";
-        return _db.Query<FullAddress>(sql, new { @FullAddressId = id }).SingleOrDefault();
+        return _db.Query<FullAddressDto>(sql, new { @FullAddressId = id }).SingleOrDefault();
     }
 
-    public void Update(FullAddress fullAddress)
+    public void Update(FullAddressDto fullAddressDto)
     {
-        var sql = "UPDATE FullAddress SET CityId = @CityId, DistrictId = @DistrictId, AddressTitle = @AddressTitle, PostalCode = @PostalCode, AddressText = @AddressText, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE FullAddress SET"
+            + " CityId = @CityId,"
+            + " DistrictId = @DistrictId,"
+            + " AddressTitle = @AddressTitle,"
+            + " PostalCode = @PostalCode,"
+            + " AddressText = @AddressText,"
+            + " CreatedAt = @CreatedAt,"
+            + " UpdatedAt = @UpdatedAt"
             + " WHERE FullAddressId = @FullAddressId";
-        _db.Execute(sql, fullAddress);
+        _db.Execute(sql, fullAddressDto);
     }
 }

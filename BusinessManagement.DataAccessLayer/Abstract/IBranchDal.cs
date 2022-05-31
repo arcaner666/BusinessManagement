@@ -1,18 +1,19 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IBranchDal
 {
-    Branch Add(Branch branch);
+    long Add(BranchDto branchDto);
     void Delete(long id);
-    Branch GetByBranchCode(string branchCode);
-    List<Branch> GetByBusinessId(int businessId);
-    Branch GetByBusinessIdAndBranchName(int businessId, string branchName);
-    Branch GetByBusinessIdAndBranchOrderOrBranchCode(int businessId, int branchOrder, string branchCode);
-    Branch GetByBusinessIdAndMaxBranchOrder(int businessId);
-    Branch GetById(long id);
-    Branch GetExtById(long id);
-    List<Branch> GetExtsByBusinessId(int businessId);
-    void Update(Branch branch);
+    BranchDto GetByBranchCode(string branchCode);
+    List<BranchDto> GetByBusinessId(int businessId);
+    BranchDto GetByBusinessIdAndBranchName(int businessId, string branchName);
+    BranchDto GetByBusinessIdAndBranchOrderOrBranchCode(int businessId, int branchOrder, string branchCode);
+    BranchDto GetByBusinessIdAndMaxBranchOrder(int businessId);
+    BranchDto GetById(long id);
+    BranchExtDto GetExtById(long id);
+    List<BranchExtDto> GetExtsByBusinessId(int businessId);
+    void Update(BranchDto branchDto);
 }

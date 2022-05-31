@@ -145,35 +145,29 @@ public class BankExtBl : IBankExtBl
 
     public IDataResult<BankExtDto> GetExtByAccountId(long accountId)
     {
-        Bank searchedBank = _bankDal.GetExtByAccountId(accountId);
-        if (searchedBank is null)
+        BankExtDto bankExtDto = _bankDal.GetExtByAccountId(accountId);
+        if (bankExtDto is null)
             return new ErrorDataResult<BankExtDto>(Messages.BankNotFound);
 
-        BankExtDto searchedBankExtDto = FillExtDto(searchedBank);
-
-        return new SuccessDataResult<BankExtDto>(searchedBankExtDto, Messages.BankExtListedByAccountId);
+        return new SuccessDataResult<BankExtDto>(bankExtDto, Messages.BankExtListedByAccountId);
     }
 
     public IDataResult<BankExtDto> GetExtById(long id)
     {
-        Bank searchedBank = _bankDal.GetExtById(id);
-        if (searchedBank is null)
+        BankExtDto bankExtDto = _bankDal.GetExtById(id);
+        if (bankExtDto is null)
             return new ErrorDataResult<BankExtDto>(Messages.BankNotFound);
 
-        BankExtDto searchedBankExtDto = FillExtDto(searchedBank);
-
-        return new SuccessDataResult<BankExtDto>(searchedBankExtDto, Messages.BankExtListedById);
+        return new SuccessDataResult<BankExtDto>(bankExtDto, Messages.BankExtListedById);
     }
 
     public IDataResult<List<BankExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<Bank> searchedBank = _bankDal.GetExtsByBusinessId(businessId);
-        if (searchedBank.Count == 0)
+        List<BankExtDto> bankExtDtos = _bankDal.GetExtsByBusinessId(businessId);
+        if (bankExtDtos.Count == 0)
             return new ErrorDataResult<List<BankExtDto>>(Messages.BankNotFound);
 
-        List<BankExtDto> searchedBankExtDtos = FillExtDtos(searchedBank);
-
-        return new SuccessDataResult<List<BankExtDto>>(searchedBankExtDtos, Messages.BankExtsListedByBusinessId);
+        return new SuccessDataResult<List<BankExtDto>>(bankExtDtos, Messages.BankExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]
@@ -208,57 +202,5 @@ public class BankExtBl : IBankExtBl
             return updateBankResult;
 
         return new SuccessResult(Messages.BankExtUpdated);
-    }
-
-    private BankExtDto FillExtDto(Bank bank)
-    {
-        BankExtDto bankExtDto = new()
-        {
-            BankId = bank.BankId,
-            BusinessId = bank.BusinessId,
-            BranchId = bank.BranchId,
-            AccountId = bank.AccountId,
-            FullAddressId = bank.FullAddressId,
-            CurrencyId = bank.CurrencyId,
-            BankName = bank.BankName,
-            BankBranchName = bank.BankBranchName,
-            BankCode = bank.BankCode,
-            BankBranchCode = bank.BankBranchCode,
-            BankAccountCode = bank.BankAccountCode,
-            Iban = bank.Iban,
-            OfficerName = bank.OfficerName,
-            StandartMaturity = bank.StandartMaturity,
-            CreatedAt = bank.CreatedAt,
-            UpdatedAt = bank.UpdatedAt,
-
-            // Extended With Branch
-            BranchName = bank.Branch.BranchName,
-
-            // Extended With Account
-            AccountGroupId = bank.Account.AccountGroupId,
-            AccountOrder = bank.Account.AccountOrder,
-            AccountName = bank.Account.AccountName,
-            AccountCode = bank.Account.AccountCode,
-            Limit = bank.Account.Limit,
-
-            // Extended With Account + AccountGroup
-            AccountGroupName = bank.Account.AccountGroup.AccountGroupName,
-
-            // Extended With FullAddress
-            CityId = bank.FullAddress.CityId,
-            DistrictId = bank.FullAddress.DistrictId,
-            AddressText = bank.FullAddress.AddressText,
-
-            // Extended With Currency
-            CurrencyName = bank.Currency.CurrencyName,
-        };
-        return bankExtDto;
-    }
-
-    private List<BankExtDto> FillExtDtos(List<Bank> bank)
-    {
-        List<BankExtDto> bankExtDtos = bank.Select(bank => FillExtDto(bank)).ToList();
-
-        return bankExtDtos;
     }
 }

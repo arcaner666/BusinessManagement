@@ -1,18 +1,18 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IAccountDal
 {
-    Account Add(Account account);
+    long Add(AccountDto accountDto);
     void Delete(long id);
-    List<Account> GetByAccountGroupId(short accountGroupId);
-    Account GetByBusinessIdAndAccountCode(int businessId, string accountCode);
-    Account GetById(long id);
-    Account GetExtById(long id);
-    List<Account> GetExtsByBusinessId(int businessId);
-    List<Account> GetExtsByBusinessIdAndAccountGroupCodes(int businessId, string[] accountGroupCodes);
-    Account GetLastAccountOrderForAnAccountGroup(int businessId, long branchId, string accountGroupCode);
-    Account GetMaxAccountOrderByBusinessIdAndBranchIdAndAccountGroupId(int businessId, long branchId, short accountGroupId);
-    void Update(Account account);
+    List<AccountDto> GetByAccountGroupId(short accountGroupId);
+    AccountDto GetByBusinessIdAndAccountCode(int businessId, string accountCode);
+    AccountDto GetById(long id);
+    AccountExtDto GetExtById(long id);
+    List<AccountExtDto> GetExtsByBusinessId(int businessId);
+    List<AccountExtDto> GetExtsByBusinessIdAndAccountGroupCodes(int businessId, string[] accountGroupCodes);
+    int GetMaxAccountOrderByBusinessIdAndBranchIdAndAccountGroupId(int businessId, long branchId, short accountGroupId);
+    void Update(AccountDto accountDto);
 }

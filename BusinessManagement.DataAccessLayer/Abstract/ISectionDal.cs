@@ -1,16 +1,17 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface ISectionDal
 {
-    Section Add(Section section);
+    int Add(SectionDto sectionDto);
     void Delete(int id);
-    List<Section> GetAll();
-    List<Section> GetByBusinessId(int businessId);
-    Section GetById(int id);
-    Section GetBySectionCode(string sectionCode);
-    Section GetExtById(int id);
-    List<Section> GetExtsByBusinessId(int businessId);
-    void Update(Section section);
+    List<SectionDto> GetAll();
+    List<SectionDto> GetByBusinessId(int businessId);
+    SectionDto GetById(int id);
+    SectionDto GetBySectionCode(string sectionCode);
+    SectionExtDto GetExtById(int id);
+    List<SectionExtDto> GetExtsByBusinessId(int businessId);
+    void Update(SectionDto sectionDto);
 }

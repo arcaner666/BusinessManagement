@@ -17,13 +17,24 @@ public class DpMsCashDal : ICashDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public Cash Add(Cash cash)
+    public long Add(CashDto cashDto)
     {
-        var sql = "INSERT INTO Cash (BusinessId, BranchId, AccountId, CurrencyId, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountId, @CurrencyId, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        var id = _db.Query<long>(sql, cash).Single();
-        cash.CashId = id;
-        return cash;
+        var sql = "INSERT INTO Cash ("
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " CurrencyId,"
+            + " CreatedAt,"
+            + " UpdatedAt)"
+            + " VALUES("
+            + " @BusinessId,"
+            + " @BranchId,"
+            + " @AccountId,"
+            + " @CurrencyId,"
+            + " @CreatedAt,"
+            + " @UpdatedAt)"
+            + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        return _db.Query<long>(sql, cashDto).Single();
     }
 
     public void Delete(long id)
@@ -33,54 +44,95 @@ public class DpMsCashDal : ICashDal
         _db.Execute(sql, new { @CashId = id });
     }
 
-    public Cash GetByAccountId(long accountId)
+    public CashDto GetByAccountId(long accountId)
     {
-        var sql = "SELECT * FROM Cash"
+        var sql = "SELECT"
+            + " CashId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " CurrencyId,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Cash"
             + " WHERE AccountId = @AccountId";
-        return _db.Query<Cash>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return _db.Query<CashDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public List<Cash> GetByBusinessId(int businessId)
+    public List<CashDto> GetByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Cash"
+        var sql = "SELECT"
+            + " CashId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " CurrencyId,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Cash"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<Cash>(sql, new { @BusinessId = businessId }).ToList();
+        return _db.Query<CashDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public Cash GetByBusinessIdAndAccountId(int businessId, long accountId)
+    public CashDto GetByBusinessIdAndAccountId(int businessId, long accountId)
     {
-        var sql = "SELECT * FROM Cash"
+        var sql = "SELECT"
+            + " CashId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " CurrencyId,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Cash"
             + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
-        return _db.Query<Cash>(sql, new
+        return _db.Query<CashDto>(sql, new
         {
             @BusinessId = businessId,
             @AccountId = accountId,
         }).SingleOrDefault();
     }
 
-    public Cash GetById(long id)
+    public CashDto GetById(long id)
     {
-        var sql = "SELECT * FROM Cash"
+        var sql = "SELECT"
+            + " CashId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " CurrencyId,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Cash"
             + " WHERE CashId = @CashId";
-        return _db.Query<Cash>(sql, new { @CashId = id }).SingleOrDefault();
+        return _db.Query<CashDto>(sql, new { @CashId = id }).SingleOrDefault();
     }
 
-    public Cash GetExtByAccountId(long accountId)
+    public CashExtDto GetExtByAccountId(long accountId)
     {
-        var sql = "SELECT * FROM Cash c"
+        var sql = "SELECT"
+            + " c.CashId,"
+            + " c.BusinessId,"
+            + " c.BranchId,"
+            + " c.AccountId,"
+            + " c.CurrencyId,"
+            + " c.CreatedAt,"
+            + " c.UpdatedAt,"
+            + " b.BranchName,"
+            + " a.AccountGroupId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.Limit,"
+            + " ag.AccountGroupName,"
+            + " cu.CurrencyName"
+            + " FROM Cash c"
+            + " INNER JOIN Branch b ON c.BranchId = b.BranchId"
             + " INNER JOIN Account a ON c.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN Currency cu ON c.CurrencyId = cu.CurrencyId"
             + " WHERE c.AccountId = @AccountId";
-        return _db.Query<Cash, Account, AccountGroup, Currency, Cash>(sql,
-            (cash, account, accountGroup, currency) =>
-            {
-                cash.Account = account;
-                cash.Account.AccountGroup = accountGroup;
-                cash.Currency = currency;
-                return cash;
-            }, new { @AccountId = accountId },
-            splitOn: "AccountId,AccountGroupId,CurrencyId").SingleOrDefault();
+        return _db.Query<CashExtDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
     public CashExtDto GetExtById(long id)
@@ -99,6 +151,7 @@ public class DpMsCashDal : ICashDal
             + " a.AccountName,"
             + " a.AccountCode,"
             + " a.Limit,"
+            + " ag.AccountGroupName,"
             + " cu.CurrencyName"
             + " FROM Cash c"
             + " INNER JOIN Branch b ON c.BranchId = b.BranchId"
@@ -109,28 +162,43 @@ public class DpMsCashDal : ICashDal
         return _db.Query<CashExtDto>(sql, new { @CashId = id }).SingleOrDefault();
     }
 
-    public List<Cash> GetExtsByBusinessId(int businessId)
+    public List<CashExtDto> GetExtsByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Cash c"
+        var sql = "SELECT"
+            + " c.CashId,"
+            + " c.BusinessId,"
+            + " c.BranchId,"
+            + " c.AccountId,"
+            + " c.CurrencyId,"
+            + " c.CreatedAt,"
+            + " c.UpdatedAt,"
+            + " b.BranchName,"
+            + " a.AccountGroupId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.Limit,"
+            + " ag.AccountGroupName,"
+            + " cu.CurrencyName"
+            + " FROM Cash c"
+            + " INNER JOIN Branch b ON c.BranchId = b.BranchId"
             + " INNER JOIN Account a ON c.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN Currency cu ON c.CurrencyId = cu.CurrencyId"
             + " WHERE c.BusinessId = @BusinessId";
-        return _db.Query<Cash, Account, AccountGroup, Currency, Cash>(sql,
-            (cash, account, accountGroup, currency) =>
-            {
-                cash.Account = account;
-                cash.Account.AccountGroup = accountGroup;
-                cash.Currency = currency;
-                return cash;
-            }, new { @BusinessId = businessId },
-            splitOn: "AccountId,AccountGroupId,CurrencyId").ToList();
+        return _db.Query<CashExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(Cash cash)
+    public void Update(CashDto cashDto)
     {
-        var sql = "UPDATE Cash SET BusinessId = @BusinessId, BranchId = @BranchId, AccountId = @AccountId, CurrencyId = @CurrencyId, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Cash SET"
+            + " BusinessId = @BusinessId,"
+            + " BranchId = @BranchId,"
+            + " AccountId = @AccountId,"
+            + " CurrencyId = @CurrencyId,"
+            + " CreatedAt = @CreatedAt,"
+            + " UpdatedAt = @UpdatedAt"
             + " WHERE CashId = @CashId";
-        _db.Execute(sql, cash);
+        _db.Execute(sql, cashDto);
     }
 }

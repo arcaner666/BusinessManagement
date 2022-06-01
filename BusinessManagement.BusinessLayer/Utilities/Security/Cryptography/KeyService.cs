@@ -1,4 +1,5 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -18,12 +19,12 @@ public class KeyService : IKeyService
     private readonly char[] testCharacters =
         "123456789".ToCharArray();
 
-    public string GenerateApartmentCode(List<Apartment> apartments, string sectionCode)
+    public string GenerateApartmentCode(List<ApartmentDto> apartmentDtos, string sectionCode)
     {
         string apartmentCode = GenerateUniqueKey(2, secureUppercaseLettersAndNumbers);
-        if (apartments is not null)
+        if (apartmentDtos is not null)
         {
-            while (SearchApartmentWithSameCode(apartments, apartmentCode))
+            while (SearchApartmentWithSameCode(apartmentDtos, apartmentCode))
             {
                 apartmentCode = GenerateUniqueKey(2, secureUppercaseLettersAndNumbers);
             }
@@ -31,12 +32,12 @@ public class KeyService : IKeyService
         return $"{sectionCode}{apartmentCode}";
     }
 
-    public string GenerateFlatCode(List<Flat> flats, string apartmentCode)
+    public string GenerateFlatCode(List<FlatDto> flatDtos, string apartmentCode)
     {
         string flatCode = GenerateUniqueKey(2, secureUppercaseLettersAndNumbers);
-        if (flats is not null)
+        if (flatDtos is not null)
         {
-            while (SearchFlatWithSameCode(flats, flatCode))
+            while (SearchFlatWithSameCode(flatDtos, flatCode))
             {
                 flatCode = GenerateUniqueKey(2, secureUppercaseLettersAndNumbers);
             }
@@ -44,12 +45,12 @@ public class KeyService : IKeyService
         return $"{apartmentCode}{flatCode}";
     }
 
-    public string GenerateSectionCode(List<Section> sections)
+    public string GenerateSectionCode(List<SectionDto> sectionDtos)
     {
         string sectionCode = GenerateUniqueKey(4, secureUppercaseLettersAndNumbers);
-        if (sections is not null)
+        if (sectionDtos is not null)
         {
-            while (SearchSectionWithSameCode(sections, sectionCode))
+            while (SearchSectionWithSameCode(sectionDtos, sectionCode))
             {
                 sectionCode = GenerateUniqueKey(4, secureUppercaseLettersAndNumbers);
             }
@@ -74,12 +75,12 @@ public class KeyService : IKeyService
         return result.ToString();
     }
 
-    private bool SearchApartmentWithSameCode(List<Apartment> apartments, string apartmentCode)
+    private bool SearchApartmentWithSameCode(List<ApartmentDto> apartmentDtos, string apartmentCode)
     {
         bool isExists = false;
-        foreach (Apartment apartment in apartments)
+        foreach (ApartmentDto apartmentDto in apartmentDtos)
         {
-            if (apartment.ApartmentCode == apartmentCode)
+            if (apartmentDto.ApartmentCode == apartmentCode)
             {
                 isExists = true;
                 break;
@@ -89,12 +90,12 @@ public class KeyService : IKeyService
         return isExists;
     }
 
-    private bool SearchFlatWithSameCode(List<Flat> flats, string flatCode)
+    private bool SearchFlatWithSameCode(List<FlatDto> flatDtos, string flatCode)
     {
         bool isExists = false;
-        foreach (Flat flat in flats)
+        foreach (FlatDto flatDto in flatDtos)
         {
-            if (flat.FlatCode == flatCode)
+            if (flatDto.FlatCode == flatCode)
             {
                 isExists = true;
                 break;
@@ -104,12 +105,12 @@ public class KeyService : IKeyService
         return isExists;
     }
 
-    private bool SearchSectionWithSameCode(List<Section> sections, string sectionCode)
+    private bool SearchSectionWithSameCode(List<SectionDto> sectionDtos, string sectionCode)
     {
         bool isExists = false;
-        foreach (Section section in sections)
+        foreach (SectionDto sectionDto in sectionDtos)
         {
-            if (section.SectionCode == sectionCode)
+            if (sectionDto.SectionCode == sectionCode)
             {
                 isExists = true;
                 break;

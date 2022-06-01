@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,13 +17,40 @@ public class DpMsManagerDal : IManagerDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public Manager Add(Manager manager)
+    public long Add(ManagerDto managerDto)
     {
-        var sql = "INSERT INTO Manager (BusinessId, BranchId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, TaxOffice, TaxNumber, IdentityNumber, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @TaxOffice, @TaxNumber, @IdentityNumber, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        var id = _db.Query<long>(sql, manager).Single();
-        manager.ManagerId = id;
-        return manager;
+        var sql = "INSERT INTO Manager ("
+            + " BusinessId,"
+            + " BranchId,"
+            + " NameSurname,"
+            + " Email,"
+            + " Phone,"
+            + " DateOfBirth,"
+            + " Gender,"
+            + " Notes,"
+            + " AvatarUrl,"
+            + " TaxOffice,"
+            + " TaxNumber,"
+            + " IdentityNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt)"
+            + " VALUES("
+            + " @BusinessId,"
+            + " @BranchId,"
+            + " @NameSurname,"
+            + " @Email,"
+            + " @Phone,"
+            + " @DateOfBirth,"
+            + " @Gender,"
+            + " @Notes,"
+            + " @AvatarUrl,"
+            + " @TaxOffice,"
+            + " @TaxNumber,"
+            + " @IdentityNumber,"
+            + " @CreatedAt,"
+            + " @UpdatedAt)"
+            + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        return _db.Query<long>(sql, managerDto).Single();
     }
 
     public void Delete(long id)
@@ -32,53 +60,127 @@ public class DpMsManagerDal : IManagerDal
         _db.Execute(sql, new { @ManagerId = id });
     }
 
-    public List<Manager> GetByBusinessId(int businessId)
+    public List<ManagerDto> GetByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Manager"
+        var sql = "SELECT"
+            + " ManagerId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " NameSurname,"
+            + " Email,"
+            + " Phone,"
+            + " DateOfBirth,"
+            + " Gender,"
+            + " Notes,"
+            + " AvatarUrl,"
+            + " TaxOffice,"
+            + " TaxNumber,"
+            + " IdentityNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Manager"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<Manager>(sql, new { @BusinessId = businessId }).ToList();
+        return _db.Query<ManagerDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public Manager GetByBusinessIdAndPhone(int businessId, string phone)
+    public ManagerDto GetByBusinessIdAndPhone(int businessId, string phone)
     {
-        var sql = "SELECT * FROM Manager"
+        var sql = "SELECT"
+            + " ManagerId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " NameSurname,"
+            + " Email,"
+            + " Phone,"
+            + " DateOfBirth,"
+            + " Gender,"
+            + " Notes,"
+            + " AvatarUrl,"
+            + " TaxOffice,"
+            + " TaxNumber,"
+            + " IdentityNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Manager"
             + " WHERE BusinessId = @BusinessId AND Phone = @Phone";
-        return _db.Query<Manager>(sql, new
+        return _db.Query<ManagerDto>(sql, new
         {
             @BusinessId = businessId,
             @Phone = phone,
         }).SingleOrDefault();
     }
 
-    public Manager GetById(long id)
+    public ManagerDto GetById(long id)
     {
-        var sql = "SELECT * FROM Manager"
+        var sql = "SELECT"
+            + " ManagerId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " NameSurname,"
+            + " Email,"
+            + " Phone,"
+            + " DateOfBirth,"
+            + " Gender,"
+            + " Notes,"
+            + " AvatarUrl,"
+            + " TaxOffice,"
+            + " TaxNumber,"
+            + " IdentityNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Manager"
             + " WHERE ManagerId = @ManagerId";
-        return _db.Query<Manager>(sql, new { @ManagerId = id }).SingleOrDefault();
+        return _db.Query<ManagerDto>(sql, new { @ManagerId = id }).SingleOrDefault();
     }
 
-    public List<Manager> GetExtsByBusinessId(int businessId)
+    public List<ManagerExtDto> GetExtsByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Manager m"
+        var sql = "SELECT"
+            + " m.ManagerId,"
+            + " m.BusinessId,"
+            + " m.BranchId,"
+            + " m.NameSurname,"
+            + " m.Email,"
+            + " m.Phone,"
+            + " m.DateOfBirth,"
+            + " m.Gender,"
+            + " m.Notes,"
+            + " m.AvatarUrl,"
+            + " m.TaxOffice,"
+            + " m.TaxNumber,"
+            + " m.IdentityNumber,"
+            + " m.CreatedAt,"
+            + " m.UpdatedAt,"
+            + " bu.BusinessName,"
+            + " fa.CityId,"
+            + " fa.DistrictId,"
+            + " fa.AddressText"
+            + " FROM Manager m"
             + " INNER JOIN Business bu ON m.BusinessId = bu.BusinessId"
             + " INNER JOIN Branch br ON m.BranchId = br.BranchId"
             + " INNER JOIN FullAddress fa ON br.FullAddressId = fa.FullAddressId"
             + " WHERE m.BusinessId = @BusinessId";
-        return _db.Query<Manager, Business, Branch, FullAddress, Manager>(sql,
-            (manager, business, branch, fullAddress) =>
-            {
-                manager.Business = business;
-                manager.Branch = branch;
-                manager.Branch.FullAddress = fullAddress;
-                return manager;
-            }, new { @BusinessId = businessId },
-            splitOn: "BusinessId,BranchId,FullAddressId").ToList();
+        return _db.Query<ManagerExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(Manager manager)
+    public void Update(ManagerDto managerDto)
     {
-        var sql = "UPDATE Manager SET BusinessId = @BusinessId, BranchId = @BranchId, NameSurname = @NameSurname, Email = @Email, Phone = @Phone, DateOfBirth = @DateOfBirth, Gender = @Gender, Notes = @Notes, AvatarUrl = @AvatarUrl, TaxOffice = @TaxOffice, TaxNumber = @TaxNumber, IdentityNumber = @IdentityNumber, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Manager SET"
+            + " BusinessId = @BusinessId,"
+            + " BranchId = @BranchId,"
+            + " NameSurname = @NameSurname,"
+            + " Email = @Email,"
+            + " Phone = @Phone,"
+            + " DateOfBirth = @DateOfBirth,"
+            + " Gender = @Gender,"
+            + " Notes = @Notes,"
+            + " AvatarUrl = @AvatarUrl,"
+            + " TaxOffice = @TaxOffice,"
+            + " TaxNumber = @TaxNumber,"
+            + " IdentityNumber = @IdentityNumber,"
+            + " CreatedAt = @CreatedAt,"
+            + " UpdatedAt = @UpdatedAt"
             + " WHERE ManagerId = @ManagerId";
-        _db.Execute(sql, manager);
+        _db.Execute(sql, managerDto);
     }
 }

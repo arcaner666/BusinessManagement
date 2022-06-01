@@ -1,14 +1,15 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IManagerDal
 {
-    Manager Add(Manager manager);
+    long Add(ManagerDto managerDto);
     void Delete(long id);
-    List<Manager> GetByBusinessId(int businessId);
-    Manager GetByBusinessIdAndPhone(int businessId, string phone);
-    Manager GetById(long id);
-    List<Manager> GetExtsByBusinessId(int businessId);
-    void Update(Manager manager);
+    List<ManagerDto> GetByBusinessId(int businessId);
+    ManagerDto GetByBusinessIdAndPhone(int businessId, string phone);
+    ManagerDto GetById(long id);
+    List<ManagerExtDto> GetExtsByBusinessId(int businessId);
+    void Update(ManagerDto managerDto);
 }

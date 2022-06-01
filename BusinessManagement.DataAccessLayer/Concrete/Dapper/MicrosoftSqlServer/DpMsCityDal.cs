@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,9 +17,13 @@ public class DpMsCityDal : ICityDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public List<City> GetAll()
+    public List<CityDto> GetAll()
     {
-        var sql = "SELECT * FROM City";
-        return _db.Query<City>(sql).ToList();
+        var sql = "SELECT" 
+            + " CityId,"
+            + " PlateCode,"
+            + " CityName"
+            + " FROM City";
+        return _db.Query<CityDto>(sql).ToList();
     }
 }

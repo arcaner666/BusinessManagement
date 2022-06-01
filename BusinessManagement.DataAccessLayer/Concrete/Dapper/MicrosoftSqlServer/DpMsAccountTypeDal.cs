@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,30 +17,42 @@ public class DpMsAccountTypeDal : IAccountTypeDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public List<AccountType> GetAll()
+    public List<AccountTypeDto> GetAll()
     {
-        var sql = "SELECT * FROM AccountType";
-        return _db.Query<AccountType>(sql).ToList();
+        var sql = "SELECT"
+            + " AccountTypeId,"
+            + " AccountTypeName"
+            + " FROM AccountType";
+        return _db.Query<AccountTypeDto>(sql).ToList();
     }
 
-    public AccountType GetByAccountTypeName(string accountTypeName)
+    public AccountTypeDto GetByAccountTypeName(string accountTypeName)
     {
-        var sql = "SELECT * FROM AccountType"
+        var sql = "SELECT"
+            + " AccountTypeId,"
+            + " AccountTypeName"
+            + " FROM AccountType"
             + " WHERE AccountTypeName = @AccountTypeName";
-        return _db.Query<AccountType>(sql, new { @AccountTypeName = accountTypeName }).SingleOrDefault();
+        return _db.Query<AccountTypeDto>(sql, new { @AccountTypeName = accountTypeName }).SingleOrDefault();
     }
 
-    public List<AccountType> GetByAccountTypeNames(string[] accountTypeNames)
+    public List<AccountTypeDto> GetByAccountTypeNames(string[] accountTypeNames)
     {
-        var sql = "SELECT * FROM AccountType"
+        var sql = "SELECT"
+            + " AccountTypeId,"
+            + " AccountTypeName"
+            + " FROM AccountType"
             + " WHERE AccountTypeName IN @AccountTypeNames";
-        return _db.Query<AccountType>(sql, new { @AccountTypeNames = accountTypeNames }).ToList();
+        return _db.Query<AccountTypeDto>(sql, new { @AccountTypeNames = accountTypeNames }).ToList();
     }
 
-    public AccountType GetById(short id)
+    public AccountTypeDto GetById(short id)
     {
-        var sql = "SELECT * FROM AccountType"
+        var sql = "SELECT"
+            + " AccountTypeId,"
+            + " AccountTypeName"
+            + " FROM AccountType"
             + " WHERE AccountTypeId = @AccountTypeId";
-        return _db.Query<AccountType>(sql, new { @AccountTypeId = id }).SingleOrDefault();
+        return _db.Query<AccountTypeDto>(sql, new { @AccountTypeId = id }).SingleOrDefault();
     }
 }

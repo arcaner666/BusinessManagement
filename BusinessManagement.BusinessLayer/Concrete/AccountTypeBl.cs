@@ -20,63 +20,37 @@ public class AccountTypeBl : IAccountTypeBl
 
     public IDataResult<List<AccountTypeDto>> GetAll()
     {
-        List<AccountType> allAccountTypes = _accountTypeDal.GetAll();
-        if (allAccountTypes.Count == 0)
+        List<AccountTypeDto> accountTypeDtos = _accountTypeDal.GetAll();
+        if (accountTypeDtos.Count == 0)
             return new ErrorDataResult<List<AccountTypeDto>>(Messages.AccountTypesNotFound);
 
-        List<AccountTypeDto> allAccountTypeDtos = FillDtos(allAccountTypes);
-
-        return new SuccessDataResult<List<AccountTypeDto>>(allAccountTypeDtos, Messages.AccountTypesListed);
+        return new SuccessDataResult<List<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListed);
     }
 
     public IDataResult<AccountTypeDto> GetById(short id)
     {
-        AccountType searchedAccountType = _accountTypeDal.GetById(id);
-        if (searchedAccountType is null)
+        AccountTypeDto accountTypeDto = _accountTypeDal.GetById(id);
+        if (accountTypeDto is null)
             return new ErrorDataResult<AccountTypeDto>(Messages.AccountTypeNotFound);
 
-        AccountTypeDto searchedAccountTypeDto = FillDto(searchedAccountType);
-
-        return new SuccessDataResult<AccountTypeDto>(searchedAccountTypeDto, Messages.AccountTypeListedById);
+        return new SuccessDataResult<AccountTypeDto>(accountTypeDto, Messages.AccountTypeListedById);
     }
 
     public IDataResult<AccountTypeDto> GetByAccountTypeName(string accountTypeName)
     {
-        AccountType searchedAccountType = _accountTypeDal.GetByAccountTypeName(accountTypeName);
-        if (searchedAccountType is null)
+        AccountTypeDto accountTypeDto = _accountTypeDal.GetByAccountTypeName(accountTypeName);
+        if (accountTypeDto is null)
             return new ErrorDataResult<AccountTypeDto>(Messages.AccountTypeNotFound);
 
-        AccountTypeDto searchedAccountTypeDto = FillDto(searchedAccountType);
-
-        return new SuccessDataResult<AccountTypeDto>(searchedAccountTypeDto, Messages.AccountTypeListedByAccountTypeName);
+        return new SuccessDataResult<AccountTypeDto>(accountTypeDto, Messages.AccountTypeListedByAccountTypeName);
     }
 
     public IDataResult<List<AccountTypeDto>> GetByAccountTypeNames(AccountTypeNamesDto accountTypeNamesDto)
     {
-        List<AccountType> searchedAccountTypes = _accountTypeDal.GetByAccountTypeNames(accountTypeNamesDto.AccountTypeNames);
-        if (searchedAccountTypes.Count() == 0)
+        List<AccountTypeDto> accountTypeDtos = _accountTypeDal.GetByAccountTypeNames(accountTypeNamesDto.AccountTypeNames);
+        if (accountTypeDtos.Count() == 0)
             return new ErrorDataResult<List<AccountTypeDto>>(Messages.AccountTypesNotFound);
 
-        List<AccountTypeDto> searchedAccountTypeDtos = FillDtos(searchedAccountTypes);
-
-        return new SuccessDataResult<List<AccountTypeDto>>(searchedAccountTypeDtos, Messages.AccountTypesListedByAccountTypeNames);
-    }
-
-    private AccountTypeDto FillDto(AccountType accountType)
-    {
-        AccountTypeDto accountTypeDto = new()
-        {
-            AccountTypeId = accountType.AccountTypeId,
-            AccountTypeName = accountType.AccountTypeName,
-        };
-
-        return accountTypeDto;
-    }
-
-    private List<AccountTypeDto> FillDtos(List<AccountType> accountTypes)
-    {
-        List<AccountTypeDto> accountTypeDtos = accountTypes.Select(accountType => FillDto(accountType)).ToList();
-
-        return accountTypeDtos;
+        return new SuccessDataResult<List<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListedByAccountTypeNames);
     }
 }

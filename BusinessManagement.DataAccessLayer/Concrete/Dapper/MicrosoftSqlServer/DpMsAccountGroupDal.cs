@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,36 +17,52 @@ public class DpMsAccountGroupDal : IAccountGroupDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public List<AccountGroup> GetAll()
+    public List<AccountGroupDto> GetAll()
     {
-        var sql = "SELECT * FROM AccountGroup";
-        return _db.Query<AccountGroup>(sql).ToList();
+        var sql = "SELECT"
+            + " AccountGroupId,"
+            + " AccountGroupName,"
+            + " AccountGroupCode"
+            + " FROM AccountGroup";
+        return _db.Query<AccountGroupDto>(sql).ToList();
     }
 
-    public AccountGroup GetByAccountGroupCode(string accountGroupCode)
+    public AccountGroupDto GetByAccountGroupCode(string accountGroupCode)
     {
-        var sql = "SELECT * FROM AccountGroup"
+        var sql = "SELECT"
+            + " AccountGroupId,"
+            + " AccountGroupName,"
+            + " AccountGroupCode"
+            + " FROM AccountGroup"
             + " WHERE AccountGroupCode = @AccountGroupCode";
-        return _db.Query<AccountGroup>(sql, new
+        return _db.Query<AccountGroupDto>(sql, new
         {
             @AccountGroupCode = accountGroupCode,
         }).SingleOrDefault();
     }
 
-    public List<AccountGroup> GetByAccountGroupCodes(string[] accountGroupCodes)
+    public List<AccountGroupDto> GetByAccountGroupCodes(string[] accountGroupCodes)
     {
-        var sql = "SELECT * FROM AccountGroup"
-            + " WHERE AccountGroupCode IN @AccountGroupCodes";
-        return _db.Query<AccountGroup>(sql, new
+        var sql = "SELECT"
+           + " AccountGroupId,"
+           + " AccountGroupName,"
+           + " AccountGroupCode"
+           + " FROM AccountGroup"
+           + " WHERE AccountGroupCode IN @AccountGroupCodes";
+        return _db.Query<AccountGroupDto>(sql, new
         {
             @AccountGroupCodes = accountGroupCodes,
         }).ToList();
     }
 
-    public AccountGroup GetById(short id)
+    public AccountGroupDto GetById(short id)
     {
-        var sql = "SELECT * FROM AccountGroup"
+        var sql = "SELECT"
+            + " AccountGroupId,"
+            + " AccountGroupName,"
+            + " AccountGroupCode"
+            + " FROM AccountGroup"
             + " WHERE AccountGroupId = @AccountGroupId";
-        return _db.Query<AccountGroup>(sql, new { @AccountGroupId = id }).SingleOrDefault();
+        return _db.Query<AccountGroupDto>(sql, new { @AccountGroupId = id }).SingleOrDefault();
     }
 }

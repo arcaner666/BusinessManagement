@@ -1,14 +1,15 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface ICustomerDal
 {
-    Customer Add(Customer customer);
-    Customer GetByAccountId(long accountId);
-    List<Customer> GetByBusinessId(int businessId);
-    Customer GetByBusinessIdAndSystemUserId(int businessId, long systemUserId);
-    Customer GetById(long id);
-    List<Customer> GetExtsByBusinessId(int businessId);
-    void Update(Customer customer);
+    long Add(CustomerDto customerDto);
+    CustomerDto GetByAccountId(long accountId);
+    List<CustomerDto> GetByBusinessId(int businessId);
+    CustomerDto GetByBusinessIdAndSystemUserId(int businessId, long systemUserId);
+    CustomerDto GetById(long id);
+    List<CustomerDto> GetExtsByBusinessId(int businessId);
+    void Update(CustomerDto customerDto);
 }

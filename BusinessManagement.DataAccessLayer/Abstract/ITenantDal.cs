@@ -1,17 +1,18 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface ITenantDal
 {
-    Tenant Add(Tenant tenant);
+    long Add(TenantDto tenantDto);
     void Delete(long id);
-    Tenant GetByAccountId(long accountId);
-    List<Tenant> GetByBusinessId(int businessId);
-    Tenant GetByBusinessIdAndAccountId(int businessId, long accountId);
-    Tenant GetById(long id);
-    Tenant GetExtByAccountId(long accountId);
-    Tenant GetExtById(long id);
-    List<Tenant> GetExtsByBusinessId(int businessId);
-    void Update(Tenant tenant);
+    TenantDto GetByAccountId(long accountId);
+    List<TenantDto> GetByBusinessId(int businessId);
+    TenantDto GetByBusinessIdAndAccountId(int businessId, long accountId);
+    TenantDto GetById(long id);
+    TenantExtDto GetExtByAccountId(long accountId);
+    TenantExtDto GetExtById(long id);
+    List<TenantExtDto> GetExtsByBusinessId(int businessId);
+    void Update(TenantDto tenantDto);
 }

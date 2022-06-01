@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,13 +17,30 @@ public class DpMsSectionDal : ISectionDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public Section Add(Section section)
+    public int Add(SectionDto sectionDto)
     {
-        var sql = "INSERT INTO Section (SectionGroupId, BusinessId, BranchId, ManagerId, FullAddressId, SectionName, SectionCode, CreatedAt, UpdatedAt)"
-            + " VALUES(@SectionGroupId, @BusinessId, @BranchId, @ManagerId, @FullAddressId, @SectionName, @SectionCode, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS INT);";
-        var id = _db.Query<int>(sql, section).Single();
-        section.SectionId = id;
-        return section;
+        var sql = "INSERT INTO Section ("
+            + " SectionGroupId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " ManagerId,"
+            + " FullAddressId,"
+            + " SectionName,"
+            + " SectionCode,"
+            + " CreatedAt,"
+            + " UpdatedAt)"
+            + " VALUES("
+            + " @SectionGroupId,"
+            + " @BusinessId,"
+            + " @BranchId,"
+            + " @ManagerId,"
+            + " @FullAddressId,"
+            + " @SectionName,"
+            + " @SectionCode,"
+            + " @CreatedAt,"
+            + " @UpdatedAt)"
+            + " SELECT CAST(SCOPE_IDENTITY() AS INT);";
+        return _db.Query<int>(sql, sectionDto).Single();
     }
 
     public void Delete(int id)
@@ -32,81 +50,154 @@ public class DpMsSectionDal : ISectionDal
         _db.Execute(sql, new { @SectionId = id });
     }
 
-    public List<Section> GetAll()
+    public List<SectionDto> GetAll()
     {
-        var sql = "SELECT * FROM Section";
-        return _db.Query<Section>(sql).ToList();
+        var sql = "SELECT"
+            + " SectionId,"
+            + " SectionGroupId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " ManagerId,"
+            + " FullAddressId,"
+            + " SectionName,"
+            + " SectionCode,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Section";
+        return _db.Query<SectionDto>(sql).ToList();
     }
 
-    public List<Section> GetByBusinessId(int businessId)
+    public List<SectionDto> GetByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Section"
+        var sql = "SELECT"
+            + " SectionId,"
+            + " SectionGroupId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " ManagerId,"
+            + " FullAddressId,"
+            + " SectionName,"
+            + " SectionCode,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Section"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<Section>(sql, new { @BusinessId = businessId }).ToList();
+        return _db.Query<SectionDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public Section GetById(int id)
+    public SectionDto GetById(int id)
     {
-        var sql = "SELECT * FROM Section"
+        var sql = "SELECT"
+            + " SectionId,"
+            + " SectionGroupId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " ManagerId,"
+            + " FullAddressId,"
+            + " SectionName,"
+            + " SectionCode,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Section"
             + " WHERE SectionId = @SectionId";
-        return _db.Query<Section>(sql, new { @SectionId = id }).SingleOrDefault();
+        return _db.Query<SectionDto>(sql, new { @SectionId = id }).SingleOrDefault();
     }
 
-    public Section GetBySectionCode(string sectionCode)
+    public SectionDto GetBySectionCode(string sectionCode)
     {
-        var sql = "SELECT * FROM Section"
+        var sql = "SELECT"
+            + " SectionId,"
+            + " SectionGroupId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " ManagerId,"
+            + " FullAddressId,"
+            + " SectionName,"
+            + " SectionCode,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Section"
             + " WHERE SectionCode = @SectionCode";
-        return _db.Query<Section>(sql, new { @SectionCode = sectionCode }).SingleOrDefault();
+        return _db.Query<SectionDto>(sql, new { @SectionCode = sectionCode }).SingleOrDefault();
     }
 
-    public Section GetExtById(int id)
+    public SectionExtDto GetExtById(int id)
     {
-        var sql = "SELECT * FROM Section s"
+        var sql = "SELECT"
+            + " s.SectionId,"
+            + " s.SectionGroupId,"
+            + " s.BusinessId,"
+            + " s.BranchId,"
+            + " s.ManagerId,"
+            + " s.FullAddressId,"
+            + " s.SectionName,"
+            + " s.SectionCode,"
+            + " s.CreatedAt,"
+            + " s.UpdatedAt,"
+            + " sg.SectionGroupName,"
+            + " m.NameSurname AS ManagerNameSurname,"
+            + " fa.CityId,"
+            + " fa.DistrictId,"
+            + " fa.AddressTitle,"
+            + " fa.PostalCode,"
+            + " fa.AddressText,"
+            + " c.CityName,"
+            + " d.DistrictName"
+            + " FROM Section s"
             + " INNER JOIN SectionGroup sg ON s.SectionGroupId = sg.SectionGroupId"
             + " INNER JOIN Manager m ON s.ManagerId = m.ManagerId"
             + " INNER JOIN FullAddress fa ON s.FullAddressId = fa.FullAddressId"
             + " INNER JOIN City c ON fa.CityId = c.CityId"
             + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
             + " WHERE s.SectionId = @SectionId;";
-        return _db.Query<Section, SectionGroup, Manager, FullAddress, City, District, Section>(sql,
-            (section, sectionGroup, manager, fullAddress, city, district) =>
-            {
-                section.SectionGroup = sectionGroup;
-                section.Manager = manager;
-                section.FullAddress = fullAddress;
-                section.FullAddress.City = city;
-                section.FullAddress.District = district;
-                return section;
-            }, new { @SectionId = id },
-            splitOn: "SectionGroupId,ManagerId,FullAddressId,CityId,DistrictId").SingleOrDefault();
+        return _db.Query<SectionExtDto>(sql, new { @SectionId = id }).SingleOrDefault();
     }
 
-    public List<Section> GetExtsByBusinessId(int businessId)
+    public List<SectionExtDto> GetExtsByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Section s"
+        var sql = "SELECT"
+            + " s.SectionId,"
+            + " s.SectionGroupId,"
+            + " s.BusinessId,"
+            + " s.BranchId,"
+            + " s.ManagerId,"
+            + " s.FullAddressId,"
+            + " s.SectionName,"
+            + " s.SectionCode,"
+            + " s.CreatedAt,"
+            + " s.UpdatedAt,"
+            + " sg.SectionGroupName,"
+            + " m.NameSurname AS ManagerNameSurname,"
+            + " fa.CityId,"
+            + " fa.DistrictId,"
+            + " fa.AddressTitle,"
+            + " fa.PostalCode,"
+            + " fa.AddressText,"
+            + " c.CityName,"
+            + " d.DistrictName"
+            + " FROM Section s"
             + " INNER JOIN SectionGroup sg ON s.SectionGroupId = sg.SectionGroupId"
             + " INNER JOIN Manager m ON s.ManagerId = m.ManagerId"
             + " INNER JOIN FullAddress fa ON s.FullAddressId = fa.FullAddressId"
             + " INNER JOIN City c ON fa.CityId = c.CityId"
             + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
             + " WHERE s.BusinessId = @BusinessId;";
-        return _db.Query<Section, SectionGroup, Manager, FullAddress, City, District, Section>(sql, 
-            (section, sectionGroup, manager, fullAddress, city, district) => 
-            {
-                section.SectionGroup = sectionGroup;
-                section.Manager = manager;
-                section.FullAddress = fullAddress;
-                section.FullAddress.City = city;
-                section.FullAddress.District = district;
-                return section;
-            }, new { @BusinessId = businessId },
-            splitOn: "SectionGroupId,ManagerId,FullAddressId,CityId,DistrictId").ToList();
+        return _db.Query<SectionExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(Section section)
+    public void Update(SectionDto sectionDto)
     {
-        var sql = "UPDATE Section SET SectionGroupId = @SectionGroupId, BusinessId = @BusinessId, BranchId = @BranchId, ManagerId = @ManagerId, FullAddressId = @FullAddressId, SectionName = @SectionName, SectionCode = @SectionCode, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Section SET"
+            + " SectionGroupId = @SectionGroupId,"
+            + " BusinessId = @BusinessId,"
+            + " BranchId = @BranchId,"
+            + " ManagerId = @ManagerId,"
+            + " FullAddressId = @FullAddressId,"
+            + " SectionName = @SectionName,"
+            + " SectionCode = @SectionCode,"
+            + " CreatedAt = @CreatedAt,"
+            + " UpdatedAt = @UpdatedAt"
             + " WHERE SectionId = @SectionId";
-        _db.Execute(sql, section);
+        _db.Execute(sql, sectionDto);
     }
 }

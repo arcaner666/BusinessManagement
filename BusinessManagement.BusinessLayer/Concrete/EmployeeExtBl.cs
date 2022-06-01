@@ -121,35 +121,29 @@ public class EmployeeExtBl : IEmployeeExtBl
 
     public IDataResult<EmployeeExtDto> GetExtByAccountId(long accountId)
     {
-        Employee searchedEmployee = _employeeDal.GetExtByAccountId(accountId);
-        if (searchedEmployee is null)
+        EmployeeExtDto employeeExtDto = _employeeDal.GetExtByAccountId(accountId);
+        if (employeeExtDto is null)
             return new ErrorDataResult<EmployeeExtDto>(Messages.EmployeeNotFound);
 
-        EmployeeExtDto searchedEmployeeExtDto = FillExtDto(searchedEmployee);
-
-        return new SuccessDataResult<EmployeeExtDto>(searchedEmployeeExtDto, Messages.EmployeeExtListedByAccountId);
+        return new SuccessDataResult<EmployeeExtDto>(employeeExtDto, Messages.EmployeeExtListedByAccountId);
     }
 
     public IDataResult<EmployeeExtDto> GetExtById(long id)
     {
-        Employee searchedEmployee = _employeeDal.GetExtById(id);
-        if (searchedEmployee is null)
+        EmployeeExtDto employeeExtDto = _employeeDal.GetExtById(id);
+        if (employeeExtDto is null)
             return new ErrorDataResult<EmployeeExtDto>(Messages.EmployeeNotFound);
 
-        EmployeeExtDto searchedEmployeeExtDto = FillExtDto(searchedEmployee);
-
-        return new SuccessDataResult<EmployeeExtDto>(searchedEmployeeExtDto, Messages.EmployeeExtListedById);
+        return new SuccessDataResult<EmployeeExtDto>(employeeExtDto, Messages.EmployeeExtListedById);
     }
 
     public IDataResult<List<EmployeeExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<Employee> searchedEmployees = _employeeDal.GetExtsByBusinessId(businessId);
-        if (searchedEmployees.Count == 0)
+        List<EmployeeExtDto> employeeExtDtos = _employeeDal.GetExtsByBusinessId(businessId);
+        if (employeeExtDtos.Count == 0)
             return new ErrorDataResult<List<EmployeeExtDto>>(Messages.EmployeesNotFound);
 
-        List<EmployeeExtDto> searchedEmployeeExtDtos = FillExtDtos(searchedEmployees);
-
-        return new SuccessDataResult<List<EmployeeExtDto>>(searchedEmployeeExtDtos, Messages.EmployeeExtsListedByBusinessId);
+        return new SuccessDataResult<List<EmployeeExtDto>>(employeeExtDtos, Messages.EmployeeExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]
@@ -187,48 +181,5 @@ public class EmployeeExtBl : IEmployeeExtBl
             return updateEmployeeResult;
 
         return new SuccessResult(Messages.EmployeeExtUpdated);
-    }
-
-    private EmployeeExtDto FillExtDto(Employee employee)
-    {
-        EmployeeExtDto employeeExtDto = new()
-        {
-            EmployeeId = employee.EmployeeId,
-            BusinessId = employee.BusinessId,
-            BranchId = employee.BranchId,
-            AccountId = employee.AccountId,
-            EmployeeTypeId = employee.EmployeeTypeId,
-            NameSurname = employee.NameSurname,
-            Email = employee.Email,
-            Phone = employee.Phone,
-            DateOfBirth = employee.DateOfBirth,
-            Gender = employee.Gender,
-            Notes = employee.Notes,
-            AvatarUrl = employee.AvatarUrl,
-            IdentityNumber = employee.IdentityNumber,
-            StillWorking = employee.StillWorking,
-            StartDate = employee.StartDate,
-            QuitDate = employee.QuitDate,
-            CreatedAt = employee.CreatedAt,
-            UpdatedAt = employee.UpdatedAt,
-
-            // Extended With Account
-            AccountGroupId = employee.Account.AccountGroupId,
-            AccountOrder = employee.Account.AccountOrder,
-            AccountName = employee.Account.AccountName,
-            AccountCode = employee.Account.AccountCode,
-            Limit = employee.Account.Limit,
-
-            // Extended With EmployeeType
-            EmployeeTypeName = employee.EmployeeType.EmployeeTypeName,
-        };
-        return employeeExtDto;
-    }
-
-    private List<EmployeeExtDto> FillExtDtos(List<Employee> employees)
-    {
-        List<EmployeeExtDto> employeeExtDtos = employees.Select(employee => FillExtDto(employee)).ToList();
-
-        return employeeExtDtos;
     }
 }

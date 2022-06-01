@@ -22,28 +22,16 @@ public class FlatBl : IFlatBl
 
     public IDataResult<FlatDto> Add(FlatDto flatDto)
     {
-        Flat searchedFlat = _flatDal.GetByFlatCode(flatDto.FlatCode);
-        if (searchedFlat is not null)
+        FlatDto searchedFlatDto = _flatDal.GetByFlatCode(flatDto.FlatCode);
+        if (searchedFlatDto is not null)
             return new ErrorDataResult<FlatDto>(Messages.FlatAlreadyExists);
 
-        Flat addedFlat = new()
-        {
-            SectionId = flatDto.SectionId,
-            ApartmentId = flatDto.ApartmentId,
-            BusinessId = flatDto.BusinessId,
-            BranchId = flatDto.BranchId,
-            HouseOwnerId = flatDto.HouseOwnerId,
-            TenantId = flatDto.TenantId,
-            FlatCode = flatDto.FlatCode,
-            DoorNumber = flatDto.DoorNumber,
-            CreatedAt = DateTimeOffset.Now,
-            UpdatedAt = DateTimeOffset.Now,
-        };
-        _flatDal.Add(addedFlat);
+        flatDto.CreatedAt = DateTimeOffset.Now;
+        flatDto.UpdatedAt = DateTimeOffset.Now;
+        long id = _flatDal.Add(flatDto);
+        flatDto.FlatId = id;
 
-        FlatDto addedFlatDto = FillDto(addedFlat);
-
-        return new SuccessDataResult<FlatDto>(addedFlatDto, Messages.FlatAdded);
+        return new SuccessDataResult<FlatDto>(flatDto, Messages.FlatAdded);
     }
 
     public IResult Delete(long id)
@@ -57,57 +45,37 @@ public class FlatBl : IFlatBl
         return new SuccessResult(Messages.FlatDeleted);
     }
 
+    public IDataResult<List<FlatDto>> GetByApartmentId(long apartmentId)
+    {
+        List<FlatDto> flatDtos = _flatDal.GetByApartmentId(apartmentId);
+        if (flatDtos is null)
+            return new ErrorDataResult<List<FlatDto>>(Messages.FlatNotFound);
+
+        return new SuccessDataResult<List<FlatDto>>(flatDtos, Messages.FlatsListedByApartmentId);
+    }
+
     public IDataResult<FlatDto> GetById(long id)
     {
-        Flat searchedFlat = _flatDal.GetById(id);
-        if (searchedFlat is null)
+        FlatDto flatDto = _flatDal.GetById(id);
+        if (flatDto is null)
             return new ErrorDataResult<FlatDto>(Messages.FlatNotFound);
 
-        FlatDto searchedFlatDto = FillDto(searchedFlat);
-
-        return new SuccessDataResult<FlatDto>(searchedFlatDto, Messages.FlatListedById);
+        return new SuccessDataResult<FlatDto>(flatDto, Messages.FlatListedById);
     }
 
     public IResult Update(FlatDto flatDto)
     {
-        Flat searchedFlat = _flatDal.GetById(flatDto.FlatId);
-        if (searchedFlat is null)
-            return new ErrorDataResult<FlatDto>(Messages.FlatNotFound);
+        var searchedFlatResult = GetById(flatDto.FlatId);
+        if (!searchedFlatResult.Success)
+            return searchedFlatResult;
 
-        searchedFlat.BranchId = flatDto.BranchId;
-        searchedFlat.HouseOwnerId = flatDto.HouseOwnerId;
-        searchedFlat.TenantId = flatDto.TenantId;
-        searchedFlat.DoorNumber = flatDto.DoorNumber;
-        searchedFlat.UpdatedAt = DateTimeOffset.Now;
-        _flatDal.Update(searchedFlat);
+        searchedFlatResult.Data.BranchId = flatDto.BranchId;
+        searchedFlatResult.Data.HouseOwnerId = flatDto.HouseOwnerId;
+        searchedFlatResult.Data.TenantId = flatDto.TenantId;
+        searchedFlatResult.Data.DoorNumber = flatDto.DoorNumber;
+        searchedFlatResult.Data.UpdatedAt = DateTimeOffset.Now;
+        _flatDal.Update(searchedFlatResult.Data);
 
         return new SuccessResult(Messages.FlatUpdated);
-    }
-
-    private FlatDto FillDto(Flat flat)
-    {
-        FlatDto flatDto = new()
-        {
-            FlatId = flat.FlatId,
-            SectionId = flat.SectionId,
-            ApartmentId = flat.ApartmentId,
-            BusinessId = flat.BusinessId,
-            BranchId = flat.BranchId,
-            HouseOwnerId = flat.HouseOwnerId,
-            TenantId = flat.TenantId,
-            FlatCode = flat.FlatCode,
-            DoorNumber = flat.DoorNumber,
-            CreatedAt = flat.CreatedAt,
-            UpdatedAt = flat.UpdatedAt,
-        };
-
-        return flatDto;
-    }
-
-    private List<FlatDto> FillDtos(List<Flat> flats)
-    {
-        List<FlatDto> flatDtos = flats.Select(flat => FillDto(flat)).ToList();
-
-        return flatDtos;
     }
 }

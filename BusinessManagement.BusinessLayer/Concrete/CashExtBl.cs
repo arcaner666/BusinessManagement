@@ -113,44 +113,29 @@ public class CashExtBl : ICashExtBl
 
     public IDataResult<CashExtDto> GetExtByAccountId(long accountId)
     {
-        Cash searchedCash = _cashDal.GetExtByAccountId(accountId);
-        if (searchedCash is null)
+        CashExtDto cashExtDto = _cashDal.GetExtByAccountId(accountId);
+        if (cashExtDto is null)
             return new ErrorDataResult<CashExtDto>(Messages.CashNotFound);
 
-        CashExtDto searchedCashExtDto = FillExtDto(searchedCash);
-
-        return new SuccessDataResult<CashExtDto>(searchedCashExtDto, Messages.CashExtListedByAccountId);
+        return new SuccessDataResult<CashExtDto>(cashExtDto, Messages.CashExtListedByAccountId);
     }
-
-    //public IDataResult<CashExtDto> GetExtById(long id)
-    //{
-    //    Cash searchedCash = _cashDal.GetExtById(id);
-    //    if (searchedCash is null)
-    //        return new ErrorDataResult<CashExtDto>(Messages.CashNotFound);
-
-    //    CashExtDto searchedCashExtDto = FillExtDto(searchedCash);
-
-    //    return new SuccessDataResult<CashExtDto>(searchedCashExtDto, Messages.CashExtListedById);
-    //}
 
     public IDataResult<CashExtDto> GetExtById(long id)
     {
-        CashExtDto searchedCashExtDto = _cashDal.GetExtById(id);
-        if (searchedCashExtDto is null)
+        CashExtDto cashExtDto = _cashDal.GetExtById(id);
+        if (cashExtDto is null)
             return new ErrorDataResult<CashExtDto>(Messages.CashNotFound);
 
-        return new SuccessDataResult<CashExtDto>(searchedCashExtDto, Messages.CashExtListedById);
+        return new SuccessDataResult<CashExtDto>(cashExtDto, Messages.CashExtListedById);
     }
 
     public IDataResult<List<CashExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<Cash> searchedCash = _cashDal.GetExtsByBusinessId(businessId);
-        if (searchedCash.Count == 0)
+        List<CashExtDto> cashExtDtos = _cashDal.GetExtsByBusinessId(businessId);
+        if (cashExtDtos.Count == 0)
             return new ErrorDataResult<List<CashExtDto>>(Messages.CashNotFound);
 
-        List<CashExtDto> searchedCashExtDtos = FillExtDtos(searchedCash);
-
-        return new SuccessDataResult<List<CashExtDto>>(searchedCashExtDtos, Messages.CashExtsListedByBusinessId);
+        return new SuccessDataResult<List<CashExtDto>>(cashExtDtos, Messages.CashExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]
@@ -162,7 +147,7 @@ public class CashExtBl : ICashExtBl
             AccountId = cashExtDto.AccountId,
             AccountName = cashExtDto.AccountName,
             Limit = cashExtDto.Limit,
-         };
+        };
         var updateAccountResult = _accountBl.Update(updatedAccountDto);
         if (!updateAccountResult.Success)
             return updateAccountResult;
@@ -177,37 +162,5 @@ public class CashExtBl : ICashExtBl
             return updateCashResult;
 
         return new SuccessResult(Messages.CashExtUpdated);
-    }
-
-    private CashExtDto FillExtDto(Cash cash)
-    {
-        CashExtDto cashExtDto = new()
-        {
-            CashId = cash.CashId,
-            BusinessId = cash.BusinessId,
-            BranchId = cash.BranchId,
-            AccountId = cash.AccountId,
-            CurrencyId = cash.CurrencyId,
-            CreatedAt = cash.CreatedAt,
-            UpdatedAt = cash.UpdatedAt,
-
-            // Extended With Account
-            AccountGroupId = cash.Account.AccountGroupId,
-            AccountOrder = cash.Account.AccountOrder,
-            AccountName = cash.Account.AccountName,
-            AccountCode = cash.Account.AccountCode,
-            Limit = cash.Account.Limit,
-
-            // Extended With Currency
-            CurrencyName = cash.Currency.CurrencyName,
-        };
-        return cashExtDto;
-    }
-
-    private List<CashExtDto> FillExtDtos(List<Cash> cash)
-    {
-        List<CashExtDto> cashExtDtos = cash.Select(cash => FillExtDto(cash)).ToList();
-
-        return cashExtDtos;
     }
 }

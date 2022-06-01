@@ -20,42 +20,19 @@ public class DistrictBl : IDistrictBl
 
     public IDataResult<List<DistrictDto>> GetAll()
     {
-        List<District> allDistricts = _districtDal.GetAll();
-        if (allDistricts.Count == 0)
+        List<DistrictDto> districtDtos = _districtDal.GetAll();
+        if (districtDtos.Count == 0)
             return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
 
-        List<DistrictDto> allDistrictDtos = FillDtos(allDistricts);
-
-        return new SuccessDataResult<List<DistrictDto>>(allDistrictDtos, Messages.DistrictsListed);
+        return new SuccessDataResult<List<DistrictDto>>(districtDtos, Messages.DistrictsListed);
     }
 
     public IDataResult<List<DistrictDto>> GetByCityId(short cityId)
     {
-        List<District> searchedDistricts = _districtDal.GetByCityId(cityId);
-        if (searchedDistricts.Count == 0) 
+        List<DistrictDto> districtDto = _districtDal.GetByCityId(cityId);
+        if (districtDto.Count == 0) 
             return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
 
-        List<DistrictDto> searchedDistrictDtos = FillDtos(searchedDistricts);
-
-        return new SuccessDataResult<List<DistrictDto>>(searchedDistrictDtos, Messages.DistrictsListedByCityId);
-    }
-
-    private DistrictDto FillDto(District district)
-    {
-        DistrictDto districtDto = new()
-        {
-            DistrictId = district.DistrictId,
-            CityId = district.CityId,
-            DistrictName = district.DistrictName,
-        };
-
-        return districtDto;
-    }
-
-    private List<DistrictDto> FillDtos(List<District> districts)
-    {
-        List<DistrictDto> districtDtos = districts.Select(district => FillDto(district)).ToList();
-
-        return districtDtos;
+        return new SuccessDataResult<List<DistrictDto>>(districtDto, Messages.DistrictsListedByCityId);
     }
 }

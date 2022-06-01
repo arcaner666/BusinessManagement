@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,16 +17,24 @@ public class DpMsDistrictDal : IDistrictDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public List<District> GetAll()
+    public List<DistrictDto> GetAll()
     {
-        var sql = "SELECT * FROM District";
-        return _db.Query<District>(sql).ToList();
+        var sql = "SELECT"
+            + " DistrictId,"
+            + " CityId,"
+            + " DistrictName"
+            + " FROM District";
+        return _db.Query<DistrictDto>(sql).ToList();
     }
 
-    public List<District> GetByCityId(short cityId)
+    public List<DistrictDto> GetByCityId(short cityId)
     {
-        var sql = "SELECT * FROM District"
+        var sql = "SELECT"
+            + " DistrictId,"
+            + " CityId,"
+            + " DistrictName"
+            + " FROM District"
             + " WHERE CityId = @CityId";
-        return _db.Query<District>(sql, new { @CityId = cityId }).ToList();
+        return _db.Query<DistrictDto>(sql, new { @CityId = cityId }).ToList();
     }
 }

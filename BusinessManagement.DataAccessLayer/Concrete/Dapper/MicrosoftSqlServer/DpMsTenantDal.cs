@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,13 +17,44 @@ public class DpMsTenantDal : ITenantDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public Tenant Add(Tenant tenant)
+    public long Add(TenantDto tenantDto)
     {
-        var sql = "INSERT INTO Tenant (BusinessId, BranchId, AccountId, NameSurname, Email, Phone, DateOfBirth, Gender, Notes, AvatarUrl, TaxOffice, TaxNumber, IdentityNumber, StandartMaturity, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountId, @NameSurname, @Email, @Phone, @DateOfBirth, @Gender, @Notes, @AvatarUrl, @TaxOffice, @TaxNumber, @IdentityNumber, @StandartMaturity, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        var id = _db.Query<long>(sql, tenant).Single();
-        tenant.TenantId = id;
-        return tenant;
+        var sql = "INSERT INTO Tenant ("
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " NameSurname,"
+            + " Email,"
+            + " Phone,"
+            + " DateOfBirth,"
+            + " Gender,"
+            + " Notes,"
+            + " AvatarUrl,"
+            + " TaxOffice,"
+            + " TaxNumber,"
+            + " IdentityNumber,"
+            + " StandartMaturity,"
+            + " CreatedAt,"
+            + " UpdatedAt)"
+            + " VALUES("
+            + " @BusinessId,"
+            + " @BranchId,"
+            + " @AccountId,"
+            + " @NameSurname,"
+            + " @Email,"
+            + " @Phone,"
+            + " @DateOfBirth,"
+            + " @Gender,"
+            + " @Notes,"
+            + " @AvatarUrl,"
+            + " @TaxOffice,"
+            + " @TaxNumber,"
+            + " @IdentityNumber,"
+            + " @StandartMaturity,"
+            + " @CreatedAt,"
+            + " @UpdatedAt)"
+            + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        return _db.Query<long>(sql, tenantDto).Single();
     }
 
     public void Delete(long id)
@@ -32,90 +64,229 @@ public class DpMsTenantDal : ITenantDal
         _db.Execute(sql, new { @TenantId = id });
     }
 
-    public Tenant GetByAccountId(long accountId)
+    public TenantDto GetByAccountId(long accountId)
     {
-        var sql = "SELECT * FROM Tenant"
+        var sql = "SELECT"
+            + " TenantId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " NameSurname,"
+            + " Email,"
+            + " Phone,"
+            + " DateOfBirth,"
+            + " Gender,"
+            + " Notes,"
+            + " AvatarUrl,"
+            + " TaxOffice,"
+            + " TaxNumber,"
+            + " IdentityNumber,"
+            + " StandartMaturity,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Tenant"
             + " WHERE AccountId = @AccountId";
-        return _db.Query<Tenant>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return _db.Query<TenantDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public List<Tenant> GetByBusinessId(int businessId)
+    public List<TenantDto> GetByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Tenant"
+        var sql = "SELECT"
+            + " TenantId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " NameSurname,"
+            + " Email,"
+            + " Phone,"
+            + " DateOfBirth,"
+            + " Gender,"
+            + " Notes,"
+            + " AvatarUrl,"
+            + " TaxOffice,"
+            + " TaxNumber,"
+            + " IdentityNumber,"
+            + " StandartMaturity,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Tenant"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<Tenant>(sql, new { @BusinessId = businessId }).ToList();
+        return _db.Query<TenantDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public Tenant GetByBusinessIdAndAccountId(int businessId, long accountId)
+    public TenantDto GetByBusinessIdAndAccountId(int businessId, long accountId)
     {
-        var sql = "SELECT * FROM Tenant"
+        var sql = "SELECT"
+            + " TenantId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " NameSurname,"
+            + " Email,"
+            + " Phone,"
+            + " DateOfBirth,"
+            + " Gender,"
+            + " Notes,"
+            + " AvatarUrl,"
+            + " TaxOffice,"
+            + " TaxNumber,"
+            + " IdentityNumber,"
+            + " StandartMaturity,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Tenant"
             + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
-        return _db.Query<Tenant>(sql, new
+        return _db.Query<TenantDto>(sql, new
         {
             @BusinessId = businessId,
             @AccountId = accountId,
         }).SingleOrDefault();
     }
 
-    public Tenant GetById(long id)
+    public TenantDto GetById(long id)
     {
-        var sql = "SELECT * FROM Tenant"
+        var sql = "SELECT"
+            + " TenantId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountId,"
+            + " NameSurname,"
+            + " Email,"
+            + " Phone,"
+            + " DateOfBirth,"
+            + " Gender,"
+            + " Notes,"
+            + " AvatarUrl,"
+            + " TaxOffice,"
+            + " TaxNumber,"
+            + " IdentityNumber,"
+            + " StandartMaturity,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Tenant"
             + " WHERE TenantId = @TenantId";
-        return _db.Query<Tenant>(sql, new { @TenantId = id }).SingleOrDefault();
+        return _db.Query<TenantDto>(sql, new { @TenantId = id }).SingleOrDefault();
     }
 
-    public Tenant GetExtByAccountId(long accountId)
+    public TenantExtDto GetExtByAccountId(long accountId)
     {
-        var sql = "SELECT * FROM Tenant t"
+        var sql = "SELECT"
+            + " t.TenantId,"
+            + " t.BusinessId,"
+            + " t.BranchId,"
+            + " t.AccountId,"
+            + " t.NameSurname,"
+            + " t.Email,"
+            + " t.Phone,"
+            + " t.DateOfBirth,"
+            + " t.Gender,"
+            + " t.Notes,"
+            + " t.AvatarUrl,"
+            + " t.TaxOffice,"
+            + " t.TaxNumber,"
+            + " t.IdentityNumber,"
+            + " t.StandartMaturity,"
+            + " t.CreatedAt,"
+            + " t.UpdatedAt,"
+            + " a.AccountGroupId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.Limit,"
+            + " ag.AccountGroupName"
+            + " FROM Tenant t"
             + " INNER JOIN Account a ON t.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " WHERE t.AccountId = @AccountId";
-        return _db.Query<Tenant, Account, AccountGroup, Tenant>(sql,
-            (tenant, account, accountGroup) =>
-            {
-                tenant.Account = account;
-                tenant.Account.AccountGroup = accountGroup;
-                return tenant;
-            }, new { @AccountId = accountId },
-            splitOn: "AccountId,AccountGroupId").SingleOrDefault();
+        return _db.Query<TenantExtDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public Tenant GetExtById(long id)
+    public TenantExtDto GetExtById(long id)
     {
-        var sql = "SELECT * FROM Tenant t"
+        var sql = "SELECT"
+            + " t.TenantId,"
+            + " t.BusinessId,"
+            + " t.BranchId,"
+            + " t.AccountId,"
+            + " t.NameSurname,"
+            + " t.Email,"
+            + " t.Phone,"
+            + " t.DateOfBirth,"
+            + " t.Gender,"
+            + " t.Notes,"
+            + " t.AvatarUrl,"
+            + " t.TaxOffice,"
+            + " t.TaxNumber,"
+            + " t.IdentityNumber,"
+            + " t.StandartMaturity,"
+            + " t.CreatedAt,"
+            + " t.UpdatedAt,"
+            + " a.AccountGroupId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.Limit,"
+            + " ag.AccountGroupName"
+            + " FROM Tenant t"
             + " INNER JOIN Account a ON t.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " WHERE t.TenantId = @TenantId";
-        return _db.Query<Tenant, Account, AccountGroup, Tenant>(sql,
-            (tenant, account, accountGroup) =>
-            {
-                tenant.Account = account;
-                tenant.Account.AccountGroup = accountGroup;
-                return tenant;
-            }, new { @TenantId = id },
-            splitOn: "AccountId,AccountGroupId").SingleOrDefault();
+        return _db.Query<TenantExtDto>(sql, new { @TenantId = id }).SingleOrDefault();
     }
 
-    public List<Tenant> GetExtsByBusinessId(int businessId)
+    public List<TenantExtDto> GetExtsByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Tenant t"
+        var sql = "SELECT"
+            + " t.TenantId,"
+            + " t.BusinessId,"
+            + " t.BranchId,"
+            + " t.AccountId,"
+            + " t.NameSurname,"
+            + " t.Email,"
+            + " t.Phone,"
+            + " t.DateOfBirth,"
+            + " t.Gender,"
+            + " t.Notes,"
+            + " t.AvatarUrl,"
+            + " t.TaxOffice,"
+            + " t.TaxNumber,"
+            + " t.IdentityNumber,"
+            + " t.StandartMaturity,"
+            + " t.CreatedAt,"
+            + " t.UpdatedAt,"
+            + " a.AccountGroupId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.Limit,"
+            + " ag.AccountGroupName"
+            + " FROM Tenant t"
             + " INNER JOIN Account a ON t.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " WHERE t.BusinessId = @BusinessId";
-        return _db.Query<Tenant, Account, AccountGroup, Tenant>(sql,
-            (tenant, account, accountGroup) =>
-            {
-                tenant.Account = account;
-                tenant.Account.AccountGroup = accountGroup;
-                return tenant;
-            }, new { @BusinessId = businessId },
-            splitOn: "AccountId,AccountGroupId").ToList();
+        return _db.Query<TenantExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(Tenant tenant)
+    public void Update(TenantDto tenantDto)
     {
-        var sql = "UPDATE Tenant SET BusinessId = @BusinessId, BranchId = @BranchId, AccountId = @AccountId, NameSurname = @NameSurname, Email = @Email, Phone = @Phone, DateOfBirth = @DateOfBirth, Gender = @Gender, Notes = @Notes, AvatarUrl = @AvatarUrl, TaxOffice = @TaxOffice, TaxNumber = @TaxNumber, IdentityNumber = @IdentityNumber, StandartMaturity = @StandartMaturity, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Tenant SET"
+            + " BusinessId = @BusinessId,"
+            + " BranchId = @BranchId,"
+            + " AccountId = @AccountId,"
+            + " NameSurname = @NameSurname,"
+            + " Email = @Email,"
+            + " Phone = @Phone,"
+            + " DateOfBirth = @DateOfBirth,"
+            + " Gender = @Gender,"
+            + " Notes = @Notes,"
+            + " AvatarUrl = @AvatarUrl,"
+            + " TaxOffice = @TaxOffice,"
+            + " TaxNumber = @TaxNumber,"
+            + " IdentityNumber = @IdentityNumber,"
+            + " StandartMaturity = @StandartMaturity,"
+            + " CreatedAt = @CreatedAt,"
+            + " UpdatedAt = @UpdatedAt"
             + " WHERE TenantId = @TenantId";
-        _db.Execute(sql, tenant);
+        _db.Execute(sql, tenantDto);
     }
 }

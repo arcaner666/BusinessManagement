@@ -26,4 +26,7 @@ public class TenantExtDto
     public string AccountName { get; set; }
     public string AccountCode { get; set; }
     public decimal Limit { get; set; }
+
+    // Extended With Account + AccountGroup
+    public string AccountGroupName { get; set; }
 }

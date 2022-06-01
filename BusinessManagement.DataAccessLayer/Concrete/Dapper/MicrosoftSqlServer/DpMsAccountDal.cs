@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,13 +17,37 @@ public class DpMsAccountDal : IAccountDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public Account Add(Account account)
+    public long Add(AccountDto accountDto)
     {
-        var sql = "INSERT INTO Account (BusinessId, BranchId, AccountGroupId, AccountTypeId, AccountOrder, AccountName, AccountCode, DebitBalance, CreditBalance, Balance, Limit, CreatedAt, UpdatedAt)"
-            + " VALUES(@BusinessId, @BranchId, @AccountGroupId, @AccountTypeId, @AccountOrder, @AccountName, @AccountCode, @DebitBalance, @CreditBalance, @Balance, @Limit, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        var id = _db.Query<long>(sql, account).Single();
-        account.AccountId = id;
-        return account;
+        var sql = "INSERT INTO Account ("
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountGroupId,"
+            + " AccountTypeId,"
+            + " AccountOrder,"
+            + " AccountName,"
+            + " AccountCode,"
+            + " DebitBalance,"
+            + " CreditBalance,"
+            + " Balance,"
+            + " Limit,"
+            + " CreatedAt,"
+            + " UpdatedAt)"
+            + " VALUES(@BusinessId,"
+            + " @BranchId,"
+            + " @AccountGroupId,"
+            + " @AccountTypeId,"
+            + " @AccountOrder,"
+            + " @AccountName,"
+            + " @AccountCode,"
+            + " @DebitBalance,"
+            + " @CreditBalance,"
+            + " @Balance,"
+            + " @Limit,"
+            + " @CreatedAt,"
+            + " @UpdatedAt)"
+            + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        return _db.Query<long>(sql, accountDto).Single();
     }
 
     public void Delete(long id)
@@ -32,111 +57,175 @@ public class DpMsAccountDal : IAccountDal
         _db.Execute(sql, new { @AccountId = id });
     }
 
-    public List<Account> GetByAccountGroupId(short accountGroupId)
+    public List<AccountDto> GetByAccountGroupId(short accountGroupId)
     {
-        var sql = "SELECT * FROM Account"
+        var sql = "SELECT"
+            + " AccountId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountGroupId,"
+            + " AccountTypeId,"
+            + " AccountOrder,"
+            + " AccountName,"
+            + " AccountCode,"
+            + " DebitBalance,"
+            + " CreditBalance,"
+            + " Balance,"
+            + " Limit,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Account"
             + " WHERE AccountGroupId = @AccountGroupId";
-        return _db.Query<Account>(sql, new { @AccountGroupId = accountGroupId }).ToList();
+        return _db.Query<AccountDto>(sql, new { @AccountGroupId = accountGroupId }).ToList();
     }
 
-    public Account GetByBusinessIdAndAccountCode(int businessId, string accountCode)
+    public AccountDto GetByBusinessIdAndAccountCode(int businessId, string accountCode)
     {
-        var sql = "SELECT * FROM Account"
+        var sql = "SELECT"
+            + " AccountId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountGroupId,"
+            + " AccountTypeId,"
+            + " AccountOrder,"
+            + " AccountName,"
+            + " AccountCode,"
+            + " DebitBalance,"
+            + " CreditBalance,"
+            + " Balance,"
+            + " Limit,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Account"
             + " WHERE BusinessId = @BusinessId AND AccountCode = @AccountCode";
-        return _db.Query<Account>(sql, new
+        return _db.Query<AccountDto>(sql, new
         {
             @BusinessId = businessId,
             @AccountCode = accountCode,
         }).SingleOrDefault();
     }
 
-    public Account GetById(long id)
+    public AccountDto GetById(long id)
     {
-        var sql = "SELECT * FROM Account"
+        var sql = "SELECT"
+            + " AccountId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " AccountGroupId,"
+            + " AccountTypeId,"
+            + " AccountOrder,"
+            + " AccountName,"
+            + " AccountCode,"
+            + " DebitBalance,"
+            + " CreditBalance,"
+            + " Balance,"
+            + " Limit,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Account"
             + " WHERE AccountId = @AccountId";
-        return _db.Query<Account>(sql, new { @AccountId = id }).SingleOrDefault();
+        return _db.Query<AccountDto>(sql, new { @AccountId = id }).SingleOrDefault();
     }
 
-    public Account GetExtById(long id)
+    public AccountExtDto GetExtById(long id)
     {
-        var sql = "SELECT * FROM Account a"
+        var sql = "SELECT"
+            + " a.AccountId,"
+            + " a.BusinessId,"
+            + " a.BranchId,"
+            + " a.AccountGroupId,"
+            + " a.AccountTypeId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.DebitBalance,"
+            + " a.CreditBalance,"
+            + " a.Balance,"
+            + " a.Limit,"
+            + " a.CreatedAt,"
+            + " a.UpdatedAt,"
+            + " b.BranchName,"
+            + " ag.AccountGroupName,"
+            + " ag.AccountGroupCode,"
+            + " at.AccountTypeName"
+            + " FROM Account a"
             + " INNER JOIN Branch b ON a.BranchId = b.BranchId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN AccountType at ON a.AccountTypeId = at.AccountTypeId"
             + " WHERE a.AccountId = @AccountId";
-        return _db.Query<Account, Branch, AccountGroup, AccountType, Account>(sql,
-            (account, branch, accountGroup, accountType) =>
-            {
-                account.Branch = branch;
-                account.AccountGroup = accountGroup;
-                account.AccountType = accountType;
-                return account;
-            }, new { @AccountId = id },
-            splitOn: "BranchId,AccountGroupId,AccountTypeId").SingleOrDefault();
+        return _db.Query<AccountExtDto>(sql, new { @AccountId = id }).SingleOrDefault();
     }
 
-    public List<Account> GetExtsByBusinessId(int businessId)
+    public List<AccountExtDto> GetExtsByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Account a"
+        var sql = "SELECT"
+            + " a.AccountId,"
+            + " a.BusinessId,"
+            + " a.BranchId,"
+            + " a.AccountGroupId,"
+            + " a.AccountTypeId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.DebitBalance,"
+            + " a.CreditBalance,"
+            + " a.Balance,"
+            + " a.Limit,"
+            + " a.CreatedAt,"
+            + " a.UpdatedAt,"
+            + " b.BranchName,"
+            + " ag.AccountGroupName,"
+            + " ag.AccountGroupCode,"
+            + " at.AccountTypeName"
+            + " FROM Account a"
             + " INNER JOIN Branch b ON a.BranchId = b.BranchId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN AccountType at ON a.AccountTypeId = at.AccountTypeId"
             + " WHERE a.BusinessId = @BusinessId";
-        return _db.Query<Account, Branch, AccountGroup, AccountType, Account>(sql,
-            (account, branch, accountGroup, accountType) =>
-            {
-                account.Branch = branch;
-                account.AccountGroup = accountGroup;
-                account.AccountType = accountType;
-                return account;
-            }, new { @BusinessId = businessId },
-            splitOn: "BranchId,AccountGroupId,AccountTypeId").ToList();
+        return _db.Query<AccountExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public List<Account> GetExtsByBusinessIdAndAccountGroupCodes(int businessId, string[] accountGroupCodes)
+    public List<AccountExtDto> GetExtsByBusinessIdAndAccountGroupCodes(int businessId, string[] accountGroupCodes)
     {
-        var sql = "SELECT * FROM Account a"
+        var sql = "SELECT"
+            + " a.AccountId,"
+            + " a.BusinessId,"
+            + " a.BranchId,"
+            + " a.AccountGroupId,"
+            + " a.AccountTypeId,"
+            + " a.AccountOrder,"
+            + " a.AccountName,"
+            + " a.AccountCode,"
+            + " a.DebitBalance,"
+            + " a.CreditBalance,"
+            + " a.Balance,"
+            + " a.Limit,"
+            + " a.CreatedAt,"
+            + " a.UpdatedAt,"
+            + " b.BranchName,"
+            + " ag.AccountGroupName,"
+            + " ag.AccountGroupCode,"
+            + " at.AccountTypeName"
+            + " FROM Account a"
             + " INNER JOIN Branch b ON a.BranchId = b.BranchId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN AccountType at ON a.AccountTypeId = at.AccountTypeId"
             + " WHERE a.BusinessId = @BusinessId AND ag.AccountGroupCode IN @AccountGroupCodes";
-        return _db.Query<Account, Branch, AccountGroup, AccountType, Account>(sql,
-            (account, branch, accountGroup, accountType) =>
-            {
-                account.Branch = branch;
-                account.AccountGroup = accountGroup;
-                account.AccountType = accountType;
-                return account;
-            }, new
+        return _db.Query<AccountExtDto>(sql, new
             {
                 @BusinessId = businessId,
                 @AccountGroupCodes = accountGroupCodes,
-            },
-            splitOn: "BranchId,AccountGroupId,AccountTypeId").ToList();
+            }).ToList();
     }
 
-    public Account GetLastAccountOrderForAnAccountGroup(int businessId, long branchId, string accountGroupCode)
+    public int GetMaxAccountOrderByBusinessIdAndBranchIdAndAccountGroupId(int businessId, long branchId, short accountGroupId)
     {
-        var sql = "SELECT * FROM Account"
+        var sql = "SELECT ISNULL(MAX(AccountOrder), 0)" 
+            + " FROM Account" 
             + " WHERE BusinessId = @BusinessId"
             + " AND BranchId = @BranchId"
-            + " AND AccountGroupId = (SELECT AccountGroupId FROM AccountGroup WHERE AccountGroupCode = @AccountGroupCode)"
-            + " AND AccountOrder = (SELECT MAX(AccountOrder) FROM Account WHERE BusinessId = @BusinessId AND BranchId = @BranchId AND AccountGroupId = (SELECT AccountGroupId FROM AccountGroup WHERE AccountGroupCode = @AccountGroupCode))";
-        return _db.Query<Account>(sql, new
-        {
-            @BusinessId = businessId,
-            @BranchId = branchId,
-            @AccountGroupCode = accountGroupCode,
-        }).SingleOrDefault();
-    }
-
-    public Account GetMaxAccountOrderByBusinessIdAndBranchIdAndAccountGroupId(int businessId, long branchId, short accountGroupId)
-    {
-        var sql = "SELECT * FROM Account"
-            + " WHERE BusinessId = @BusinessId AND BranchId = @BranchId AND AccountGroupId = @AccountGroupId AND AccountOrder ="
-            + " (SELECT MAX(AccountOrder) FROM Account"
-            + " WHERE BusinessId = @BusinessId AND BranchId = @BranchId AND AccountGroupId = @AccountGroupId)";
-        return _db.Query<Account>(sql, new
+            + " AND AccountGroupId = @AccountGroupId";
+        return _db.Query<int>(sql, new
         {
             @BusinessId = businessId,
             @BranchId = branchId,
@@ -144,10 +233,23 @@ public class DpMsAccountDal : IAccountDal
         }).SingleOrDefault();
     }
 
-    public void Update(Account account)
+    public void Update(AccountDto accountDto)
     {
-        var sql = "UPDATE Account SET BusinessId = @BusinessId, BranchId = @BranchId, AccountGroupId = @AccountGroupId, AccountTypeId = @AccountTypeId, AccountOrder = @AccountOrder, AccountName = @AccountName, AccountCode = @AccountCode, DebitBalance = @DebitBalance, CreditBalance = @CreditBalance, Balance = @Balance, Limit = @Limit, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Account SET"
+            + " BusinessId = @BusinessId,"
+            + " BranchId = @BranchId,"
+            + " AccountGroupId = @AccountGroupId,"
+            + " AccountTypeId = @AccountTypeId,"
+            + " AccountOrder = @AccountOrder,"
+            + " AccountName = @AccountName,"
+            + " AccountCode = @AccountCode,"
+            + " DebitBalance = @DebitBalance,"
+            + " CreditBalance = @CreditBalance,"
+            + " Balance = @Balance,"
+            + " Limit = @Limit,"
+            + " CreatedAt = @CreatedAt,"
+            + " UpdatedAt = @UpdatedAt"
             + " WHERE AccountId = @AccountId";
-        _db.Execute(sql, account);
+        _db.Execute(sql, accountDto);
     }
 }

@@ -123,35 +123,29 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
 
     public IDataResult<HouseOwnerExtDto> GetExtByAccountId(long accountId)
     {
-        HouseOwner searchedHouseOwner = _houseOwnerDal.GetExtByAccountId(accountId);
-        if (searchedHouseOwner is null)
+        HouseOwnerExtDto houseOwnerExtDto = _houseOwnerDal.GetExtByAccountId(accountId);
+        if (houseOwnerExtDto is null)
             return new ErrorDataResult<HouseOwnerExtDto>(Messages.HouseOwnerNotFound);
 
-        HouseOwnerExtDto searchedHouseOwnerExtDto = FillExtDto(searchedHouseOwner);
-
-        return new SuccessDataResult<HouseOwnerExtDto>(searchedHouseOwnerExtDto, Messages.HouseOwnerExtListedByAccountId);
+        return new SuccessDataResult<HouseOwnerExtDto>(houseOwnerExtDto, Messages.HouseOwnerExtListedByAccountId);
     }
 
     public IDataResult<HouseOwnerExtDto> GetExtById(long id)
     {
-        HouseOwner searchedHouseOwner = _houseOwnerDal.GetExtById(id);
-        if (searchedHouseOwner is null)
+        HouseOwnerExtDto houseOwnerExtDto = _houseOwnerDal.GetExtById(id);
+        if (houseOwnerExtDto is null)
             return new ErrorDataResult<HouseOwnerExtDto>(Messages.HouseOwnerNotFound);
 
-        HouseOwnerExtDto searchedHouseOwnerExtDto = FillExtDto(searchedHouseOwner);
-
-        return new SuccessDataResult<HouseOwnerExtDto>(searchedHouseOwnerExtDto, Messages.HouseOwnerExtListedById);
+        return new SuccessDataResult<HouseOwnerExtDto>(houseOwnerExtDto, Messages.HouseOwnerExtListedById);
     }
 
     public IDataResult<List<HouseOwnerExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<HouseOwner> searchedHouseOwners = _houseOwnerDal.GetExtsByBusinessId(businessId);
-        if (searchedHouseOwners.Count == 0)
+        List<HouseOwnerExtDto> houseOwnerExtDtos = _houseOwnerDal.GetExtsByBusinessId(businessId);
+        if (houseOwnerExtDtos.Count == 0)
             return new ErrorDataResult<List<HouseOwnerExtDto>>(Messages.HouseOwnersNotFound);
 
-        List<HouseOwnerExtDto> searchedHouseOwnerExtDtos = FillExtDtos(searchedHouseOwners);
-
-        return new SuccessDataResult<List<HouseOwnerExtDto>>(searchedHouseOwnerExtDtos, Messages.HouseOwnerExtsListedByBusinessId);
+        return new SuccessDataResult<List<HouseOwnerExtDto>>(houseOwnerExtDtos, Messages.HouseOwnerExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]
@@ -188,44 +182,5 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
             return updateHouseOwnerResult;
 
         return new SuccessResult(Messages.HouseOwnerExtUpdated);
-    }
-
-    private HouseOwnerExtDto FillExtDto(HouseOwner houseOwner)
-    {
-        HouseOwnerExtDto houseOwnerExtDto = new()
-        {
-            HouseOwnerId = houseOwner.HouseOwnerId,
-            BusinessId = houseOwner.BusinessId,
-            BranchId = houseOwner.BranchId,
-            AccountId = houseOwner.AccountId,
-            NameSurname = houseOwner.NameSurname,
-            Email = houseOwner.Email,
-            Phone = houseOwner.Phone,
-            DateOfBirth = houseOwner.DateOfBirth,
-            Gender = houseOwner.Gender,
-            Notes = houseOwner.Notes,
-            AvatarUrl = houseOwner.AvatarUrl,
-            TaxOffice = houseOwner.TaxOffice,
-            TaxNumber = houseOwner.TaxNumber,
-            IdentityNumber = houseOwner.IdentityNumber,
-            StandartMaturity = houseOwner.StandartMaturity,
-            CreatedAt = houseOwner.CreatedAt,
-            UpdatedAt = houseOwner.UpdatedAt,
-
-            // Extended With Account
-            AccountGroupId = houseOwner.Account.AccountGroupId,
-            AccountOrder = houseOwner.Account.AccountOrder,
-            AccountName = houseOwner.Account.AccountName,
-            AccountCode = houseOwner.Account.AccountCode,
-            Limit = houseOwner.Account.Limit,
-        };
-        return houseOwnerExtDto;
-    }
-
-    private List<HouseOwnerExtDto> FillExtDtos(List<HouseOwner> houseOwners)
-    {
-        List<HouseOwnerExtDto> houseOwnerExtDtos = houseOwners.Select(houseOwner => FillExtDto(houseOwner)).ToList();
-
-        return houseOwnerExtDtos;
     }
 }

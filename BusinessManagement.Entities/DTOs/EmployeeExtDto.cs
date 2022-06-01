@@ -28,6 +28,9 @@ public class EmployeeExtDto
     public string AccountCode { get; set; }
     public decimal Limit { get; set; }
 
+    // Extended With Account + AccountGroup
+    public string AccountGroupName { get; set; }
+
     // Extended With EmployeeType
     public string EmployeeTypeName { get; set; }
 }

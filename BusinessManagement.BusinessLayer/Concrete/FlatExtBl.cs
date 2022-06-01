@@ -38,10 +38,10 @@ public class FlatExtBl : IFlatExtBl
             return getApartmentResult;
 
         // Eşsiz bir daire kodu üretebilmek için ilgili apartmandaki tüm daireler getirilir.
-        List<Flat> getFlatsResult = _flatDal.GetByApartmentId(flatExtDto.ApartmentId);
+        List<FlatDto> flatDtos = _flatDal.GetByApartmentId(flatExtDto.ApartmentId);
 
         // Daire kodu üretilir.
-        string flatCode = _keyService.GenerateFlatCode(getFlatsResult, getApartmentResult.Data.ApartmentCode);
+        string flatCode = _keyService.GenerateFlatCode(flatDtos, getApartmentResult.Data.ApartmentCode);
 
         // Daire eklenir.
         FlatDto flatDto = new()
@@ -65,33 +65,29 @@ public class FlatExtBl : IFlatExtBl
     [TransactionScopeAspect]
     public IResult DeleteExt(long id)
     {
-        var deleteSectionResult = _flatBl.Delete(id);
-        if (!deleteSectionResult.Success)
-            return deleteSectionResult;
+        var deleteFlatResult = _flatBl.Delete(id);
+        if (!deleteFlatResult.Success)
+            return deleteFlatResult;
 
         return new SuccessResult(Messages.FlatExtDeleted);
     }
 
     public IDataResult<FlatExtDto> GetExtById(long id)
     {
-        Flat searchedFlat = _flatDal.GetExtById(id);
-        if (searchedFlat is null)
+        FlatExtDto flatExtDto = _flatDal.GetExtById(id);
+        if (flatExtDto is null)
             return new ErrorDataResult<FlatExtDto>(Messages.FlatNotFound);
 
-        FlatExtDto searchedFlatExtDto = FillExtDto(searchedFlat);
-
-        return new SuccessDataResult<FlatExtDto>(searchedFlatExtDto, Messages.FlatExtListedById);
+        return new SuccessDataResult<FlatExtDto>(flatExtDto, Messages.FlatExtListedById);
     }
 
     public IDataResult<List<FlatExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<Flat> searchedFlats = _flatDal.GetExtsByBusinessId(businessId);
-        if (searchedFlats.Count == 0)
+        List<FlatExtDto> flatExtDtos = _flatDal.GetExtsByBusinessId(businessId);
+        if (flatExtDtos.Count == 0)
             return new ErrorDataResult<List<FlatExtDto>>(Messages.FlatsNotFound);
 
-        List<FlatExtDto> searchedFlatExtDtos = FillExtDtos(searchedFlats);
-
-        return new SuccessDataResult<List<FlatExtDto>>(searchedFlatExtDtos, Messages.FlatExtsListedByBusinessId);
+        return new SuccessDataResult<List<FlatExtDto>>(flatExtDtos, Messages.FlatExtsListedByBusinessId);
     }
 
     public IResult UpdateExt(FlatExtDto flatExtDto)
@@ -109,37 +105,5 @@ public class FlatExtBl : IFlatExtBl
             return updateFlatResult;
 
         return new SuccessResult(Messages.FlatExtUpdated);
-    }
-
-    private FlatExtDto FillExtDto(Flat flat)
-    {
-        FlatExtDto flatExtDto = new()
-        {
-            FlatId = flat.FlatId,
-            SectionId = flat.SectionId,
-            ApartmentId = flat.ApartmentId,
-            BusinessId = flat.BusinessId,
-            BranchId = flat.BranchId,
-            HouseOwnerId = flat.HouseOwnerId,
-            TenantId = flat.TenantId,
-            FlatCode = flat.FlatCode,
-            DoorNumber = flat.DoorNumber,
-            CreatedAt = flat.CreatedAt,
-            UpdatedAt = flat.UpdatedAt,
-
-            SectionName = flat.Section.SectionName,
-            ApartmentName = flat.Apartment.ApartmentName,
-            HouseOwnerNameSurname = flat.HouseOwner?.NameSurname,
-            TenantNameSurname = flat.Tenant?.NameSurname,
-        };
-
-        return flatExtDto;
-    }
-
-    private List<FlatExtDto> FillExtDtos(List<Flat> flats)
-    {
-        List<FlatExtDto> flatExtDtos = flats.Select(flat => FillExtDto(flat)).ToList();
-
-        return flatExtDtos;
     }
 }

@@ -70,10 +70,10 @@ public class AccountExtBl : IAccountExtBl
 
         // İlgili hesap grubundaki en son hesap sırası getirilir.
         int accountOrder = 1;
-        Account getLastAccountOrderResult = _accountDal.GetMaxAccountOrderByBusinessIdAndBranchIdAndAccountGroupId(businessId, branchId, getAccountGroupResult.Data.AccountGroupId);
-        if (getLastAccountOrderResult is not null)
+        int maxAccountOrder = _accountDal.GetMaxAccountOrderByBusinessIdAndBranchIdAndAccountGroupId(businessId, branchId, getAccountGroupResult.Data.AccountGroupId);
+        if (maxAccountOrder != 0)
         {
-            accountOrder = getLastAccountOrderResult.AccountOrder + 1;
+            accountOrder = maxAccountOrder + 1;
         }
 
         // Hesap kodu oluşturulur.
@@ -102,35 +102,29 @@ public class AccountExtBl : IAccountExtBl
 
     public IDataResult<AccountExtDto> GetExtById(long id)
     {
-        Account searchedAccount = _accountDal.GetExtById(id);
-        if (searchedAccount is null)
+        AccountExtDto accountExtDto = _accountDal.GetExtById(id);
+        if (accountExtDto is null)
             return new ErrorDataResult<AccountExtDto>(Messages.AccountNotFound);
 
-        AccountExtDto searchedAccountExtDto = FillExtDto(searchedAccount);
-
-        return new SuccessDataResult<AccountExtDto>(searchedAccountExtDto, Messages.AccountExtListedById);
+        return new SuccessDataResult<AccountExtDto>(accountExtDto, Messages.AccountExtListedById);
     }
 
     public IDataResult<List<AccountExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<Account> searchedAccounts = _accountDal.GetExtsByBusinessId(businessId);
-        if (searchedAccounts.Count == 0)
+        List<AccountExtDto> accountExtDtos = _accountDal.GetExtsByBusinessId(businessId);
+        if (accountExtDtos.Count == 0)
             return new ErrorDataResult<List<AccountExtDto>>(Messages.AccountsNotFound);
 
-        List<AccountExtDto> searchedAccountExtDtos = FillExtDtos(searchedAccounts);
-
-        return new SuccessDataResult<List<AccountExtDto>>(searchedAccountExtDtos, Messages.AccountExtsListedByBusinessId);
+        return new SuccessDataResult<List<AccountExtDto>>(accountExtDtos, Messages.AccountExtsListedByBusinessId);
     }
 
     public IDataResult<List<AccountExtDto>> GetExtsByBusinessIdAndAccountGroupCodes(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto)
     {
-        List<Account> searchedAccounts = _accountDal.GetExtsByBusinessIdAndAccountGroupCodes(accountGetByAccountGroupCodesDto.BusinessId, accountGetByAccountGroupCodesDto.AccountGroupCodes);
-        if (searchedAccounts.Count == 0)
+        List<AccountExtDto> accountExtDtos = _accountDal.GetExtsByBusinessIdAndAccountGroupCodes(accountGetByAccountGroupCodesDto.BusinessId, accountGetByAccountGroupCodesDto.AccountGroupCodes);
+        if (accountExtDtos.Count == 0)
             return new ErrorDataResult<List<AccountExtDto>>(Messages.AccountsNotFound);
 
-        List<AccountExtDto> searchedAccountExtDtos = FillExtDtos(searchedAccounts);
-
-        return new SuccessDataResult<List<AccountExtDto>>(searchedAccountExtDtos, Messages.AccountExtsListedByBusinessId);
+        return new SuccessDataResult<List<AccountExtDto>>(accountExtDtos, Messages.AccountExtsListedByBusinessId);
     }
 
     public IResult UpdateExt(AccountExtDto accountExtDto)
@@ -149,44 +143,5 @@ public class AccountExtBl : IAccountExtBl
             return updateAccountResult;
 
         return new SuccessResult(Messages.AccountExtUpdated);
-    }
-
-    private AccountExtDto FillExtDto(Account account)
-    {
-        AccountExtDto accountExtDto = new()
-        {
-            AccountId = account.AccountId,
-            BusinessId = account.BusinessId,
-            BranchId = account.BranchId,
-            AccountGroupId = account.AccountGroupId,
-            AccountTypeId = account.AccountTypeId,
-            AccountOrder = account.AccountOrder,
-            AccountName = account.AccountName,
-            AccountCode = account.AccountCode,
-            DebitBalance = account.DebitBalance,
-            CreditBalance = account.CreditBalance,
-            Balance = account.Balance,
-            Limit = account.Limit,
-            CreatedAt = account.CreatedAt,
-            UpdatedAt = account.UpdatedAt,
-
-            // Extended With Branch
-            BranchName = account.Branch.BranchName,
-
-            // Extended With AccountGroup
-            AccountGroupName = account.AccountGroup.AccountGroupName,
-            AccountGroupCode = account.AccountGroup.AccountGroupCode,
-
-            // Extended With AccountType
-            AccountTypeName = account.AccountType.AccountTypeName,
-        };
-        return accountExtDto;
-    }
-
-    private List<AccountExtDto> FillExtDtos(List<Account> accounts)
-    {
-        List<AccountExtDto> accountExtDtos = accounts.Select(account => FillExtDto(account)).ToList();
-
-        return accountExtDtos;
     }
 }

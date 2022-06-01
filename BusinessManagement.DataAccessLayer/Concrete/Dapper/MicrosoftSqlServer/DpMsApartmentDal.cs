@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,13 +17,30 @@ public class DpMsApartmentDal : IApartmentDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public Apartment Add(Apartment apartment)
+    public long Add(ApartmentDto apartmentDto)
     {
-        var sql = "INSERT INTO Apartment (SectionId, BusinessId, BranchId, ManagerId, ApartmentName, ApartmentCode, BlockNumber, CreatedAt, UpdatedAt)"
-            + " VALUES(@SectionId, @BusinessId, @BranchId, @ManagerId, @ApartmentName, @ApartmentCode, @BlockNumber, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        var id = _db.Query<long>(sql, apartment).Single();
-        apartment.ApartmentId = id;
-        return apartment;
+        var sql = "INSERT INTO Apartment ("
+            + " SectionId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " ManagerId,"
+            + " ApartmentName,"
+            + " ApartmentCode,"
+            + " BlockNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt)"
+            + " VALUES("
+            + " @SectionId,"
+            + " @BusinessId,"
+            + " @BranchId,"
+            + " @ManagerId,"
+            + " @ApartmentName,"
+            + " @ApartmentCode,"
+            + " @BlockNumber,"
+            + " @CreatedAt,"
+            + " @UpdatedAt)"
+            + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
+        return _db.Query<long>(sql, apartmentDto).Single();
     }
 
     public void Delete(long id)
@@ -32,70 +50,135 @@ public class DpMsApartmentDal : IApartmentDal
         _db.Execute(sql, new { @ApartmentId = id });
     }
 
-    public Apartment GetByApartmentCode(string apartmentCode)
+    public ApartmentDto GetByApartmentCode(string apartmentCode)
     {
-        var sql = "SELECT * FROM Apartment"
+        var sql = "SELECT"
+            + " ApartmentId,"
+            + " SectionId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " ManagerId,"
+            + " ApartmentName,"
+            + " ApartmentCode,"
+            + " BlockNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Apartment"
             + " WHERE ApartmentCode = @ApartmentCode";
-        return _db.Query<Apartment>(sql, new { @ApartmentCode = apartmentCode }).SingleOrDefault();
+        return _db.Query<ApartmentDto>(sql, new { @ApartmentCode = apartmentCode }).SingleOrDefault();
     }
 
-    public List<Apartment> GetByBusinessId(int businessId)
+    public List<ApartmentDto> GetByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Apartment"
+        var sql = "SELECT"
+            + " ApartmentId,"
+            + " SectionId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " ManagerId,"
+            + " ApartmentName,"
+            + " ApartmentCode,"
+            + " BlockNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Apartment"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<Apartment>(sql, new { @BusinessId = businessId }).ToList();
+        return _db.Query<ApartmentDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public Apartment GetById(long id)
+    public ApartmentDto GetById(long id)
     {
-        var sql = "SELECT * FROM Apartment"
+        var sql = "SELECT"
+            + " ApartmentId,"
+            + " SectionId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " ManagerId,"
+            + " ApartmentName,"
+            + " ApartmentCode,"
+            + " BlockNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Apartment"
             + " WHERE ApartmentId = @ApartmentId";
-        return _db.Query<Apartment>(sql, new { @ApartmentId = id }).SingleOrDefault();
+        return _db.Query<ApartmentDto>(sql, new { @ApartmentId = id }).SingleOrDefault();
     }
 
-    public List<Apartment> GetBySectionId(int sectionId)
+    public List<ApartmentDto> GetBySectionId(int sectionId)
     {
-        var sql = "SELECT * FROM Apartment"
+        var sql = "SELECT"
+            + " ApartmentId,"
+            + " SectionId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " ManagerId,"
+            + " ApartmentName,"
+            + " ApartmentCode,"
+            + " BlockNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Apartment"
             + " WHERE SectionId = @SectionId";
-        return _db.Query<Apartment>(sql, new { @SectionId = sectionId }).ToList();
+        return _db.Query<ApartmentDto>(sql, new { @SectionId = sectionId }).ToList();
     }
 
-    public Apartment GetExtById(long id)
+    public ApartmentExtDto GetExtById(long id)
     {
-        var sql = "SELECT * FROM Apartment a"
+        var sql = "SELECT"
+            + " a.ApartmentId,"
+            + " a.SectionId,"
+            + " a.BusinessId,"
+            + " a.BranchId,"
+            + " a.ManagerId,"
+            + " a.ApartmentName,"
+            + " a.ApartmentCode,"
+            + " a.BlockNumber,"
+            + " a.CreatedAt,"
+            + " a.UpdatedAt,"
+            + " s.SectionName,"
+            + " m.NameSurname AS ManagerNameSurname"
+            + " FROM Apartment a"
             + " INNER JOIN Section s ON a.SectionId = s.SectionId"
             + " INNER JOIN Manager m ON a.ManagerId = m.ManagerId"
             + " WHERE a.ApartmentId = @ApartmentId";
-        return _db.Query<Apartment, Section, Manager, Apartment>(sql,
-            (apartment, section, manager) =>
-            {
-                apartment.Section = section;
-                apartment.Manager = manager;
-                return apartment;
-            }, new { @ApartmentId = id },
-            splitOn: "SectionId,ManagerId").SingleOrDefault();
+        return _db.Query<ApartmentExtDto>(sql, new { @ApartmentId = id }).SingleOrDefault();
     }
 
-    public List<Apartment> GetExtsByBusinessId(int businessId)
+    public List<ApartmentExtDto> GetExtsByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Apartment a"
+        var sql = "SELECT"
+            + " a.ApartmentId,"
+            + " a.SectionId,"
+            + " a.BusinessId,"
+            + " a.BranchId,"
+            + " a.ManagerId,"
+            + " a.ApartmentName,"
+            + " a.ApartmentCode,"
+            + " a.BlockNumber,"
+            + " a.CreatedAt,"
+            + " a.UpdatedAt,"
+            + " s.SectionName,"
+            + " m.NameSurname AS ManagerNameSurname"
+            + " FROM Apartment a"
             + " INNER JOIN Section s ON a.SectionId = s.SectionId"
             + " INNER JOIN Manager m ON a.ManagerId = m.ManagerId"
             + " WHERE a.BusinessId = @BusinessId";
-        return _db.Query<Apartment, Section, Manager, Apartment>(sql,
-            (apartment, section, manager) =>
-            {
-                apartment.Section = section;
-                apartment.Manager = manager;
-                return apartment;
-            }, new { @BusinessId = businessId },
-            splitOn: "SectionId,ManagerId").ToList();
+        return _db.Query<ApartmentExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(Apartment apartment)
+    public void Update(ApartmentDto apartmentDto)
     {
-        var sql = "UPDATE Apartment SET SectionId = @SectionId, BusinessId = @BusinessId, BranchId = @BranchId, ManagerId = @ManagerId, ApartmentName = @ApartmentName, ApartmentCode = @ApartmentCode, BlockNumber = @BlockNumber, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Apartment SET"
+            + " SectionId = @SectionId,"
+            + " BusinessId = @BusinessId,"
+            + " BranchId = @BranchId,"
+            + " ManagerId = @ManagerId,"
+            + " ApartmentName = @ApartmentName,"
+            + " ApartmentCode = @ApartmentCode,"
+            + " BlockNumber = @BlockNumber,"
+            + " CreatedAt = @CreatedAt,"
+            + " UpdatedAt = @UpdatedAt"
             + " WHERE ApartmentId = @ApartmentId";
-        _db.Execute(sql, apartment);
+        _db.Execute(sql, apartmentDto);
     }
 }

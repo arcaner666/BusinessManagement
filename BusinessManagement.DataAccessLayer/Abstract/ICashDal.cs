@@ -5,14 +5,14 @@ namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface ICashDal
 {
-    Cash Add(Cash cash);
+    long Add(CashDto cashDto);
     void Delete(long id);
-    Cash GetByAccountId(long accountId);
-    List<Cash> GetByBusinessId(int businessId);
-    Cash GetByBusinessIdAndAccountId(int businessId, long accountId);
-    Cash GetById(long id);
-    Cash GetExtByAccountId(long accountId);
+    CashDto GetByAccountId(long accountId);
+    List<CashDto> GetByBusinessId(int businessId);
+    CashDto GetByBusinessIdAndAccountId(int businessId, long accountId);
+    CashDto GetById(long id);
+    CashExtDto GetExtByAccountId(long accountId);
     CashExtDto GetExtById(long id);
-    List<Cash> GetExtsByBusinessId(int businessId);
-    void Update(Cash cash);
+    List<CashExtDto> GetExtsByBusinessId(int businessId);
+    void Update(CashDto cashDto);
 }

@@ -1,11 +1,12 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IAccountGroupDal
 {
-    List<AccountGroup> GetAll();
-    AccountGroup GetByAccountGroupCode(string accountGroupCode);
-    List<AccountGroup> GetByAccountGroupCodes(string[] accountGroupCodes);
-    AccountGroup GetById(short id);
+    List<AccountGroupDto> GetAll();
+    AccountGroupDto GetByAccountGroupCode(string accountGroupCode);
+    List<AccountGroupDto> GetByAccountGroupCodes(string[] accountGroupCodes);
+    AccountGroupDto GetById(short id);
 }

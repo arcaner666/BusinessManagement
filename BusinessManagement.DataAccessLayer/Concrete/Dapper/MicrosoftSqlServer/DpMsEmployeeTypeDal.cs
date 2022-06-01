@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,9 +17,12 @@ public class DpMsEmployeeTypeDal : IEmployeeTypeDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public List<EmployeeType> GetAll()
+    public List<EmployeeTypeDto> GetAll()
     {
-        var sql = "SELECT * FROM EmployeeType";
-        return _db.Query<EmployeeType>(sql).ToList();
+        var sql = "SELECT"
+            + " EmployeeTypeId,"
+            + " EmployeeTypeName"
+            + " FROM EmployeeType";
+        return _db.Query<EmployeeTypeDto>(sql).ToList();
     }
 }

@@ -71,7 +71,7 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " RefreshToken,"
             + " RefreshTokenExpiryTime,"
             + " CreatedAt,"
-            + " UpdatedAt)"
+            + " UpdatedAt"
             + " FROM SystemUser su"
             + " WHERE Email = @Email";
         return _db.Query<SystemUserDto>(sql, new { @Email = email }).SingleOrDefault();
@@ -92,7 +92,7 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " RefreshToken,"
             + " RefreshTokenExpiryTime,"
             + " CreatedAt,"
-            + " UpdatedAt)"
+            + " UpdatedAt"
             + " FROM SystemUser"
             + " WHERE SystemUserId = @SystemUserId";
         return _db.Query<SystemUserDto>(sql, new { @SystemUserId = id }).SingleOrDefault();
@@ -113,7 +113,7 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " RefreshToken,"
             + " RefreshTokenExpiryTime,"
             + " CreatedAt,"
-            + " UpdatedAt)"
+            + " UpdatedAt"
             + " FROM SystemUser"
             + " WHERE Phone = @Phone";
         return _db.Query<SystemUserDto>(sql, new { @Phone = phone }).SingleOrDefault();

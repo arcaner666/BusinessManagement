@@ -20,26 +20,18 @@ public class CashBl : ICashBl
 
     public IDataResult<CashDto> Add(CashDto cashDto)
     {
-        Cash searchedCash = _cashDal.GetByBusinessIdAndAccountId(cashDto.BusinessId, cashDto.AccountId);
-        if (searchedCash is not null)
+        CashDto searchedCashDto = _cashDal.GetByBusinessIdAndAccountId(cashDto.BusinessId, cashDto.AccountId);
+        if (searchedCashDto is not null)
         {
             return new ErrorDataResult<CashDto>(Messages.CashAlreadyExists);
         }
 
-        Cash addedCash = new()
-        {
-            BusinessId = cashDto.BusinessId,
-            BranchId = cashDto.BranchId,
-            AccountId = cashDto.AccountId,
-            CurrencyId = cashDto.CurrencyId,
-            CreatedAt = DateTimeOffset.Now,
-            UpdatedAt = DateTimeOffset.Now,
-        };
-        _cashDal.Add(addedCash);
+        cashDto.CreatedAt = DateTimeOffset.Now;
+        cashDto.UpdatedAt = DateTimeOffset.Now;
+        long id = _cashDal.Add(cashDto);
+        cashDto.CashId = id;
 
-        CashDto addedCashDto = FillDto(addedCash);
-
-        return new SuccessDataResult<CashDto>(addedCashDto, Messages.CashAdded);
+        return new SuccessDataResult<CashDto>(cashDto, Messages.CashAdded);
     }
 
     public IResult Delete(long id)
@@ -55,69 +47,40 @@ public class CashBl : ICashBl
 
     public IDataResult<CashDto> GetByAccountId(long accountId)
     {
-        Cash searchedCash = _cashDal.GetByAccountId(accountId);
-        if (searchedCash is null)
+        CashDto cashDto = _cashDal.GetByAccountId(accountId);
+        if (cashDto is null)
             return new ErrorDataResult<CashDto>(Messages.CashNotFound);
 
-        CashDto searchedCashDto = FillDto(searchedCash);
-
-        return new SuccessDataResult<CashDto>(searchedCashDto, Messages.CashListedByAccountId);
+        return new SuccessDataResult<CashDto>(cashDto, Messages.CashListedByAccountId);
     }
 
     public IDataResult<List<CashDto>> GetByBusinessId(int businessId)
     {
-        List<Cash> searchedCash = _cashDal.GetByBusinessId(businessId);
-        if (searchedCash.Count == 0)
+        List<CashDto> cashDto = _cashDal.GetByBusinessId(businessId);
+        if (cashDto.Count == 0)
             return new ErrorDataResult<List<CashDto>>(Messages.CashNotFound);
 
-        List<CashDto> searchedCashDtos = FillDtos(searchedCash);
-
-        return new SuccessDataResult<List<CashDto>>(searchedCashDtos, Messages.CashListedByBusinessId);
+        return new SuccessDataResult<List<CashDto>>(cashDto, Messages.CashListedByBusinessId);
     }
 
     public IDataResult<CashDto> GetById(long id)
     {
-        Cash searchedCash = _cashDal.GetById(id);
-        if (searchedCash is null)
+        CashDto cashDto = _cashDal.GetById(id);
+        if (cashDto is null)
             return new ErrorDataResult<CashDto>(Messages.CashNotFound);
 
-        CashDto searchedCashDto = FillDto(searchedCash);
-
-        return new SuccessDataResult<CashDto>(searchedCashDto, Messages.CashListedById);
+        return new SuccessDataResult<CashDto>(cashDto, Messages.CashListedById);
     }
 
     public IResult Update(CashDto cashDto)
     {
-        Cash searchedCash = _cashDal.GetById(cashDto.CashId);
-        if (searchedCash is null)
-            return new ErrorDataResult<AccountDto>(Messages.CashNotFound);
+        var searchedCashResult = GetById(cashDto.CashId);
+        if (!searchedCashResult.Success)
+            return searchedCashResult;
 
-        searchedCash.UpdatedAt = DateTimeOffset.Now;
-        _cashDal.Update(searchedCash);
+        searchedCashResult.Data.UpdatedAt = DateTimeOffset.Now;
+        _cashDal.Update(searchedCashResult.Data);
 
         return new SuccessResult(Messages.CashUpdated);
-    }
-
-    private CashDto FillDto(Cash cash)
-    {
-        CashDto cashDto = new()
-        {
-            CashId = cash.CashId,
-            BusinessId = cash.BusinessId,
-            BranchId = cash.BranchId,
-            AccountId = cash.AccountId,
-            CurrencyId = cash.CurrencyId,
-            CreatedAt = cash.CreatedAt,
-            UpdatedAt = cash.UpdatedAt,
-        };
-
-        return cashDto;
-    }
-
-    private List<CashDto> FillDtos(List<Cash> cash)
-    {
-        List<CashDto> cashDtos = cash.Select(cash => FillDto(cash)).ToList();
-
-        return cashDtos;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -16,13 +17,32 @@ public class DpMsFlatDal : IFlatDal
         _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
     }
 
-    public Flat Add(Flat flat)
+    public long Add(FlatDto flatDto)
     {
-        var sql = "INSERT INTO Flat (SectionId, ApartmentId, BusinessId, BranchId, HouseOwnerId, TenantId, FlatCode, DoorNumber, CreatedAt, UpdatedAt)"
-            + " VALUES(@SectionId, @ApartmentId, @BusinessId, @BranchId, @HouseOwnerId, @TenantId, @FlatCode, @DoorNumber, @CreatedAt, @UpdatedAt) SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
-        var id = _db.Query<long>(sql, flat).Single();
-        flat.FlatId = id;
-        return flat;
+        var sql = "INSERT INTO Flat ("
+            + " SectionId,"
+            + " ApartmentId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " HouseOwnerId,"
+            + " TenantId,"
+            + " FlatCode,"
+            + " DoorNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt)"
+            + " VALUES("
+            + " @SectionId,"
+            + " @ApartmentId,"
+            + " @BusinessId,"
+            + " @BranchId,"
+            + " @HouseOwnerId,"
+            + " @TenantId,"
+            + " @FlatCode,"
+            + " @DoorNumber,"
+            + " @CreatedAt,"
+            + " @UpdatedAt)"
+            + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
+        return _db.Query<long>(sql, flatDto).Single();
     }
 
     public void Delete(long id)
@@ -32,75 +52,131 @@ public class DpMsFlatDal : IFlatDal
         _db.Execute(sql, new { @FlatId = id });
     }
 
-    public List<Flat> GetByApartmentId(long apartmentId)
+    public List<FlatDto> GetByApartmentId(long apartmentId)
     {
-        var sql = "SELECT * FROM Flat"
+        var sql = "SELECT"
+            + " FlatId,"
+            + " SectionId,"
+            + " ApartmentId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " HouseOwnerId,"
+            + " TenantId,"
+            + " FlatCode,"
+            + " DoorNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Flat"
             + " WHERE ApartmentId = @ApartmentId";
-        return _db.Query<Flat>(sql, new { @ApartmentId = apartmentId }).ToList();
+        return _db.Query<FlatDto>(sql, new { @ApartmentId = apartmentId }).ToList();
     }
 
-    public Flat GetByFlatCode(string flatCode)
+    public FlatDto GetByFlatCode(string flatCode)
     {
-        var sql = "SELECT * FROM Flat"
+        var sql = "SELECT"
+            + " FlatId,"
+            + " SectionId,"
+            + " ApartmentId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " HouseOwnerId,"
+            + " TenantId,"
+            + " FlatCode,"
+            + " DoorNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Flat"
             + " WHERE FlatCode = @FlatCode";
-        return _db.Query<Flat>(sql, new { @FlatCode = flatCode }).SingleOrDefault();
+        return _db.Query<FlatDto>(sql, new { @FlatCode = flatCode }).SingleOrDefault();
     }
 
-    public Flat GetById(long id)
+    public FlatDto GetById(long id)
     {
-        var sql = "SELECT * FROM Flat"
+        var sql = "SELECT"
+            + " FlatId,"
+            + " SectionId,"
+            + " ApartmentId,"
+            + " BusinessId,"
+            + " BranchId,"
+            + " HouseOwnerId,"
+            + " TenantId,"
+            + " FlatCode,"
+            + " DoorNumber,"
+            + " CreatedAt,"
+            + " UpdatedAt"
+            + " FROM Flat"
             + " WHERE FlatId = @FlatId";
-        return _db.Query<Flat>(sql, new { @FlatId = id }).SingleOrDefault();
+        return _db.Query<FlatDto>(sql, new { @FlatId = id }).SingleOrDefault();
     }
 
-    public Flat GetExtById(long id)
+    public FlatExtDto GetExtById(long id)
     {
-        var sql = "SELECT * FROM Flat f"
-                + " INNER JOIN Section s ON f.SectionId = s.SectionId"
-                + " INNER JOIN Apartment a ON f.ApartmentId = a.ApartmentId"
-                + " LEFT JOIN HouseOwner o ON f.HouseOwnerId = o.HouseOwnerId"
-                + " LEFT JOIN Tenant t ON f.TenantId = t.TenantId"
-                + " WHERE f.FlatId = @FlatId;";
-        return _db.Query<Flat, Section, Apartment, HouseOwner, Tenant, Flat>(sql,
-            (flat, section, apartment, houseOwner, tenant) =>
-            {
-                flat.Section = section;
-                flat.Apartment = apartment;
-                if (houseOwner != null)
-                    flat.HouseOwner = houseOwner;
-                if (tenant != null)
-                    flat.Tenant = tenant;
-                return flat;
-            }, new { @FlatId = id },
-            splitOn: "SectionId,ApartmentId,HouseOwnerId,TenantId").SingleOrDefault();
+        var sql = "SELECT"
+            + " f.FlatId,"
+            + " f.SectionId,"
+            + " f.ApartmentId,"
+            + " f.BusinessId,"
+            + " f.BranchId,"
+            + " f.HouseOwnerId,"
+            + " f.TenantId,"
+            + " f.FlatCode,"
+            + " f.DoorNumber,"
+            + " f.CreatedAt,"
+            + " f.UpdatedAt,"
+            + " s.SectionName,"
+            + " a.ApartmentName,"
+            + " ho.NameSurname AS HouseOwnerNameSurname,"
+            + " t.NameSurname AS TenantNameSurname"
+            + " FROM Flat f"
+            + " INNER JOIN Section s ON f.SectionId = s.SectionId"
+            + " INNER JOIN Apartment a ON f.ApartmentId = a.ApartmentId"
+            + " LEFT JOIN HouseOwner ho ON f.HouseOwnerId = ho.HouseOwnerId"
+            + " LEFT JOIN Tenant t ON f.TenantId = t.TenantId"
+            + " WHERE f.FlatId = @FlatId;";
+        return _db.Query<FlatExtDto>(sql, new { @FlatId = id }).SingleOrDefault();
     }
 
-    public List<Flat> GetExtsByBusinessId(int businessId)
+    public List<FlatExtDto> GetExtsByBusinessId(int businessId)
     {
-        var sql = "SELECT * FROM Flat f"
-                + " INNER JOIN Section s ON f.SectionId = s.SectionId"
-                + " INNER JOIN Apartment a ON f.ApartmentId = a.ApartmentId"
-                + " LEFT JOIN HouseOwner o ON f.HouseOwnerId = o.HouseOwnerId"
-                + " LEFT JOIN Tenant t ON f.TenantId = t.TenantId"
-                + " WHERE f.BusinessId = @BusinessId;";
-        return _db.Query<Flat, Section, Apartment, HouseOwner, Tenant, Flat>(sql,
-            (flat, section, apartment, houseOwner, tenant) =>
-            {
-                flat.Section = section;
-                flat.Apartment = apartment;
-                if (houseOwner != null)
-                    flat.HouseOwner = houseOwner;
-                if (tenant != null)
-                    flat.Tenant = tenant;
-                return flat;
-            }, new { @BusinessId = businessId },
-            splitOn: "SectionId,ApartmentId,HouseOwnerId,TenantId").ToList();
+        var sql = "SELECT"
+            + " f.FlatId,"
+            + " f.SectionId,"
+            + " f.ApartmentId,"
+            + " f.BusinessId,"
+            + " f.BranchId,"
+            + " f.HouseOwnerId,"
+            + " f.TenantId,"
+            + " f.FlatCode,"
+            + " f.DoorNumber,"
+            + " f.CreatedAt,"
+            + " f.UpdatedAt,"
+            + " s.SectionName,"
+            + " a.ApartmentName,"
+            + " ho.NameSurname AS HouseOwnerNameSurname,"
+            + " t.NameSurname AS TenantNameSurname"
+            + " FROM Flat f"
+            + " INNER JOIN Section s ON f.SectionId = s.SectionId"
+            + " INNER JOIN Apartment a ON f.ApartmentId = a.ApartmentId"
+            + " LEFT JOIN HouseOwner ho ON f.HouseOwnerId = ho.HouseOwnerId"
+            + " LEFT JOIN Tenant t ON f.TenantId = t.TenantId"
+            + " WHERE f.BusinessId = @BusinessId;";
+        return _db.Query<FlatExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(Flat flat)
+    public void Update(FlatDto flatDto)
     {
-        var sql = "UPDATE Flat SET SectionId = @SectionId, ApartmentId = @ApartmentId, BusinessId = @BusinessId, BranchId = @BranchId, HouseOwnerId = @HouseOwnerId, TenantId = @TenantId, FlatCode = @FlatCode, DoorNumber = @DoorNumber, CreatedAt = @CreatedAt, UpdatedAt = @UpdatedAt"
+        var sql = "UPDATE Flat SET"
+            + " SectionId = @SectionId,"
+            + " ApartmentId = @ApartmentId,"
+            + " BusinessId = @BusinessId,"
+            + " BranchId = @BranchId,"
+            + " HouseOwnerId = @HouseOwnerId,"
+            + " TenantId = @TenantId,"
+            + " FlatCode = @FlatCode,"
+            + " DoorNumber = @DoorNumber,"
+            + " CreatedAt = @CreatedAt,"
+            + " UpdatedAt = @UpdatedAt"
             + " WHERE FlatId = @FlatId";
-        _db.Execute(sql, flat);
+        _db.Execute(sql, flatDto);
     }
 }

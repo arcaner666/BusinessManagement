@@ -123,35 +123,29 @@ public class TenantExtBl : ITenantExtBl
 
     public IDataResult<TenantExtDto> GetExtByAccountId(long accountId)
     {
-        Tenant searchedTenant = _tenantDal.GetExtByAccountId(accountId);
-        if (searchedTenant is null)
+        TenantExtDto tenantExtDto = _tenantDal.GetExtByAccountId(accountId);
+        if (tenantExtDto is null)
             return new ErrorDataResult<TenantExtDto>(Messages.TenantNotFound);
 
-        TenantExtDto searchedTenantExtDto = FillExtDto(searchedTenant);
-
-        return new SuccessDataResult<TenantExtDto>(searchedTenantExtDto, Messages.TenantExtListedByAccountId);
+        return new SuccessDataResult<TenantExtDto>(tenantExtDto, Messages.TenantExtListedByAccountId);
     }
 
     public IDataResult<TenantExtDto> GetExtById(long id)
     {
-        Tenant searchedTenant = _tenantDal.GetExtById(id);
-        if (searchedTenant is null)
+        TenantExtDto tenantExtDto = _tenantDal.GetExtById(id);
+        if (tenantExtDto is null)
             return new ErrorDataResult<TenantExtDto>(Messages.TenantNotFound);
 
-        TenantExtDto searchedTenantExtDto = FillExtDto(searchedTenant);
-
-        return new SuccessDataResult<TenantExtDto>(searchedTenantExtDto, Messages.TenantExtListedById);
+        return new SuccessDataResult<TenantExtDto>(tenantExtDto, Messages.TenantExtListedById);
     }
 
     public IDataResult<List<TenantExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<Tenant> searchedTenants = _tenantDal.GetExtsByBusinessId(businessId);
-        if (searchedTenants.Count == 0)
+        List<TenantExtDto> tenantExtDtos = _tenantDal.GetExtsByBusinessId(businessId);
+        if (tenantExtDtos.Count == 0)
             return new ErrorDataResult<List<TenantExtDto>>(Messages.TenantsNotFound);
 
-        List<TenantExtDto> searchedTenantExtDtos = FillExtDtos(searchedTenants);
-
-        return new SuccessDataResult<List<TenantExtDto>>(searchedTenantExtDtos, Messages.TenantExtsListedByBusinessId);
+        return new SuccessDataResult<List<TenantExtDto>>(tenantExtDtos, Messages.TenantExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]
@@ -188,44 +182,5 @@ public class TenantExtBl : ITenantExtBl
             return updateTenantResult;
 
         return new SuccessResult(Messages.TenantExtUpdated);
-    }
-
-    private TenantExtDto FillExtDto(Tenant tenant)
-    {
-        TenantExtDto tenantExtDto = new()
-        {
-            TenantId = tenant.TenantId,
-            BusinessId = tenant.BusinessId,
-            BranchId = tenant.BranchId,
-            AccountId = tenant.AccountId,
-            NameSurname = tenant.NameSurname,
-            Email = tenant.Email,
-            Phone = tenant.Phone,
-            DateOfBirth = tenant.DateOfBirth,
-            Gender = tenant.Gender,
-            Notes = tenant.Notes,
-            AvatarUrl = tenant.AvatarUrl,
-            TaxOffice = tenant.TaxOffice,
-            TaxNumber = tenant.TaxNumber,
-            IdentityNumber = tenant.IdentityNumber,
-            StandartMaturity = tenant.StandartMaturity,
-            CreatedAt = tenant.CreatedAt,
-            UpdatedAt = tenant.UpdatedAt,
-
-            // Extended With Account
-            AccountGroupId = tenant.Account.AccountGroupId,
-            AccountOrder = tenant.Account.AccountOrder,
-            AccountName = tenant.Account.AccountName,
-            AccountCode = tenant.Account.AccountCode,
-            Limit = tenant.Account.Limit,
-        };
-        return tenantExtDto;
-    }
-
-    private List<TenantExtDto> FillExtDtos(List<Tenant> tenants)
-    {
-        List<TenantExtDto> tenantExtDtos = tenants.Select(tenant => FillExtDto(tenant)).ToList();
-
-        return tenantExtDtos;
     }
 }

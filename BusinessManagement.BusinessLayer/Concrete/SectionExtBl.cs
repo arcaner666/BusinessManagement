@@ -11,19 +11,28 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 
 public class SectionExtBl : ISectionExtBl
 {
+    private readonly IApartmentBl _apartmentBl;
+    private readonly IApartmentExtBl _apartmentExtBl;
+    private readonly IFlatBl _flatBl;
     private readonly IFullAddressBl _fullAddressBl;
     private readonly IKeyService _keyService;
     private readonly ISectionBl _sectionBl;
     private readonly ISectionDal _sectionDal;
 
     public SectionExtBl(
+        IApartmentBl apartmentBl,
+        IApartmentExtBl apartmentExtBl,
+        IFlatBl flatBl,
         IFullAddressBl fullAddressBl,
         IKeyService keyService,
         ISectionBl sectionBl,
         ISectionDal sectionDal
     )
     {
+        _apartmentBl = apartmentBl;
+        _apartmentExtBl = apartmentExtBl;
         _fullAddressBl = fullAddressBl;
+        _flatBl = flatBl;
         _keyService = keyService;
         _sectionBl = sectionBl;
         _sectionDal = sectionDal;
@@ -46,10 +55,10 @@ public class SectionExtBl : ISectionExtBl
             return addFullAddressResult;
 
         // Eşsiz bir site kodu oluşturmak için tüm siteler getirilir.
-        List<Section> allSections = _sectionDal.GetAll();
+        List<SectionDto> sectionDtos = _sectionDal.GetAll();
 
         // Site kodu üretilir.
-        string sectionCode = _keyService.GenerateSectionCode(allSections);
+        string sectionCode = _keyService.GenerateSectionCode(sectionDtos);
 
         // Site eklenir.
         SectionDto sectionDto = new()
@@ -77,6 +86,17 @@ public class SectionExtBl : ISectionExtBl
         if (!getSectionResult.Success)
             return getSectionResult;
 
+        // Sitedeki apartmanlar getirilir.
+        var getApartmentsResult = _apartmentBl.GetBySectionId(id);
+        if (getApartmentsResult is null)
+            return getApartmentsResult;
+
+        // Sitedeki apartmanlar silinir.
+        foreach (ApartmentDto apartmentDto in getApartmentsResult.Data)
+        {
+            _apartmentExtBl.DeleteExt(apartmentDto.ApartmentId);
+        }
+
         // Site silinir.
         var deleteSectionResult = _sectionBl.Delete(getSectionResult.Data.SectionId);
         if (!deleteSectionResult.Success)
@@ -92,24 +112,20 @@ public class SectionExtBl : ISectionExtBl
 
     public IDataResult<SectionExtDto> GetExtById(int id)
     {
-        Section searchedSection = _sectionDal.GetExtById(id);
-        if (searchedSection is null)
+        SectionExtDto sectionExtDto = _sectionDal.GetExtById(id);
+        if (sectionExtDto is null)
             return new ErrorDataResult<SectionExtDto>(Messages.SectionNotFound);
 
-        SectionExtDto searchedSectionExtDto = FillExtDto(searchedSection);
-
-        return new SuccessDataResult<SectionExtDto>(searchedSectionExtDto, Messages.SectionExtListedById);
+        return new SuccessDataResult<SectionExtDto>(sectionExtDto, Messages.SectionExtListedById);
     }
 
     public IDataResult<List<SectionExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<Section> searchedSections = _sectionDal.GetExtsByBusinessId(businessId);
-        if (searchedSections.Count == 0)
+        List<SectionExtDto> sectionExtDtos = _sectionDal.GetExtsByBusinessId(businessId);
+        if (sectionExtDtos.Count == 0)
             return new ErrorDataResult<List<SectionExtDto>>(Messages.SectionsNotFound);
 
-        List<SectionExtDto> searchedSectionExtDtos = FillExtDtos(searchedSections);
-
-        return new SuccessDataResult<List<SectionExtDto>>(searchedSectionExtDtos, Messages.SectionExtsListedByBusinessId);
+        return new SuccessDataResult<List<SectionExtDto>>(sectionExtDtos, Messages.SectionExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]
@@ -143,41 +159,5 @@ public class SectionExtBl : ISectionExtBl
             return updateSectionResult;
 
         return new SuccessResult(Messages.SectionExtUpdated);
-    }
-
-    private SectionExtDto FillExtDto(Section section)
-    {
-        SectionExtDto sectionExtDto = new()
-        {
-            SectionId = section.SectionId,
-            SectionGroupId = section.SectionGroupId,
-            BusinessId = section.BusinessId,
-            BranchId = section.BranchId,
-            ManagerId = section.ManagerId,
-            FullAddressId = section.FullAddressId,
-            SectionName = section.SectionName,
-            SectionCode = section.SectionCode,
-            CreatedAt = section.CreatedAt,
-            UpdatedAt = section.UpdatedAt,
-
-            SectionGroupName = section.SectionGroup.SectionGroupName,
-            ManagerNameSurname = section.Manager.NameSurname,
-            CityId = section.FullAddress.CityId,
-            DistrictId = section.FullAddress.DistrictId,
-            AddressTitle = section.FullAddress.AddressTitle,
-            PostalCode = section.FullAddress.PostalCode,
-            AddressText = section.FullAddress.AddressText,
-            CityName = section.FullAddress.City.CityName,
-            DistrictName = section.FullAddress.District.DistrictName,
-        };
-
-        return sectionExtDto;
-    }
-
-    private List<SectionExtDto> FillExtDtos(List<Section> sections)
-    {
-        List<SectionExtDto> sectionExtDtos = sections.Select(section => FillExtDto(section)).ToList();
-
-        return sectionExtDtos;
     }
 }

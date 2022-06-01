@@ -240,6 +240,8 @@ public static class Messages
     #region Manager
     public const string ManagerAdded = "ManagerAdded";
     public const string ManagerAlreadyExists = "ManagerAlreadyExists";
+    public const string ManagerExtsListedByBusinessId = "ManagerExtsListedByBusinessId";
+    public const string ManagerNotFound = "ManagerNotFound";
     public const string ManagersListedByBusinessId = "ManagersListedByBusinessId";
     public const string ManagersNotFound = "ManagersNotFound";
     #endregion

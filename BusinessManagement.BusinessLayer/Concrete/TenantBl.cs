@@ -20,36 +20,18 @@ public class TenantBl : ITenantBl
 
     public IDataResult<TenantDto> Add(TenantDto tenantDto)
     {
-        Tenant searchedTenant = _tenantDal.GetByBusinessIdAndAccountId(tenantDto.BusinessId, tenantDto.AccountId);
-        if (searchedTenant is not null)
+        TenantDto searchedTenantDto = _tenantDal.GetByBusinessIdAndAccountId(tenantDto.BusinessId, tenantDto.AccountId);
+        if (searchedTenantDto is not null)
         {
             return new ErrorDataResult<TenantDto>(Messages.TenantAlreadyExists);
         }
 
-        Tenant addedTenant = new()
-        {
-            BusinessId = tenantDto.BusinessId,
-            BranchId = tenantDto.BranchId,
-            AccountId = tenantDto.AccountId,
-            NameSurname = tenantDto.NameSurname,
-            Email = tenantDto.Email,
-            Phone = tenantDto.Phone,
-            DateOfBirth = tenantDto.DateOfBirth,
-            Gender = tenantDto.Gender,
-            Notes = tenantDto.Notes,
-            AvatarUrl = tenantDto.AvatarUrl,
-            TaxOffice = tenantDto.TaxOffice,
-            TaxNumber = tenantDto.TaxNumber,
-            IdentityNumber = tenantDto.IdentityNumber,
-            StandartMaturity = tenantDto.StandartMaturity,
-            CreatedAt = DateTimeOffset.Now,
-            UpdatedAt = DateTimeOffset.Now,
-        };
-        _tenantDal.Add(addedTenant);
+        tenantDto.CreatedAt = DateTimeOffset.Now;
+        tenantDto.UpdatedAt = DateTimeOffset.Now;
+        long id = _tenantDal.Add(tenantDto);
+        tenantDto.TenantId = id;
 
-        TenantDto addedTenantDto = FillDto(addedTenant);
-
-        return new SuccessDataResult<TenantDto>(addedTenantDto, Messages.TenantAdded);
+        return new SuccessDataResult<TenantDto>(tenantDto, Messages.TenantAdded);
     }
 
     public IResult Delete(long id)
@@ -65,89 +47,50 @@ public class TenantBl : ITenantBl
 
     public IDataResult<TenantDto> GetByAccountId(long accountId)
     {
-        Tenant searchedTenant = _tenantDal.GetByAccountId(accountId);
-        if (searchedTenant is null)
+        TenantDto tenantDto = _tenantDal.GetByAccountId(accountId);
+        if (tenantDto is null)
             return new ErrorDataResult<TenantDto>(Messages.TenantNotFound);
 
-        TenantDto searchedTenantDto = FillDto(searchedTenant);
-
-        return new SuccessDataResult<TenantDto>(searchedTenantDto, Messages.TenantListedByAccountId);
+        return new SuccessDataResult<TenantDto>(tenantDto, Messages.TenantListedByAccountId);
     }
 
     public IDataResult<List<TenantDto>> GetByBusinessId(int businessId)
     {
-        List<Tenant> searchedTenants = _tenantDal.GetByBusinessId(businessId);
-        if (searchedTenants.Count == 0)
+        List<TenantDto> tenantDtos = _tenantDal.GetByBusinessId(businessId);
+        if (tenantDtos.Count == 0)
             return new ErrorDataResult<List<TenantDto>>(Messages.TenantsNotFound);
 
-        List<TenantDto> searchedTenantDtos = FillDtos(searchedTenants);
-
-        return new SuccessDataResult<List<TenantDto>>(searchedTenantDtos, Messages.TenantsListedByBusinessId);
+        return new SuccessDataResult<List<TenantDto>>(tenantDtos, Messages.TenantsListedByBusinessId);
     }
 
     public IDataResult<TenantDto> GetById(long id)
     {
-        Tenant searchedTenant = _tenantDal.GetById(id);
-        if (searchedTenant is null)
+        TenantDto tenantDto = _tenantDal.GetById(id);
+        if (tenantDto is null)
             return new ErrorDataResult<TenantDto>(Messages.TenantNotFound);
 
-        TenantDto searchedTenantDto = FillDto(searchedTenant);
-
-        return new SuccessDataResult<TenantDto>(searchedTenantDto, Messages.TenantListedById);
+        return new SuccessDataResult<TenantDto>(tenantDto, Messages.TenantListedById);
     }
 
     public IResult Update(TenantDto tenantDto)
     {
-        Tenant searchedTenant = _tenantDal.GetById(tenantDto.TenantId);
-        if (searchedTenant is null)
-            return new ErrorDataResult<AccountDto>(Messages.TenantNotFound);
+        var searchedTenantResult = GetById(tenantDto.TenantId);
+        if (!searchedTenantResult.Success)
+            return searchedTenantResult;
 
-        searchedTenant.NameSurname = tenantDto.NameSurname;
-        searchedTenant.Email = tenantDto.Email;
-        searchedTenant.DateOfBirth = tenantDto.DateOfBirth;
-        searchedTenant.Gender = tenantDto.Gender;
-        searchedTenant.Notes = tenantDto.Notes;
-        searchedTenant.AvatarUrl = tenantDto.AvatarUrl;
-        searchedTenant.TaxOffice = tenantDto.TaxOffice;
-        searchedTenant.TaxNumber = tenantDto.TaxNumber;
-        searchedTenant.IdentityNumber = tenantDto.IdentityNumber;
-        searchedTenant.StandartMaturity = tenantDto.StandartMaturity;
-        searchedTenant.UpdatedAt = DateTimeOffset.Now;
-        _tenantDal.Update(searchedTenant);
+        searchedTenantResult.Data.NameSurname = tenantDto.NameSurname;
+        searchedTenantResult.Data.Email = tenantDto.Email;
+        searchedTenantResult.Data.DateOfBirth = tenantDto.DateOfBirth;
+        searchedTenantResult.Data.Gender = tenantDto.Gender;
+        searchedTenantResult.Data.Notes = tenantDto.Notes;
+        searchedTenantResult.Data.AvatarUrl = tenantDto.AvatarUrl;
+        searchedTenantResult.Data.TaxOffice = tenantDto.TaxOffice;
+        searchedTenantResult.Data.TaxNumber = tenantDto.TaxNumber;
+        searchedTenantResult.Data.IdentityNumber = tenantDto.IdentityNumber;
+        searchedTenantResult.Data.StandartMaturity = tenantDto.StandartMaturity;
+        searchedTenantResult.Data.UpdatedAt = DateTimeOffset.Now;
+        _tenantDal.Update(searchedTenantResult.Data);
 
         return new SuccessResult(Messages.TenantUpdated);
-    }
-
-    private TenantDto FillDto(Tenant tenant)
-    {
-        TenantDto tenantDto = new()
-        {
-            TenantId = tenant.TenantId,
-            BusinessId = tenant.BusinessId,
-            BranchId = tenant.BranchId,
-            AccountId = tenant.AccountId,
-            NameSurname = tenant.NameSurname,
-            Email = tenant.Email,
-            Phone = tenant.Phone,
-            DateOfBirth = tenant.DateOfBirth,
-            Gender = tenant.Gender,
-            Notes = tenant.Notes,
-            AvatarUrl = tenant.AvatarUrl,
-            TaxOffice = tenant.TaxOffice,
-            TaxNumber = tenant.TaxNumber,
-            IdentityNumber = tenant.IdentityNumber,
-            StandartMaturity = tenant.StandartMaturity,
-            CreatedAt = tenant.CreatedAt,
-            UpdatedAt = tenant.UpdatedAt,
-        };
-
-        return tenantDto;
-    }
-
-    private List<TenantDto> FillDtos(List<Tenant> tenants)
-    {
-        List<TenantDto> tenantDtos = tenants.Select(tenant => FillDto(tenant)).ToList();
-
-        return tenantDtos;
     }
 }

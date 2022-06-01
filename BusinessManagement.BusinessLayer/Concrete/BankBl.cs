@@ -34,9 +34,9 @@ public class BankBl : IBankBl
 
     public IResult Delete(long id)
     {
-        var getBankDtoResult = GetById(id);
-        if (getBankDtoResult is null)
-            return getBankDtoResult;
+        var getBankResult = GetById(id);
+        if (getBankResult is null)
+            return getBankResult;
 
         _bankDal.Delete(id);
 
@@ -72,20 +72,20 @@ public class BankBl : IBankBl
 
     public IResult Update(BankDto bankDto)
     {
-        var searchedBankDtoResult = GetById(bankDto.BankId);
-        if (!searchedBankDtoResult.Success)
-            return searchedBankDtoResult;
+        var searchedBankResult = GetById(bankDto.BankId);
+        if (!searchedBankResult.Success)
+            return searchedBankResult;
 
-        searchedBankDtoResult.Data.BankName = bankDto.BankName;
-        searchedBankDtoResult.Data.BankBranchName = bankDto.BankBranchName;
-        searchedBankDtoResult.Data.BankCode = bankDto.BankCode;
-        searchedBankDtoResult.Data.BankBranchCode = bankDto.BankBranchCode;
-        searchedBankDtoResult.Data.BankAccountCode = bankDto.BankAccountCode;
-        searchedBankDtoResult.Data.Iban = bankDto.Iban;
-        searchedBankDtoResult.Data.OfficerName = bankDto.OfficerName;
-        searchedBankDtoResult.Data.StandartMaturity = bankDto.StandartMaturity;
-        searchedBankDtoResult.Data.UpdatedAt = DateTimeOffset.Now;
-        _bankDal.Update(searchedBankDtoResult.Data);
+        searchedBankResult.Data.BankName = bankDto.BankName;
+        searchedBankResult.Data.BankBranchName = bankDto.BankBranchName;
+        searchedBankResult.Data.BankCode = bankDto.BankCode;
+        searchedBankResult.Data.BankBranchCode = bankDto.BankBranchCode;
+        searchedBankResult.Data.BankAccountCode = bankDto.BankAccountCode;
+        searchedBankResult.Data.Iban = bankDto.Iban;
+        searchedBankResult.Data.OfficerName = bankDto.OfficerName;
+        searchedBankResult.Data.StandartMaturity = bankDto.StandartMaturity;
+        searchedBankResult.Data.UpdatedAt = DateTimeOffset.Now;
+        _bankDal.Update(searchedBankResult.Data);
 
         return new SuccessResult(Messages.BankUpdated);
     }

@@ -20,37 +20,21 @@ public class EmployeeBl : IEmployeeBl
 
     public IDataResult<EmployeeDto> Add(EmployeeDto employeeDto)
     {
-        Employee searchedEmployee = _employeeDal.GetByBusinessIdAndAccountId(employeeDto.BusinessId, employeeDto.AccountId);
-        if (searchedEmployee is not null)
+        EmployeeDto searchedEmployeeDto = _employeeDal.GetByBusinessIdAndAccountId(employeeDto.BusinessId, employeeDto.AccountId);
+        if (searchedEmployeeDto is not null)
         {
             return new ErrorDataResult<EmployeeDto>(Messages.EmployeeAlreadyExists);
         }
 
-        Employee addedEmployee = new()
-        {
-            BusinessId = employeeDto.BusinessId,
-            BranchId = employeeDto.BranchId,
-            AccountId = employeeDto.AccountId,
-            EmployeeTypeId = employeeDto.EmployeeTypeId,
-            NameSurname = employeeDto.NameSurname,
-            Email = employeeDto.Email,
-            Phone = employeeDto.Phone,
-            DateOfBirth = employeeDto.DateOfBirth,
-            Gender = employeeDto.Gender,
-            Notes = employeeDto.Notes,
-            AvatarUrl = employeeDto.AvatarUrl,
-            IdentityNumber = employeeDto.IdentityNumber,
-            StillWorking = true,
-            StartDate = DateTime.Now,
-            QuitDate = null,
-            CreatedAt = DateTimeOffset.Now,
-            UpdatedAt = DateTimeOffset.Now,
-        };
-        _employeeDal.Add(addedEmployee);
+        employeeDto.StillWorking = true;
+        employeeDto.StartDate = DateTime.Now;
+        employeeDto.QuitDate = null;
+        employeeDto.CreatedAt = DateTimeOffset.Now;
+        employeeDto.UpdatedAt = DateTimeOffset.Now;
+        long id = _employeeDal.Add(employeeDto);
+        employeeDto.EmployeeId = id;
 
-        EmployeeDto addedEmployeeDto = FillDto(addedEmployee);
-
-        return new SuccessDataResult<EmployeeDto>(addedEmployeeDto, Messages.EmployeeAdded);
+        return new SuccessDataResult<EmployeeDto>(employeeDto, Messages.EmployeeAdded);
     }
 
     public IResult Delete(long id)
@@ -66,80 +50,42 @@ public class EmployeeBl : IEmployeeBl
 
     public IDataResult<EmployeeDto> GetByAccountId(long accountId)
     {
-        Employee searchedEmployee = _employeeDal.GetByAccountId(accountId);
-        if (searchedEmployee is null)
+        EmployeeDto employeeDto = _employeeDal.GetByAccountId(accountId);
+        if (employeeDto is null)
             return new ErrorDataResult<EmployeeDto>(Messages.EmployeeNotFound);
 
-        EmployeeDto searchedEmployeeDto = FillDto(searchedEmployee);
-
-        return new SuccessDataResult<EmployeeDto>(searchedEmployeeDto, Messages.EmployeeListedByAccountId);
+        return new SuccessDataResult<EmployeeDto>(employeeDto, Messages.EmployeeListedByAccountId);
     }
 
     public IDataResult<EmployeeDto> GetById(long id)
     {
-        Employee searchedEmployee = _employeeDal.GetById(id);
-        if (searchedEmployee is null)
+        EmployeeDto employeeDto = _employeeDal.GetById(id);
+        if (employeeDto is null)
             return new ErrorDataResult<EmployeeDto>(Messages.EmployeeNotFound);
 
-        EmployeeDto searchedEmployeeDto = FillDto(searchedEmployee);
-
-        return new SuccessDataResult<EmployeeDto>(searchedEmployeeDto, Messages.EmployeeListedById);
+        return new SuccessDataResult<EmployeeDto>(employeeDto, Messages.EmployeeListedById);
     }
 
     public IResult Update(EmployeeDto employeeDto)
     {
-        Employee searchedEmployee = _employeeDal.GetById(employeeDto.EmployeeId);
-        if (searchedEmployee is null)
-            return new ErrorDataResult<AccountDto>(Messages.EmployeeNotFound);
+        var searchedEmployeeResult = GetById(employeeDto.EmployeeId);
+        if (!searchedEmployeeResult.Success)
+            return searchedEmployeeResult;
 
-        searchedEmployee.EmployeeTypeId = employeeDto.EmployeeTypeId;
-        searchedEmployee.NameSurname = employeeDto.NameSurname;
-        searchedEmployee.Email = employeeDto.Email;
-        searchedEmployee.DateOfBirth = employeeDto.DateOfBirth;
-        searchedEmployee.Gender = employeeDto.Gender;
-        searchedEmployee.Notes = employeeDto.Notes;
-        searchedEmployee.AvatarUrl = employeeDto.AvatarUrl;
-        searchedEmployee.IdentityNumber = employeeDto.IdentityNumber;
-        searchedEmployee.StillWorking = employeeDto.StillWorking;
-        searchedEmployee.StartDate = employeeDto.StartDate;
-        searchedEmployee.QuitDate = employeeDto.QuitDate;
-        searchedEmployee.UpdatedAt = DateTimeOffset.Now;
-        _employeeDal.Update(searchedEmployee);
+        searchedEmployeeResult.Data.EmployeeTypeId = employeeDto.EmployeeTypeId;
+        searchedEmployeeResult.Data.NameSurname = employeeDto.NameSurname;
+        searchedEmployeeResult.Data.Email = employeeDto.Email;
+        searchedEmployeeResult.Data.DateOfBirth = employeeDto.DateOfBirth;
+        searchedEmployeeResult.Data.Gender = employeeDto.Gender;
+        searchedEmployeeResult.Data.Notes = employeeDto.Notes;
+        searchedEmployeeResult.Data.AvatarUrl = employeeDto.AvatarUrl;
+        searchedEmployeeResult.Data.IdentityNumber = employeeDto.IdentityNumber;
+        searchedEmployeeResult.Data.StillWorking = employeeDto.StillWorking;
+        searchedEmployeeResult.Data.StartDate = employeeDto.StartDate;
+        searchedEmployeeResult.Data.QuitDate = employeeDto.QuitDate;
+        searchedEmployeeResult.Data.UpdatedAt = DateTimeOffset.Now;
+        _employeeDal.Update(searchedEmployeeResult.Data);
 
         return new SuccessResult(Messages.EmployeeUpdated);
-    }
-
-    private EmployeeDto FillDto(Employee employee)
-    {
-        EmployeeDto employeeDto = new()
-        {
-            EmployeeId = employee.EmployeeId,
-            BusinessId = employee.BusinessId,
-            BranchId = employee.BranchId,
-            AccountId = employee.AccountId,
-            EmployeeTypeId = employee.EmployeeTypeId,
-            NameSurname = employee.NameSurname,
-            Email = employee.Email,
-            Phone = employee.Phone,
-            DateOfBirth = employee.DateOfBirth,
-            Gender = employee.Gender,
-            Notes = employee.Notes,
-            AvatarUrl = employee.AvatarUrl,
-            IdentityNumber = employee.IdentityNumber,
-            StillWorking = employee.StillWorking,
-            StartDate = employee.StartDate,
-            QuitDate = employee.QuitDate,
-            CreatedAt = employee.CreatedAt,
-            UpdatedAt = employee.UpdatedAt,
-        };
-
-        return employeeDto;
-    }
-
-    private List<EmployeeDto> FillDtos(List<Employee> employees)
-    {
-        List<EmployeeDto> employeeDtos = employees.Select(employee => FillDto(employee)).ToList();
-
-        return employeeDtos;
     }
 }

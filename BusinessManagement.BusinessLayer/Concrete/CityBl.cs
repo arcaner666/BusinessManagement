@@ -20,31 +20,10 @@ public class CityBl : ICityBl
 
     public IDataResult<List<CityDto>> GetAll()
     {
-        List<City> allCities = _cityDal.GetAll();
-        if (allCities.Count == 0)
+        List<CityDto> cityDtos = _cityDal.GetAll();
+        if (cityDtos.Count == 0)
             return new ErrorDataResult<List<CityDto>>(Messages.CitiesNotFound);
 
-        List<CityDto> allCityDtos = FillDtos(allCities);
-
-        return new SuccessDataResult<List<CityDto>>(allCityDtos, Messages.CitiesListed);
-    }
-
-    private CityDto FillDto(City city)
-    {
-        CityDto cityDto = new()
-        {
-            CityId = city.CityId,
-            PlateCode = city.PlateCode,
-            CityName = city.CityName,
-        };
-
-        return cityDto;
-    }
-
-    private List<CityDto> FillDtos(List<City> cities)
-    {
-        List<CityDto> cityDtos = cities.Select(city => FillDto(city)).ToList();
-
-        return cityDtos;
+        return new SuccessDataResult<List<CityDto>>(cityDtos, Messages.CitiesListed);
     }
 }

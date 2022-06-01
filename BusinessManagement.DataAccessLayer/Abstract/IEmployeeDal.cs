@@ -1,16 +1,17 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IEmployeeDal
 {
-    Employee Add(Employee employee);
+    long Add(EmployeeDto employeeDto);
     void Delete(long id);
-    Employee GetByAccountId(long accountId);
-    Employee GetByBusinessIdAndAccountId(int businessId, long accountId);
-    Employee GetById(long id);
-    Employee GetExtByAccountId(long accountId);
-    Employee GetExtById(long id);
-    List<Employee> GetExtsByBusinessId(int businessId);
-    void Update(Employee employee);
+    EmployeeDto GetByAccountId(long accountId);
+    EmployeeDto GetByBusinessIdAndAccountId(int businessId, long accountId);
+    EmployeeDto GetById(long id);
+    EmployeeExtDto GetExtByAccountId(long accountId);
+    EmployeeExtDto GetExtById(long id);
+    List<EmployeeExtDto> GetExtsByBusinessId(int businessId);
+    void Update(EmployeeDto employeeDto);
 }

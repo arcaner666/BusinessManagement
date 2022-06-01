@@ -20,6 +20,9 @@ public class CashExtDto
     public string AccountCode { get; set; }
     public decimal Limit { get; set; }
 
+    // Extended With Account + AccountGroup
+    public string AccountGroupName { get; set; }
+
     // Extended With Currency
     public string CurrencyName { get; set; }
 }

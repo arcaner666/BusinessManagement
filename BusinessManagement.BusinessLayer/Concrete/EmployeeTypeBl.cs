@@ -20,30 +20,10 @@ public class EmployeeTypeBl : IEmployeeTypeBl
 
     public IDataResult<List<EmployeeTypeDto>> GetAll()
     {
-        List<EmployeeType> allEmployeeTypes = _employeeTypeDal.GetAll();
-        if (allEmployeeTypes.Count == 0)
+        List<EmployeeTypeDto> employeeTypeDtos = _employeeTypeDal.GetAll();
+        if (employeeTypeDtos.Count == 0)
             return new ErrorDataResult<List<EmployeeTypeDto>>(Messages.EmployeeTypesNotFound);
 
-        List<EmployeeTypeDto> allEmployeeTypeDtos = FillDtos(allEmployeeTypes);
-
-        return new SuccessDataResult<List<EmployeeTypeDto>>(allEmployeeTypeDtos, Messages.EmployeeTypesListed);
-    }
-
-    private EmployeeTypeDto FillDto(EmployeeType employeeType)
-    {
-        EmployeeTypeDto employeeTypeDto = new()
-        {
-            EmployeeTypeId = employeeType.EmployeeTypeId,
-            EmployeeTypeName = employeeType.EmployeeTypeName,
-        };
-
-        return employeeTypeDto;
-    }
-
-    private List<EmployeeTypeDto> FillDtos(List<EmployeeType> employeeTypes)
-    {
-        List<EmployeeTypeDto> employeeTypeDtos = employeeTypes.Select(employeeType => FillDto(employeeType)).ToList();
-
-        return employeeTypeDtos;
+        return new SuccessDataResult<List<EmployeeTypeDto>>(employeeTypeDtos, Messages.EmployeeTypesListed);
     }
 }

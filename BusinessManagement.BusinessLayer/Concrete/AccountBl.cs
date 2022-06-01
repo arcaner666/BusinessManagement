@@ -20,33 +20,21 @@ public class AccountBl : IAccountBl
 
     public IDataResult<AccountDto> Add(AccountDto accountDto)
     {
-        Account searchedAccount = _accountDal.GetByBusinessIdAndAccountCode(accountDto.BusinessId, accountDto.AccountCode);
-        if (searchedAccount is not null)
+        AccountDto searchedAccountDto = _accountDal.GetByBusinessIdAndAccountCode(accountDto.BusinessId, accountDto.AccountCode);
+        if (searchedAccountDto is not null)
         {
             return new ErrorDataResult<AccountDto>(Messages.AccountAlreadyExists);
         }
 
-        Account addedAccount = new()
-        {
-            BusinessId = accountDto.BusinessId,
-            BranchId = accountDto.BranchId,
-            AccountGroupId = accountDto.AccountGroupId,
-            AccountTypeId = accountDto.AccountTypeId,
-            AccountOrder = accountDto.AccountOrder,
-            AccountName = accountDto.AccountName,
-            AccountCode = accountDto.AccountCode,
-            DebitBalance = 0,
-            CreditBalance = 0,
-            Balance = 0,
-            Limit = accountDto.Limit,
-            CreatedAt = DateTimeOffset.Now,
-            UpdatedAt = DateTimeOffset.Now,
-        };
-        _accountDal.Add(addedAccount);
+        accountDto.DebitBalance = 0;
+        accountDto.CreditBalance = 0;
+        accountDto.Balance = 0;
+        accountDto.CreatedAt = DateTimeOffset.Now;
+        accountDto.UpdatedAt = DateTimeOffset.Now;
+        long id = _accountDal.Add(accountDto);
+        accountDto.AccountId = id;
 
-        AccountDto addedAccountDto = FillDto(addedAccount);
-
-        return new SuccessDataResult<AccountDto>(addedAccountDto, Messages.AccountAdded);
+        return new SuccessDataResult<AccountDto>(accountDto, Messages.AccountAdded);
     }
 
     public IResult Delete(long id)
@@ -62,59 +50,27 @@ public class AccountBl : IAccountBl
 
     public IDataResult<AccountDto> GetById(long id)
     {
-        Account searchedAccount = _accountDal.GetById(id);
-        if (searchedAccount is null)
+        AccountDto accountDto = _accountDal.GetById(id);
+        if (accountDto is null)
             return new ErrorDataResult<AccountDto>(Messages.AccountNotFound);
 
-        AccountDto searchedAccountDto = FillDto(searchedAccount);
-
-        return new SuccessDataResult<AccountDto>(searchedAccountDto, Messages.AccountListedById);
+        return new SuccessDataResult<AccountDto>(accountDto, Messages.AccountListedById);
     }
 
     public IResult Update(AccountDto accountDto)
     {
-        Account searchedAccount = _accountDal.GetById(accountDto.AccountId);
-        if (searchedAccount is null)
-            return new ErrorDataResult<AccountDto>(Messages.AccountNotFound);
+        var searchedAccountResult = GetById(accountDto.AccountId);
+        if (!searchedAccountResult.Success)
+            return searchedAccountResult;
 
-        searchedAccount.AccountName = accountDto.AccountName;
-        searchedAccount.DebitBalance = accountDto.DebitBalance;
-        searchedAccount.CreditBalance = accountDto.CreditBalance;
-        searchedAccount.Balance = accountDto.Balance;
-        searchedAccount.Limit = accountDto.Limit;
-        searchedAccount.UpdatedAt = DateTimeOffset.Now;
-        _accountDal.Update(searchedAccount);
+        searchedAccountResult.Data.AccountName = accountDto.AccountName;
+        searchedAccountResult.Data.DebitBalance = accountDto.DebitBalance;
+        searchedAccountResult.Data.CreditBalance = accountDto.CreditBalance;
+        searchedAccountResult.Data.Balance = accountDto.Balance;
+        searchedAccountResult.Data.Limit = accountDto.Limit;
+        searchedAccountResult.Data.UpdatedAt = DateTimeOffset.Now;
+        _accountDal.Update(searchedAccountResult.Data);
 
         return new SuccessResult(Messages.AccountUpdated);
-    }
-
-    private AccountDto FillDto(Account account)
-    {
-        AccountDto accountDto = new()
-        {
-            AccountId = account.AccountId,
-            BusinessId = account.BusinessId,
-            BranchId = account.BranchId,
-            AccountGroupId = account.AccountGroupId,
-            AccountTypeId = account.AccountTypeId,
-            AccountOrder = account.AccountOrder,
-            AccountName = account.AccountName,
-            AccountCode = account.AccountCode,
-            DebitBalance = account.DebitBalance,
-            CreditBalance = account.CreditBalance,
-            Balance = account.Balance,
-            Limit = account.Limit,
-            CreatedAt = account.CreatedAt,
-            UpdatedAt = account.UpdatedAt,
-        };
-
-        return accountDto;
-    }
-
-    private List<AccountDto> FillDtos(List<Account> accounts)
-    {
-        List<AccountDto> accountDtos = accounts.Select(account => FillDto(account)).ToList();
-
-        return accountDtos;
     }
 }

@@ -41,10 +41,10 @@ public class ApartmentExtBl : IApartmentExtBl
             return getSectionResult;
 
         // Eşsiz bir apartman kodu üretebilmek için ilgili sitedeki tüm apartmanlar getirilir.
-        List<Apartment> allApartments = _apartmentDal.GetBySectionId(apartmentExtDto.SectionId);
+        List<ApartmentDto> apartmentDtos = _apartmentDal.GetBySectionId(apartmentExtDto.SectionId);
 
         // Apartman kodu üretilir.
-        string apartmentCode = _keyService.GenerateApartmentCode(allApartments, getSectionResult.Data.SectionCode);
+        string apartmentCode = _keyService.GenerateApartmentCode(apartmentDtos, getSectionResult.Data.SectionCode);
 
         // Apartman eklenir.
         ApartmentDto apartmentDto = new()
@@ -67,46 +67,41 @@ public class ApartmentExtBl : IApartmentExtBl
     [TransactionScopeAspect]
     public IResult DeleteExt(long id)
     {
-        //// Apartmandaki daireler silinir.
-        //var getFlatsResult = _flatBl.GetByApartmentId(apartmentDto.ApartmentId);
-        //if (getFlatsResult == null)
-        //{
-        //    return getFlatsResult;
-        //}
+        // Apartmandaki daireler getirilir.
+        var getFlatsResult = _flatBl.GetByApartmentId(id);
+        if (getFlatsResult is null)
+            return getFlatsResult;
 
-        //foreach (Flat flat in getFlatsResult)
-        //{
-        //    _flatBl.Delete(flat.FlatId);
-        //}
+        // Apartmandaki daireler silinir.
+        foreach (FlatDto flatDto in getFlatsResult.Data)
+        {
+            _flatBl.Delete(flatDto.FlatId);
+        }
 
         // Apartman silinir.
-        var deleteSectionResult = _apartmentBl.Delete(id);
-        if (!deleteSectionResult.Success)
-            return deleteSectionResult;
+        var deleteApartmentResult = _apartmentBl.Delete(id);
+        if (!deleteApartmentResult.Success)
+            return deleteApartmentResult;
 
         return new SuccessResult(Messages.ApartmentExtDeleted);
     }
 
     public IDataResult<ApartmentExtDto> GetExtById(long id)
     {
-        Apartment searchedApartment = _apartmentDal.GetExtById(id);
-        if (searchedApartment is null)
+        ApartmentExtDto apartmentExtDto = _apartmentDal.GetExtById(id);
+        if (apartmentExtDto is null)
             return new ErrorDataResult<ApartmentExtDto>(Messages.ApartmentNotFound);
 
-        ApartmentExtDto searchedApartmentExtDto = FillExtDto(searchedApartment);
-
-        return new SuccessDataResult<ApartmentExtDto>(searchedApartmentExtDto, Messages.ApartmentExtListedById);
+        return new SuccessDataResult<ApartmentExtDto>(apartmentExtDto, Messages.ApartmentExtListedById);
     }
 
     public IDataResult<List<ApartmentExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<Apartment> searchedApartments = _apartmentDal.GetExtsByBusinessId(businessId);
-        if (searchedApartments.Count == 0)
+        List<ApartmentExtDto> apartmentExtDtos = _apartmentDal.GetExtsByBusinessId(businessId);
+        if (apartmentExtDtos.Count == 0)
             return new ErrorDataResult<List<ApartmentExtDto>>(Messages.ApartmentsNotFound);
 
-        List<ApartmentExtDto> searchedApartmentExtDtos = FillExtDtos(searchedApartments);
-
-        return new SuccessDataResult<List<ApartmentExtDto>>(searchedApartmentExtDtos, Messages.ApartmentExtsListedByBusinessId);
+        return new SuccessDataResult<List<ApartmentExtDto>>(apartmentExtDtos, Messages.ApartmentExtsListedByBusinessId);
     }
 
     public IResult UpdateExt(ApartmentExtDto apartmentExtDto)
@@ -124,34 +119,5 @@ public class ApartmentExtBl : IApartmentExtBl
             return updateApartmentResult;
 
         return new SuccessResult(Messages.ApartmentExtUpdated);
-    }
-
-    private ApartmentExtDto FillExtDto(Apartment apartment)
-    {
-        ApartmentExtDto apartmentExtDto = new()
-        {
-            ApartmentId = apartment.ApartmentId,
-            SectionId = apartment.SectionId,
-            BusinessId = apartment.BusinessId,
-            BranchId = apartment.BranchId,
-            ManagerId = apartment.ManagerId,
-            ApartmentName = apartment.ApartmentName,
-            ApartmentCode = apartment.ApartmentCode,
-            BlockNumber = apartment.BlockNumber,
-            CreatedAt = apartment.CreatedAt,
-            UpdatedAt = apartment.UpdatedAt,
-
-            SectionName = apartment.Section.SectionName,
-            ManagerNameSurname = apartment.Manager.NameSurname,
-        };
-
-        return apartmentExtDto;
-    }
-
-    private List<ApartmentExtDto> FillExtDtos(List<Apartment> apartments)
-    {
-        List<ApartmentExtDto> apartmentExtDtos = apartments.Select(apartment => FillExtDto(apartment)).ToList();
-
-        return apartmentExtDtos;
     }
 }

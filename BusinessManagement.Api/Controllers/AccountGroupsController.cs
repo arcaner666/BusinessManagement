@@ -23,7 +23,8 @@ public class AccountGroupsController : ControllerBase
         var result = _accountGroupBl.GetAll();
         if (result.Success) 
             return Ok(result);
-        return StatusCode(StatusCodes.Status500InternalServerError, result);
+        //return StatusCode(StatusCodes.Status500InternalServerError, result);
+        return BadRequest(result);
     }
 
     [HttpPost("getbyaccountgroupcodes")]

@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BusinessManagement.Api.Extensions;
+using BusinessManagement.BusinessLayer.CrossCuttingConcerns.Logging;
 using BusinessManagement.BusinessLayer.DependencyResolvers.Autofac;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
@@ -25,9 +26,10 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-    app.UseDeveloperExceptionPage();
-else 
+var logger = app.Services.GetRequiredService<ILoggerManager>();
+app.ConfigureExceptionHandler(logger);
+
+if (app.Environment.IsProduction())
     app.UseHsts();
 
 app.UseHttpsRedirection();

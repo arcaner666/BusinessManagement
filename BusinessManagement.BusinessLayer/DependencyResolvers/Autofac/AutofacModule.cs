@@ -76,9 +76,9 @@ public class AutofacModule : Module
         builder.RegisterType<HouseOwnerExtBl>().As<IHouseOwnerExtBl>().SingleInstance();
         builder.RegisterType<DpMsHouseOwnerDal>().As<IHouseOwnerDal>().SingleInstance();
 
-        builder.RegisterType<JwtHelper>().As<ITokenService>();
+        builder.RegisterType<JwtHelper>().As<ITokenService>().SingleInstance();
 
-        builder.RegisterType<KeyService>().As<IKeyService>();
+        builder.RegisterType<KeyService>().As<IKeyService>().SingleInstance();
 
         builder.RegisterType<LoggerManager>().As<ILoggerManager>().SingleInstance();
 

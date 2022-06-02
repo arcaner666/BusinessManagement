@@ -20,6 +20,8 @@ public class AccountGroupBl : IAccountGroupBl
 
     public IDataResult<List<AccountGroupDto>> GetAll()
     {
+        return new ErrorDataResult<List<AccountGroupDto>>(Messages.AccountGroupsNotFound);
+        
         List<AccountGroupDto> accountGroupDtos = _accountGroupDal.GetAll();
         if (accountGroupDtos.Count == 0)
             return new ErrorDataResult<List<AccountGroupDto>>(Messages.AccountGroupsNotFound);

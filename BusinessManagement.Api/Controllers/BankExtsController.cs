@@ -23,7 +23,7 @@ public class BankExtsController : ControllerBase
         var result = _bankExtBl.AddExt(bankExtDto);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpDelete("deleteext/{id}")]
@@ -32,7 +32,7 @@ public class BankExtsController : ControllerBase
         var result = _bankExtBl.DeleteExt(id);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpDelete("deleteextbyaccountid/{accountId}")]
@@ -41,7 +41,7 @@ public class BankExtsController : ControllerBase
         var result = _bankExtBl.DeleteExtByAccountId(accountId);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getextbyaccountid/{accountId}")]
@@ -50,7 +50,7 @@ public class BankExtsController : ControllerBase
         var result = _bankExtBl.GetExtByAccountId(accountId);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getextbyid/{id}")]
@@ -59,7 +59,7 @@ public class BankExtsController : ControllerBase
         var result = _bankExtBl.GetExtById(id);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getextsbybusinessid/{businessId}")]
@@ -68,7 +68,7 @@ public class BankExtsController : ControllerBase
         var result = _bankExtBl.GetExtsByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpPost("updateext")]
@@ -77,6 +77,6 @@ public class BankExtsController : ControllerBase
         var result = _bankExtBl.UpdateExt(bankExtDto);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

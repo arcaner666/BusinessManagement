@@ -25,7 +25,7 @@ public class AuthorizationController : ControllerBase
         var result = _authorizationBl.LoginWithEmail(authorizationDto);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpPost("loginwithphone")]
@@ -34,7 +34,7 @@ public class AuthorizationController : ControllerBase
         var result = _authorizationBl.LoginWithPhone(authorizationDto);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("logout")]
@@ -44,7 +44,7 @@ public class AuthorizationController : ControllerBase
         var result = _authorizationBl.Logout(Convert.ToInt32(HttpContext.User.ClaimSystemUserId().FirstOrDefault()));
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpPost("refreshaccesstoken")]
@@ -54,7 +54,7 @@ public class AuthorizationController : ControllerBase
         var result = _authorizationBl.RefreshAccessToken(authorizationDto);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpPost("registersectionmanager")]
@@ -63,6 +63,6 @@ public class AuthorizationController : ControllerBase
         var result = _authorizationBl.RegisterSectionManager(registerSectionManagerDto);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

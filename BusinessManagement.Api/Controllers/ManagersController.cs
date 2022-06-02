@@ -22,6 +22,6 @@ public class ManagersController : ControllerBase
         var result = _managerBl.GetByBusinessId(businessId);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

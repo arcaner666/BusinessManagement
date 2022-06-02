@@ -22,6 +22,6 @@ public class SectionsController : ControllerBase
         var result = _sectionBl.GetByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
 
-[Route("api/[controller]/")]
+[Route("api/accountgroups/")]
 [ApiController]
 public class AccountGroupsController : ControllerBase
 {
@@ -17,13 +17,13 @@ public class AccountGroupsController : ControllerBase
         _accountGroupBl = accountGroupBl;
     }
 
-    [HttpGet("getall")]
+    [HttpGet]
     public IActionResult GetAll()
     {
         var result = _accountGroupBl.GetAll();
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpPost("getbyaccountgroupcodes")]
@@ -32,6 +32,6 @@ public class AccountGroupsController : ControllerBase
         var result = _accountGroupBl.GetByAccountGroupCodes(accountGroupCodesDto);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

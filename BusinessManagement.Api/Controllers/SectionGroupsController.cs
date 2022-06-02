@@ -23,7 +23,7 @@ public class SectionGroupsController : ControllerBase
         var result = _sectionGroupBl.Add(sectionGroupDto);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpDelete("delete/{id}")]
@@ -32,7 +32,7 @@ public class SectionGroupsController : ControllerBase
         var result = _sectionGroupBl.Delete(id);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getbybusinessid/{businessId}")]
@@ -41,7 +41,7 @@ public class SectionGroupsController : ControllerBase
         var result = _sectionGroupBl.GetByBusinessId(businessId);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getbyid/{id}")]
@@ -50,7 +50,7 @@ public class SectionGroupsController : ControllerBase
         var result = _sectionGroupBl.GetById(id);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpPost("update")]
@@ -59,6 +59,6 @@ public class SectionGroupsController : ControllerBase
         var result = _sectionGroupBl.Update(sectionGroupDto);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

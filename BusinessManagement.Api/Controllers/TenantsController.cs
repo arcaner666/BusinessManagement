@@ -23,6 +23,6 @@ public class TenantsController : ControllerBase
         var result = _tenantBl.GetByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

@@ -23,7 +23,7 @@ public class AccountTypesController : ControllerBase
         var result = _accountTypeBl.GetAll();
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getbyaccounttypename")]
@@ -32,7 +32,7 @@ public class AccountTypesController : ControllerBase
         var result = _accountTypeBl.GetByAccountTypeName(accountTypeName);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpPost("getbyaccounttypenames")]
@@ -41,6 +41,6 @@ public class AccountTypesController : ControllerBase
         var result = _accountTypeBl.GetByAccountTypeNames(accountTypeNamesDto);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

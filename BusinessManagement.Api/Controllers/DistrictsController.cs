@@ -22,7 +22,7 @@ public class DistrictsController : ControllerBase
         var result = _districtBl.GetAll();
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getbycityid/{cityId}")]
@@ -31,6 +31,6 @@ public class DistrictsController : ControllerBase
         var result = _districtBl.GetByCityId(cityId);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

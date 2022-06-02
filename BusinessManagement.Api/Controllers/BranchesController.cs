@@ -22,7 +22,7 @@ public class BranchesController : ControllerBase
         var result = _branchBl.GenerateBranchCode(businessId);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getbybusinessid/{businessId}")]
@@ -31,6 +31,6 @@ public class BranchesController : ControllerBase
         var result = _branchBl.GetByBusinessId(businessId);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

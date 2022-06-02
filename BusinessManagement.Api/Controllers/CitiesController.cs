@@ -22,6 +22,6 @@ public class CitiesController : ControllerBase
         var result = _cityBl.GetAll();
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

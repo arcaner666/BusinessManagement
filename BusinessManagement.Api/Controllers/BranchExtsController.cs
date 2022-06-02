@@ -23,7 +23,7 @@ public class BranchExtsController : ControllerBase
         var result = _branchExtBl.AddExt(branchExtDto);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpDelete("deleteext/{id}")]
@@ -32,7 +32,7 @@ public class BranchExtsController : ControllerBase
         var result = _branchExtBl.DeleteExt(id);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getextbyid/{id}")]
@@ -41,7 +41,7 @@ public class BranchExtsController : ControllerBase
         var result = _branchExtBl.GetExtById(id);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getextsbybusinessid/{businessId}")]
@@ -50,7 +50,7 @@ public class BranchExtsController : ControllerBase
         var result = _branchExtBl.GetExtsByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpPost("updateext")]
@@ -59,6 +59,6 @@ public class BranchExtsController : ControllerBase
         var result = _branchExtBl.UpdateExt(branchExtDto);
         if (result.Success) 
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

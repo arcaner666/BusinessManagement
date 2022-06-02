@@ -23,7 +23,7 @@ public class TenantExtsController : ControllerBase
         var result = _tenantExtBl.AddExt(tenantExtDto);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpDelete("deleteext/{id}")]
@@ -32,7 +32,7 @@ public class TenantExtsController : ControllerBase
         var result = _tenantExtBl.DeleteExt(id);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpDelete("deleteextbyaccountid/{accountId}")]
@@ -41,7 +41,7 @@ public class TenantExtsController : ControllerBase
         var result = _tenantExtBl.DeleteExtByAccountId(accountId);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getextbyaccountid/{accountId}")]
@@ -50,7 +50,7 @@ public class TenantExtsController : ControllerBase
         var result = _tenantExtBl.GetExtByAccountId(accountId);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getextbyid/{id}")]
@@ -59,7 +59,7 @@ public class TenantExtsController : ControllerBase
         var result = _tenantExtBl.GetExtById(id);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getextsbybusinessid/{businessId}")]
@@ -68,7 +68,7 @@ public class TenantExtsController : ControllerBase
         var result = _tenantExtBl.GetExtsByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpPost("updateext")]
@@ -77,6 +77,6 @@ public class TenantExtsController : ControllerBase
         var result = _tenantExtBl.UpdateExt(tenantExtDto);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

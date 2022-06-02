@@ -22,7 +22,7 @@ public class ApartmentsController : ControllerBase
         var result = _apartmentBl.GetByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
     [HttpGet("getbysectionid/{sectionId}")]
@@ -31,6 +31,6 @@ public class ApartmentsController : ControllerBase
         var result = _apartmentBl.GetBySectionId(sectionId);
         if (result.Success)
             return Ok(result);
-        return BadRequest(result);
+        return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 }

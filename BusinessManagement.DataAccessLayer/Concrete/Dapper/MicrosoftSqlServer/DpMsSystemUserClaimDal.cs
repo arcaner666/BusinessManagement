@@ -1,24 +1,21 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsSystemUserClaimDal : ISystemUserClaimDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsSystemUserClaimDal(IConfiguration configuration)
+    public DpMsSystemUserClaimDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public long Add(SystemUserClaimDto systemUserClaimDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "INSERT INTO SystemUserClaim ("
             + " SystemUserId,"
             + " OperationClaimId,"
@@ -30,18 +27,20 @@ public class DpMsSystemUserClaimDal : ISystemUserClaimDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return _db.Query<long>(sql, systemUserClaimDto).Single();
+        return connection.Query<long>(sql, systemUserClaimDto).Single();
     }
 
     public void Delete(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "DELETE FROM SystemUserClaim"
             + " WHERE SystemUserClaimId = @SystemUserClaimId";
-        _db.Execute(sql, new { @SystemUserClaimId = id });
+        connection.Execute(sql, new { @SystemUserClaimId = id });
     }
 
     public SystemUserClaimDto GetBySystemUserIdAndOperationClaimId(long systemUserId, int operationClaimId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " SystemUserClaimId,"
             + " SystemUserId,"
@@ -50,7 +49,7 @@ public class DpMsSystemUserClaimDal : ISystemUserClaimDal
             + " UpdatedAt"
             + " FROM SystemUserClaim"
             + " WHERE SystemUserId = @SystemUserId AND OperationClaimId = @OperationClaimId";
-        return _db.Query<SystemUserClaimDto>(sql, new
+        return connection.Query<SystemUserClaimDto>(sql, new
         {
             @SystemUserId = systemUserId,
             @OperationClaimId = operationClaimId
@@ -59,6 +58,7 @@ public class DpMsSystemUserClaimDal : ISystemUserClaimDal
 
     public List<SystemUserClaimExtDto> GetExtsBySystemUserId(long systemUserId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " suc.SystemUserClaimId,"
             + " suc.SystemUserId,"
@@ -69,6 +69,6 @@ public class DpMsSystemUserClaimDal : ISystemUserClaimDal
             + " FROM SystemUserClaim suc"
             + " INNER JOIN OperationClaim oc ON suc.OperationClaimId = oc.OperationClaimId"
             + " WHERE suc.SystemUserId = @SystemUserId";
-        return _db.Query<SystemUserClaimExtDto>(sql, new { @SystemUserId = systemUserId }).ToList();
+        return connection.Query<SystemUserClaimExtDto>(sql, new { @SystemUserId = systemUserId }).ToList();
     }
 }

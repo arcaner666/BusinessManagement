@@ -1,24 +1,21 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsSectionGroupDal : ISectionGroupDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsSectionGroupDal(IConfiguration configuration)
+    public DpMsSectionGroupDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public long Add(SectionGroupDto sectionGroupDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "INSERT INTO SectionGroup ("
             + " BusinessId,"
             + " BranchId,"
@@ -32,18 +29,20 @@ public class DpMsSectionGroupDal : ISectionGroupDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
-        return _db.Query<long>(sql, sectionGroupDto).Single();
+        return connection.Query<long>(sql, sectionGroupDto).Single();
     }
 
     public void Delete(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "DELETE FROM SectionGroup"
             + " WHERE SectionGroupId = @SectionGroupId";
-        _db.Execute(sql, new { @SectionGroupId = id });
+        connection.Execute(sql, new { @SectionGroupId = id });
     }
 
     public List<SectionGroupDto> GetByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " SectionGroupId,"
             + " BusinessId,"
@@ -53,11 +52,12 @@ public class DpMsSectionGroupDal : ISectionGroupDal
             + " UpdatedAt"
             + " FROM SectionGroup"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<SectionGroupDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<SectionGroupDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
     public SectionGroupDto GetByBusinessIdAndSectionGroupName(int businessId, string sectionGroupName)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " SectionGroupId,"
             + " BusinessId,"
@@ -67,7 +67,7 @@ public class DpMsSectionGroupDal : ISectionGroupDal
             + " UpdatedAt"
             + " FROM SectionGroup"
             + " WHERE BusinessId = @BusinessId AND SectionGroupName = @SectionGroupName";
-        return _db.Query<SectionGroupDto>(sql, new
+        return connection.Query<SectionGroupDto>(sql, new
         {
             @BusinessId = businessId,
             @SectionGroupName = sectionGroupName,
@@ -76,6 +76,7 @@ public class DpMsSectionGroupDal : ISectionGroupDal
 
     public SectionGroupDto GetById(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " SectionGroupId,"
             + " BusinessId,"
@@ -85,11 +86,12 @@ public class DpMsSectionGroupDal : ISectionGroupDal
             + " UpdatedAt"
             + " FROM SectionGroup"
             + " WHERE SectionGroupId = @SectionGroupId";
-        return _db.Query<SectionGroupDto>(sql, new { @SectionGroupId = id }).SingleOrDefault();
+        return connection.Query<SectionGroupDto>(sql, new { @SectionGroupId = id }).SingleOrDefault();
     }
 
     public void Update(SectionGroupDto sectionGroupDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "UPDATE SectionGroup SET"
             + " BusinessId = @BusinessId,"
             + " BranchId = @BranchId,"
@@ -97,6 +99,6 @@ public class DpMsSectionGroupDal : ISectionGroupDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE SectionGroupId = @SectionGroupId";
-        _db.Execute(sql, sectionGroupDto);
+        connection.Execute(sql, sectionGroupDto);
     }
 }

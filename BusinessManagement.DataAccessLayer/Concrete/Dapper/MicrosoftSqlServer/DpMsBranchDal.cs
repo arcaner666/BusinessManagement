@@ -1,24 +1,21 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsBranchDal : IBranchDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsBranchDal(IConfiguration configuration)
+    public DpMsBranchDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public long Add(BranchDto branchDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Branch ("
             + " BusinessId,"
             + " FullAddressId,"
@@ -36,18 +33,20 @@ public class DpMsBranchDal : IBranchDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
-        return _db.Query<long>(sql, branchDto).Single();
+        return connection.Query<long>(sql, branchDto).Single();
     }
 
     public void Delete(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "DELETE FROM Branch"
             + " WHERE BranchId = @BranchId";
-        _db.Execute(sql, new { @BranchId = id });
+        connection.Execute(sql, new { @BranchId = id });
     }
 
     public BranchDto GetByBranchCode(string branchCode)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " BranchId,"
             + " BusinessId,"
@@ -59,11 +58,12 @@ public class DpMsBranchDal : IBranchDal
             + " UpdatedAt"
             + " FROM Branch"
             + " WHERE BranchCode = @BranchCode";
-        return _db.Query<BranchDto>(sql, new { @BranchCode = branchCode }).SingleOrDefault();
+        return connection.Query<BranchDto>(sql, new { @BranchCode = branchCode }).SingleOrDefault();
     }
 
     public List<BranchDto> GetByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " BranchId,"
             + " BusinessId,"
@@ -75,10 +75,11 @@ public class DpMsBranchDal : IBranchDal
             + " UpdatedAt"
             + " FROM Branch"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<BranchDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<BranchDto>(sql, new { @BusinessId = businessId }).ToList();
     }
     public BranchDto GetByBusinessIdAndBranchName(int businessId, string branchName)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " BranchId,"
             + " BusinessId,"
@@ -90,7 +91,7 @@ public class DpMsBranchDal : IBranchDal
             + " UpdatedAt"
             + " FROM Branch"
             + " WHERE BusinessId = @BusinessId AND BranchName = @BranchName";
-        return _db.Query<BranchDto>(sql, new
+        return connection.Query<BranchDto>(sql, new
         {
             @BusinessId = businessId,
             @BranchName = branchName,
@@ -99,6 +100,7 @@ public class DpMsBranchDal : IBranchDal
 
     public BranchDto GetByBusinessIdAndBranchOrderOrBranchCode(int businessId, int branchOrder, string branchCode)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " BranchId,"
             + " BusinessId,"
@@ -110,7 +112,7 @@ public class DpMsBranchDal : IBranchDal
             + " UpdatedAt"
             + " FROM Branch"
             + " WHERE BusinessId = @BusinessId AND BranchOrder = @BranchOrder OR BusinessId = @BusinessId AND BranchCode = @BranchCode";
-        return _db.Query<BranchDto>(sql, new
+        return connection.Query<BranchDto>(sql, new
         {
             @BusinessId = businessId,
             @BranchOrder = branchOrder,
@@ -120,6 +122,7 @@ public class DpMsBranchDal : IBranchDal
 
     public BranchDto GetByBusinessIdAndMaxBranchOrder(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " BranchId,"
             + " BusinessId,"
@@ -131,7 +134,7 @@ public class DpMsBranchDal : IBranchDal
             + " UpdatedAt"
             + " FROM Branch"
             + " WHERE BusinessId = @BusinessId AND BranchOrder = (SELECT MAX(BranchOrder) FROM Branch WHERE BusinessId = @BusinessId)";
-        return _db.Query<BranchDto>(sql, new
+        return connection.Query<BranchDto>(sql, new
         {
             @BusinessId = businessId,
         }).SingleOrDefault();
@@ -139,6 +142,7 @@ public class DpMsBranchDal : IBranchDal
 
     public BranchDto GetById(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " BranchId,"
             + " BusinessId,"
@@ -150,11 +154,12 @@ public class DpMsBranchDal : IBranchDal
             + " UpdatedAt"
             + " FROM Branch"
             + " WHERE BranchId = @BranchId";
-        return _db.Query<BranchDto>(sql, new { @BranchId = id }).SingleOrDefault();
+        return connection.Query<BranchDto>(sql, new { @BranchId = id }).SingleOrDefault();
     }
 
     public BranchExtDto GetExtById(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " b.BranchId,"
             + " b.BusinessId,"
@@ -172,11 +177,12 @@ public class DpMsBranchDal : IBranchDal
             + " FROM Branch b"
             + " INNER JOIN FullAddress fa ON b.FullAddressId = fa.FullAddressId"
             + " WHERE b.BranchId = @BranchId;";
-        return _db.Query<BranchExtDto>(sql, new { @BranchId = id }).SingleOrDefault();
+        return connection.Query<BranchExtDto>(sql, new { @BranchId = id }).SingleOrDefault();
     }
 
     public List<BranchExtDto> GetExtsByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " b.BranchId,"
             + " b.BusinessId,"
@@ -194,11 +200,12 @@ public class DpMsBranchDal : IBranchDal
             + " FROM Branch b"
             + " INNER JOIN FullAddress fa ON b.FullAddressId = fa.FullAddressId"
             + " WHERE b.BusinessId = @BusinessId;";
-        return _db.Query<BranchExtDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<BranchExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
     public void Update(BranchDto branchDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "UPDATE Branch SET"
             + " BusinessId = @BusinessId,"
             + " FullAddressId = @FullAddressId,"
@@ -208,6 +215,6 @@ public class DpMsBranchDal : IBranchDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE BranchId = @BranchId";
-        _db.Execute(sql, branchDto);
+        connection.Execute(sql, branchDto);
     }
 }

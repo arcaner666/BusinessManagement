@@ -1,24 +1,21 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsFullAddressDal : IFullAddressDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsFullAddressDal(IConfiguration configuration)
+    public DpMsFullAddressDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public long Add(FullAddressDto fullAddressDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "INSERT INTO FullAddress ("
             + " CityId,"
             + " DistrictId,"
@@ -36,18 +33,20 @@ public class DpMsFullAddressDal : IFullAddressDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
-        return _db.Query<long>(sql, fullAddressDto).Single();
+        return connection.Query<long>(sql, fullAddressDto).Single();
     }
 
     public void Delete(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "DELETE FROM FullAddress"
             + " WHERE FullAddressId = @FullAddressId";
-        _db.Execute(sql, new { @FullAddressId = id });
+        connection.Execute(sql, new { @FullAddressId = id });
     }
 
     public FullAddressDto GetByAddressText(string addressText)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " FullAddressId,"
             + " CityId,"
@@ -59,11 +58,12 @@ public class DpMsFullAddressDal : IFullAddressDal
             + " UpdatedAt"
             + " FROM FullAddress"
             + " WHERE AddressText = @AddressText";
-        return _db.Query<FullAddressDto>(sql, new { @AddressText = addressText }).SingleOrDefault();
+        return connection.Query<FullAddressDto>(sql, new { @AddressText = addressText }).SingleOrDefault();
     }
 
     public FullAddressDto GetById(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " FullAddressId,"
             + " CityId,"
@@ -75,11 +75,12 @@ public class DpMsFullAddressDal : IFullAddressDal
             + " UpdatedAt"
             + " FROM FullAddress"
             + " WHERE FullAddressId = @FullAddressId";
-        return _db.Query<FullAddressDto>(sql, new { @FullAddressId = id }).SingleOrDefault();
+        return connection.Query<FullAddressDto>(sql, new { @FullAddressId = id }).SingleOrDefault();
     }
 
     public void Update(FullAddressDto fullAddressDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "UPDATE FullAddress SET"
             + " CityId = @CityId,"
             + " DistrictId = @DistrictId,"
@@ -89,6 +90,6 @@ public class DpMsFullAddressDal : IFullAddressDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE FullAddressId = @FullAddressId";
-        _db.Execute(sql, fullAddressDto);
+        connection.Execute(sql, fullAddressDto);
     }
 }

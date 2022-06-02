@@ -1,24 +1,21 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsFlatDal : IFlatDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsFlatDal(IConfiguration configuration)
+    public DpMsFlatDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public long Add(FlatDto flatDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Flat ("
             + " SectionId,"
             + " ApartmentId,"
@@ -42,18 +39,20 @@ public class DpMsFlatDal : IFlatDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT);";
-        return _db.Query<long>(sql, flatDto).Single();
+        return connection.Query<long>(sql, flatDto).Single();
     }
 
     public void Delete(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "DELETE FROM Flat"
             + " WHERE FlatId = @FlatId";
-        _db.Execute(sql, new { @FlatId = id });
+        connection.Execute(sql, new { @FlatId = id });
     }
 
     public List<FlatDto> GetByApartmentId(long apartmentId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " FlatId,"
             + " SectionId,"
@@ -68,11 +67,12 @@ public class DpMsFlatDal : IFlatDal
             + " UpdatedAt"
             + " FROM Flat"
             + " WHERE ApartmentId = @ApartmentId";
-        return _db.Query<FlatDto>(sql, new { @ApartmentId = apartmentId }).ToList();
+        return connection.Query<FlatDto>(sql, new { @ApartmentId = apartmentId }).ToList();
     }
 
     public FlatDto GetByFlatCode(string flatCode)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " FlatId,"
             + " SectionId,"
@@ -87,11 +87,12 @@ public class DpMsFlatDal : IFlatDal
             + " UpdatedAt"
             + " FROM Flat"
             + " WHERE FlatCode = @FlatCode";
-        return _db.Query<FlatDto>(sql, new { @FlatCode = flatCode }).SingleOrDefault();
+        return connection.Query<FlatDto>(sql, new { @FlatCode = flatCode }).SingleOrDefault();
     }
 
     public FlatDto GetById(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " FlatId,"
             + " SectionId,"
@@ -106,11 +107,12 @@ public class DpMsFlatDal : IFlatDal
             + " UpdatedAt"
             + " FROM Flat"
             + " WHERE FlatId = @FlatId";
-        return _db.Query<FlatDto>(sql, new { @FlatId = id }).SingleOrDefault();
+        return connection.Query<FlatDto>(sql, new { @FlatId = id }).SingleOrDefault();
     }
 
     public FlatExtDto GetExtById(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " f.FlatId,"
             + " f.SectionId,"
@@ -133,11 +135,12 @@ public class DpMsFlatDal : IFlatDal
             + " LEFT JOIN HouseOwner ho ON f.HouseOwnerId = ho.HouseOwnerId"
             + " LEFT JOIN Tenant t ON f.TenantId = t.TenantId"
             + " WHERE f.FlatId = @FlatId;";
-        return _db.Query<FlatExtDto>(sql, new { @FlatId = id }).SingleOrDefault();
+        return connection.Query<FlatExtDto>(sql, new { @FlatId = id }).SingleOrDefault();
     }
 
     public List<FlatExtDto> GetExtsByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " f.FlatId,"
             + " f.SectionId,"
@@ -160,11 +163,12 @@ public class DpMsFlatDal : IFlatDal
             + " LEFT JOIN HouseOwner ho ON f.HouseOwnerId = ho.HouseOwnerId"
             + " LEFT JOIN Tenant t ON f.TenantId = t.TenantId"
             + " WHERE f.BusinessId = @BusinessId;";
-        return _db.Query<FlatExtDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<FlatExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
     public void Update(FlatDto flatDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "UPDATE Flat SET"
             + " SectionId = @SectionId,"
             + " ApartmentId = @ApartmentId,"
@@ -177,6 +181,6 @@ public class DpMsFlatDal : IFlatDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE FlatId = @FlatId";
-        _db.Execute(sql, flatDto);
+        connection.Execute(sql, flatDto);
     }
 }

@@ -63,6 +63,8 @@ public class BankExtBl : IBankExtBl
         if (!addAccountResult.Success)
             return addAccountResult;
 
+        return new ErrorResult("cari hesap eklendi fakat adres eklenemedi.");
+
         // Yeni bir adres oluşturulur.
         FullAddressDto fullAddressDto = new()
         {

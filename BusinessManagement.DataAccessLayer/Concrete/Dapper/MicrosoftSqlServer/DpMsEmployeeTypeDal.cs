@@ -1,28 +1,25 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsEmployeeTypeDal : IEmployeeTypeDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsEmployeeTypeDal(IConfiguration configuration)
+    public DpMsEmployeeTypeDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public List<EmployeeTypeDto> GetAll()
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " EmployeeTypeId,"
             + " EmployeeTypeName"
             + " FROM EmployeeType";
-        return _db.Query<EmployeeTypeDto>(sql).ToList();
+        return connection.Query<EmployeeTypeDto>(sql).ToList();
     }
 }

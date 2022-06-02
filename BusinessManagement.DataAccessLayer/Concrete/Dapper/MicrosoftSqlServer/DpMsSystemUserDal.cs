@@ -1,24 +1,21 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsSystemUserDal : ISystemUserDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsSystemUserDal(IConfiguration configuration)
+    public DpMsSystemUserDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public long Add(SystemUserDto systemUserDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "INSERT INTO SystemUser ("
             + " Email,"
             + " Phone,"
@@ -46,18 +43,20 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return _db.Query<long>(sql, systemUserDto).Single();
+        return connection.Query<long>(sql, systemUserDto).Single();
     }
 
     public void Delete(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "DELETE FROM SystemUser"
             + " WHERE SystemUserId = @SystemUserId";
-        _db.Execute(sql, new { @SystemUserId = id });
+        connection.Execute(sql, new { @SystemUserId = id });
     }
 
     public SystemUserDto GetByEmail(string email)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " SystemUserId,"
             + " Email,"
@@ -74,11 +73,12 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " UpdatedAt"
             + " FROM SystemUser su"
             + " WHERE Email = @Email";
-        return _db.Query<SystemUserDto>(sql, new { @Email = email }).SingleOrDefault();
+        return connection.Query<SystemUserDto>(sql, new { @Email = email }).SingleOrDefault();
     }
 
     public SystemUserDto GetById(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " SystemUserId,"
             + " Email,"
@@ -95,11 +95,12 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " UpdatedAt"
             + " FROM SystemUser"
             + " WHERE SystemUserId = @SystemUserId";
-        return _db.Query<SystemUserDto>(sql, new { @SystemUserId = id }).SingleOrDefault();
+        return connection.Query<SystemUserDto>(sql, new { @SystemUserId = id }).SingleOrDefault();
     }
 
     public SystemUserDto GetByPhone(string phone)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " SystemUserId,"
             + " Email,"
@@ -116,11 +117,12 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " UpdatedAt"
             + " FROM SystemUser"
             + " WHERE Phone = @Phone";
-        return _db.Query<SystemUserDto>(sql, new { @Phone = phone }).SingleOrDefault();
+        return connection.Query<SystemUserDto>(sql, new { @Phone = phone }).SingleOrDefault();
     }
 
     public void Update(SystemUserDto systemUserDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "UPDATE SystemUser SET"
             + " Email = @Email,"
             + " Phone = @Phone,"
@@ -135,6 +137,6 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE SystemUserId = @SystemUserId";
-        _db.Execute(sql, systemUserDto);
+        connection.Execute(sql, systemUserDto);
     }
 }

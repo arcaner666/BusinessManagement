@@ -53,6 +53,8 @@ public class AutofacModule : Module
         builder.RegisterType<CurrencyBl>().As<ICurrencyBl>().SingleInstance();
         builder.RegisterType<DpMsCurrencyDal>().As<ICurrencyDal>().SingleInstance();
 
+        builder.RegisterType<DapperContext>().SingleInstance();
+
         builder.RegisterType<DistrictBl>().As<IDistrictBl>().SingleInstance();
         builder.RegisterType<DpMsDistrictDal>().As<IDistrictDal>().SingleInstance();
 

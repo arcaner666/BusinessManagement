@@ -1,24 +1,21 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsCashDal : ICashDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsCashDal(IConfiguration configuration)
+    public DpMsCashDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public long Add(CashDto cashDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Cash ("
             + " BusinessId,"
             + " BranchId,"
@@ -34,18 +31,20 @@ public class DpMsCashDal : ICashDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return _db.Query<long>(sql, cashDto).Single();
+        return connection.Query<long>(sql, cashDto).Single();
     }
 
     public void Delete(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "DELETE FROM Cash"
             + " WHERE CashId = @CashId";
-        _db.Execute(sql, new { @CashId = id });
+        connection.Execute(sql, new { @CashId = id });
     }
 
     public CashDto GetByAccountId(long accountId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " CashId,"
             + " BusinessId,"
@@ -56,11 +55,12 @@ public class DpMsCashDal : ICashDal
             + " UpdatedAt"
             + " FROM Cash"
             + " WHERE AccountId = @AccountId";
-        return _db.Query<CashDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return connection.Query<CashDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
     public List<CashDto> GetByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " CashId,"
             + " BusinessId,"
@@ -71,11 +71,12 @@ public class DpMsCashDal : ICashDal
             + " UpdatedAt"
             + " FROM Cash"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<CashDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<CashDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
     public CashDto GetByBusinessIdAndAccountId(int businessId, long accountId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " CashId,"
             + " BusinessId,"
@@ -86,7 +87,7 @@ public class DpMsCashDal : ICashDal
             + " UpdatedAt"
             + " FROM Cash"
             + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
-        return _db.Query<CashDto>(sql, new
+        return connection.Query<CashDto>(sql, new
         {
             @BusinessId = businessId,
             @AccountId = accountId,
@@ -95,6 +96,7 @@ public class DpMsCashDal : ICashDal
 
     public CashDto GetById(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " CashId,"
             + " BusinessId,"
@@ -105,11 +107,12 @@ public class DpMsCashDal : ICashDal
             + " UpdatedAt"
             + " FROM Cash"
             + " WHERE CashId = @CashId";
-        return _db.Query<CashDto>(sql, new { @CashId = id }).SingleOrDefault();
+        return connection.Query<CashDto>(sql, new { @CashId = id }).SingleOrDefault();
     }
 
     public CashExtDto GetExtByAccountId(long accountId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " c.CashId,"
             + " c.BusinessId,"
@@ -132,11 +135,12 @@ public class DpMsCashDal : ICashDal
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN Currency cu ON c.CurrencyId = cu.CurrencyId"
             + " WHERE c.AccountId = @AccountId";
-        return _db.Query<CashExtDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return connection.Query<CashExtDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
     public CashExtDto GetExtById(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " c.CashId,"
             + " c.BusinessId,"
@@ -159,11 +163,12 @@ public class DpMsCashDal : ICashDal
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN Currency cu ON c.CurrencyId = cu.CurrencyId"
             + " WHERE c.CashId = @CashId";
-        return _db.Query<CashExtDto>(sql, new { @CashId = id }).SingleOrDefault();
+        return connection.Query<CashExtDto>(sql, new { @CashId = id }).SingleOrDefault();
     }
 
     public List<CashExtDto> GetExtsByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " c.CashId,"
             + " c.BusinessId,"
@@ -186,11 +191,12 @@ public class DpMsCashDal : ICashDal
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN Currency cu ON c.CurrencyId = cu.CurrencyId"
             + " WHERE c.BusinessId = @BusinessId";
-        return _db.Query<CashExtDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<CashExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
     public void Update(CashDto cashDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "UPDATE Cash SET"
             + " BusinessId = @BusinessId,"
             + " BranchId = @BranchId,"
@@ -199,6 +205,6 @@ public class DpMsCashDal : ICashDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE CashId = @CashId";
-        _db.Execute(sql, cashDto);
+        connection.Execute(sql, cashDto);
     }
 }

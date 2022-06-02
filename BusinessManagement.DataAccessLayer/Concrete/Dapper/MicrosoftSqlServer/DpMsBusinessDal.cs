@@ -1,24 +1,21 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsBusinessDal : IBusinessDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsBusinessDal(IConfiguration configuration)
+    public DpMsBusinessDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public int Add(BusinessDto businessDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Business ("
             + " OwnerSystemUserId,"
             + " BusinessOrder,"
@@ -34,11 +31,12 @@ public class DpMsBusinessDal : IBusinessDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS INT)";
-        return _db.Query<int>(sql, businessDto).Single();
+        return connection.Query<int>(sql, businessDto).Single();
     }
 
     public BusinessDto GetByBusinessName(string businessName)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " BusinessId,"
             + " OwnerSystemUserId,"
@@ -49,11 +47,12 @@ public class DpMsBusinessDal : IBusinessDal
             + " UpdatedAt"
             + " FROM Business"
             + " WHERE BusinessName = @BusinessName";
-        return _db.Query<BusinessDto>(sql, new { @BusinessName = businessName }).SingleOrDefault();
+        return connection.Query<BusinessDto>(sql, new { @BusinessName = businessName }).SingleOrDefault();
     }
 
     public BusinessDto GetById(int id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " BusinessId,"
             + " OwnerSystemUserId,"
@@ -64,11 +63,12 @@ public class DpMsBusinessDal : IBusinessDal
             + " UpdatedAt"
             + " FROM Business"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<BusinessDto>(sql, new { @BusinessId = id }).SingleOrDefault();
+        return connection.Query<BusinessDto>(sql, new { @BusinessId = id }).SingleOrDefault();
     }
 
     public BusinessDto GetByOwnerSystemUserId(long ownerSystemUserId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " BusinessId,"
             + " OwnerSystemUserId,"
@@ -79,6 +79,6 @@ public class DpMsBusinessDal : IBusinessDal
             + " UpdatedAt"
             + " FROM Business"
             + " WHERE OwnerSystemUserId = @OwnerSystemUserId";
-        return _db.Query<BusinessDto>(sql, new { @OwnerSystemUserId = ownerSystemUserId }).SingleOrDefault();
+        return connection.Query<BusinessDto>(sql, new { @OwnerSystemUserId = ownerSystemUserId }).SingleOrDefault();
     }        
 }

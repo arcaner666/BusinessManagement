@@ -1,40 +1,38 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsDistrictDal : IDistrictDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsDistrictDal(IConfiguration configuration)
+    public DpMsDistrictDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public List<DistrictDto> GetAll()
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " DistrictId,"
             + " CityId,"
             + " DistrictName"
             + " FROM District";
-        return _db.Query<DistrictDto>(sql).ToList();
+        return connection.Query<DistrictDto>(sql).ToList();
     }
 
     public List<DistrictDto> GetByCityId(short cityId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " DistrictId,"
             + " CityId,"
             + " DistrictName"
             + " FROM District"
             + " WHERE CityId = @CityId";
-        return _db.Query<DistrictDto>(sql, new { @CityId = cityId }).ToList();
+        return connection.Query<DistrictDto>(sql, new { @CityId = cityId }).ToList();
     }
 }

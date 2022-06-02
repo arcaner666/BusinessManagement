@@ -1,24 +1,21 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsSectionDal : ISectionDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsSectionDal(IConfiguration configuration)
+    public DpMsSectionDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public int Add(SectionDto sectionDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Section ("
             + " SectionGroupId,"
             + " BusinessId,"
@@ -40,18 +37,20 @@ public class DpMsSectionDal : ISectionDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS INT);";
-        return _db.Query<int>(sql, sectionDto).Single();
+        return connection.Query<int>(sql, sectionDto).Single();
     }
 
     public void Delete(int id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "DELETE FROM Section"
             + " WHERE SectionId = @SectionId";
-        _db.Execute(sql, new { @SectionId = id });
+        connection.Execute(sql, new { @SectionId = id });
     }
 
     public List<SectionDto> GetAll()
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " SectionId,"
             + " SectionGroupId,"
@@ -64,11 +63,12 @@ public class DpMsSectionDal : ISectionDal
             + " CreatedAt,"
             + " UpdatedAt"
             + " FROM Section";
-        return _db.Query<SectionDto>(sql).ToList();
+        return connection.Query<SectionDto>(sql).ToList();
     }
 
     public List<SectionDto> GetByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " SectionId,"
             + " SectionGroupId,"
@@ -82,11 +82,12 @@ public class DpMsSectionDal : ISectionDal
             + " UpdatedAt"
             + " FROM Section"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<SectionDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<SectionDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
     public SectionDto GetById(int id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " SectionId,"
             + " SectionGroupId,"
@@ -100,11 +101,12 @@ public class DpMsSectionDal : ISectionDal
             + " UpdatedAt"
             + " FROM Section"
             + " WHERE SectionId = @SectionId";
-        return _db.Query<SectionDto>(sql, new { @SectionId = id }).SingleOrDefault();
+        return connection.Query<SectionDto>(sql, new { @SectionId = id }).SingleOrDefault();
     }
 
     public SectionDto GetBySectionCode(string sectionCode)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " SectionId,"
             + " SectionGroupId,"
@@ -118,11 +120,12 @@ public class DpMsSectionDal : ISectionDal
             + " UpdatedAt"
             + " FROM Section"
             + " WHERE SectionCode = @SectionCode";
-        return _db.Query<SectionDto>(sql, new { @SectionCode = sectionCode }).SingleOrDefault();
+        return connection.Query<SectionDto>(sql, new { @SectionCode = sectionCode }).SingleOrDefault();
     }
 
     public SectionExtDto GetExtById(int id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " s.SectionId,"
             + " s.SectionGroupId,"
@@ -150,11 +153,12 @@ public class DpMsSectionDal : ISectionDal
             + " INNER JOIN City c ON fa.CityId = c.CityId"
             + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
             + " WHERE s.SectionId = @SectionId;";
-        return _db.Query<SectionExtDto>(sql, new { @SectionId = id }).SingleOrDefault();
+        return connection.Query<SectionExtDto>(sql, new { @SectionId = id }).SingleOrDefault();
     }
 
     public List<SectionExtDto> GetExtsByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " s.SectionId,"
             + " s.SectionGroupId,"
@@ -182,11 +186,12 @@ public class DpMsSectionDal : ISectionDal
             + " INNER JOIN City c ON fa.CityId = c.CityId"
             + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
             + " WHERE s.BusinessId = @BusinessId;";
-        return _db.Query<SectionExtDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<SectionExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
     public void Update(SectionDto sectionDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "UPDATE Section SET"
             + " SectionGroupId = @SectionGroupId,"
             + " BusinessId = @BusinessId,"
@@ -198,6 +203,6 @@ public class DpMsSectionDal : ISectionDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE SectionId = @SectionId";
-        _db.Execute(sql, sectionDto);
+        connection.Execute(sql, sectionDto);
     }
 }

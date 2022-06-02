@@ -1,24 +1,21 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsCustomerDal : ICustomerDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsCustomerDal(IConfiguration configuration)
+    public DpMsCustomerDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public long Add(CustomerDto customerDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Customer ("
             + " BusinessId,"
             + " BranchId,"
@@ -60,11 +57,12 @@ public class DpMsCustomerDal : ICustomerDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return _db.Query<long>(sql, customerDto).Single();
+        return connection.Query<long>(sql, customerDto).Single();
     }
 
     public CustomerDto GetByAccountId(long accountId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " CustomerId,"
             + " BusinessId,"
@@ -88,11 +86,12 @@ public class DpMsCustomerDal : ICustomerDal
             + " UpdatedAt"
             + " FROM Customer"
             + " WHERE AccountId = @AccountId";
-        return _db.Query<CustomerDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return connection.Query<CustomerDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
     public List<CustomerDto> GetByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " CustomerId,"
             + " BusinessId,"
@@ -116,11 +115,12 @@ public class DpMsCustomerDal : ICustomerDal
             + " UpdatedAt"
             + " FROM Customer"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<CustomerDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<CustomerDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
     public CustomerDto GetByBusinessIdAndSystemUserId(int businessId, long systemUserId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " CustomerId,"
             + " BusinessId,"
@@ -144,7 +144,7 @@ public class DpMsCustomerDal : ICustomerDal
             + " UpdatedAt"
             + " FROM Customer"
             + " WHERE BusinessId = @BusinessId AND SystemUserId = @SystemUserId";
-        return _db.Query<CustomerDto>(sql, new
+        return connection.Query<CustomerDto>(sql, new
         {
             @BusinessId = businessId,
             @SystemUserId = systemUserId,
@@ -153,6 +153,7 @@ public class DpMsCustomerDal : ICustomerDal
 
     public CustomerDto GetById(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " CustomerId,"
             + " BusinessId,"
@@ -176,11 +177,12 @@ public class DpMsCustomerDal : ICustomerDal
             + " UpdatedAt"
             + " FROM Customer"
             + " WHERE CustomerId = @CustomerId";
-        return _db.Query<CustomerDto>(sql, new { @CustomerId = id }).SingleOrDefault();
+        return connection.Query<CustomerDto>(sql, new { @CustomerId = id }).SingleOrDefault();
     }
 
     public List<CustomerDto> GetExtsByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " c.CustomerId,"
             + " c.BusinessId,"
@@ -204,11 +206,12 @@ public class DpMsCustomerDal : ICustomerDal
             + " c.UpdatedAt"
             + " FROM Customer c"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<CustomerDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<CustomerDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
     public void Update(CustomerDto customerDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "UPDATE Customer SET"
             + " BusinessId = @BusinessId,"
             + " BranchId = @BranchId,"
@@ -230,6 +233,6 @@ public class DpMsCustomerDal : ICustomerDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE CustomerId = @CustomerId";
-        _db.Execute(sql, customerDto);
+        connection.Execute(sql, customerDto);
     }
 }

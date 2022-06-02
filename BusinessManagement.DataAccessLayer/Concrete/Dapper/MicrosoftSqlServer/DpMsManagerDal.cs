@@ -1,24 +1,21 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
 using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using System.Data;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
 
 public class DpMsManagerDal : IManagerDal
 {
-    private readonly IDbConnection _db;
+    private readonly DapperContext _context;
 
-    public DpMsManagerDal(IConfiguration configuration)
+    public DpMsManagerDal(DapperContext context)
     {
-        _db = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+        _context = context;
     }
 
     public long Add(ManagerDto managerDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Manager ("
             + " BusinessId,"
             + " BranchId,"
@@ -50,18 +47,20 @@ public class DpMsManagerDal : IManagerDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return _db.Query<long>(sql, managerDto).Single();
+        return connection.Query<long>(sql, managerDto).Single();
     }
 
     public void Delete(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "DELETE FROM Manager"
             + " WHERE ManagerId = @ManagerId";
-        _db.Execute(sql, new { @ManagerId = id });
+        connection.Execute(sql, new { @ManagerId = id });
     }
 
     public List<ManagerDto> GetByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " ManagerId,"
             + " BusinessId,"
@@ -80,11 +79,12 @@ public class DpMsManagerDal : IManagerDal
             + " UpdatedAt"
             + " FROM Manager"
             + " WHERE BusinessId = @BusinessId";
-        return _db.Query<ManagerDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<ManagerDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
     public ManagerDto GetByBusinessIdAndPhone(int businessId, string phone)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " ManagerId,"
             + " BusinessId,"
@@ -103,7 +103,7 @@ public class DpMsManagerDal : IManagerDal
             + " UpdatedAt"
             + " FROM Manager"
             + " WHERE BusinessId = @BusinessId AND Phone = @Phone";
-        return _db.Query<ManagerDto>(sql, new
+        return connection.Query<ManagerDto>(sql, new
         {
             @BusinessId = businessId,
             @Phone = phone,
@@ -112,6 +112,7 @@ public class DpMsManagerDal : IManagerDal
 
     public ManagerDto GetById(long id)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " ManagerId,"
             + " BusinessId,"
@@ -130,11 +131,12 @@ public class DpMsManagerDal : IManagerDal
             + " UpdatedAt"
             + " FROM Manager"
             + " WHERE ManagerId = @ManagerId";
-        return _db.Query<ManagerDto>(sql, new { @ManagerId = id }).SingleOrDefault();
+        return connection.Query<ManagerDto>(sql, new { @ManagerId = id }).SingleOrDefault();
     }
 
     public List<ManagerExtDto> GetExtsByBusinessId(int businessId)
     {
+        using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " m.ManagerId,"
             + " m.BusinessId,"
@@ -160,11 +162,12 @@ public class DpMsManagerDal : IManagerDal
             + " INNER JOIN Branch br ON m.BranchId = br.BranchId"
             + " INNER JOIN FullAddress fa ON br.FullAddressId = fa.FullAddressId"
             + " WHERE m.BusinessId = @BusinessId";
-        return _db.Query<ManagerExtDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<ManagerExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
     public void Update(ManagerDto managerDto)
     {
+        using var connection = _context.CreateConnection();
         var sql = "UPDATE Manager SET"
             + " BusinessId = @BusinessId,"
             + " BranchId = @BranchId,"
@@ -181,6 +184,6 @@ public class DpMsManagerDal : IManagerDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE ManagerId = @ManagerId";
-        _db.Execute(sql, managerDto);
+        connection.Execute(sql, managerDto);
     }
 }

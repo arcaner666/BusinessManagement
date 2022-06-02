@@ -18,6 +18,23 @@ public static class ServiceExtensions
                 .AllowAnyHeader());
         });
 
+    //public static void ConfigureCustomExceptionMiddleware(this IServiceCollection services, IConfiguration configuration)
+    //{
+    //    services.Add
+    //}
+
+    public static void ConfigureFileTransferOptions(this IServiceCollection services, IConfiguration configuration)
+    {
+        var fileTransferOptions = configuration.GetSection("FileTransferOptions").Get<FileTransferOptions>();
+        services.Configure<FormOptions>(options =>
+        {
+            // 1MB dosya yükleme limiti koydum. 1024 X 1024 = 1048576 b = 1024 kb = 1 mb
+            options.ValueLengthLimit = fileTransferOptions.UploadLimit;
+            options.MultipartBodyLengthLimit = fileTransferOptions.UploadLimit;
+            options.MemoryBufferThreshold = fileTransferOptions.UploadLimit;
+        });
+    }
+
     public static void ConfigureIISIntegration(this IServiceCollection services) =>
         services.Configure<IISOptions>(options => { });
 
@@ -38,17 +55,4 @@ public static class ServiceExtensions
             };
         });
     }
-
-    public static void ConfigureFileTransferOptions(this IServiceCollection services, IConfiguration configuration)
-    {
-        var fileTransferOptions = configuration.GetSection("FileTransferOptions").Get<FileTransferOptions>();
-        services.Configure<FormOptions>(options =>
-        {
-            // 1MB dosya yükleme limiti koydum. 1024 X 1024 = 1048576 b = 1024 kb = 1 mb
-            options.ValueLengthLimit = fileTransferOptions.UploadLimit;
-            options.MultipartBodyLengthLimit = fileTransferOptions.UploadLimit;
-            options.MemoryBufferThreshold = fileTransferOptions.UploadLimit;
-        });
-    }
-
 }

@@ -1,10 +1,12 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
+using BusinessManagement.BusinessLayer.Aspects.Autofac.Validation;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Extensions;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.BusinessLayer.Utilities.Security.Hashing;
 using BusinessManagement.BusinessLayer.Utilities.Security.JWT;
+using BusinessManagement.BusinessLayer.ValidationRules.FluentValidation;
 using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
@@ -63,6 +65,7 @@ public class AuthorizationBl : IAuthorizationBl
         return loginResult;
     }
 
+    [ValidationAspect(typeof(AuthorizationDtoLoginWithPhoneValidator))]
     public IResult LoginWithPhone(AuthorizationDto authorizationDto)
     {
         // Veri tabanında gönderilen telefon numarasına sahip biri var mı kontrol eder.

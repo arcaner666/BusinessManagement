@@ -13,7 +13,7 @@ public class DpMsAccountGroupDal : IAccountGroupDal
         _context = context;
     }
 
-    public List<AccountGroupDto> GetAll()
+    public IEnumerable<AccountGroupDto> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -39,7 +39,7 @@ public class DpMsAccountGroupDal : IAccountGroupDal
         }).SingleOrDefault();
     }
 
-    public List<AccountGroupDto> GetByAccountGroupCodes(string[] accountGroupCodes)
+    public IEnumerable<AccountGroupDto> GetByAccountGroupCodes(string[] accountGroupCodes)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

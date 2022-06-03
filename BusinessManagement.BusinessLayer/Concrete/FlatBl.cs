@@ -45,13 +45,13 @@ public class FlatBl : IFlatBl
         return new SuccessResult(Messages.FlatDeleted);
     }
 
-    public IDataResult<List<FlatDto>> GetByApartmentId(long apartmentId)
+    public IDataResult<IEnumerable<FlatDto>> GetByApartmentId(long apartmentId)
     {
-        List<FlatDto> flatDtos = _flatDal.GetByApartmentId(apartmentId);
+        IEnumerable<FlatDto> flatDtos = _flatDal.GetByApartmentId(apartmentId);
         if (flatDtos is null)
-            return new ErrorDataResult<List<FlatDto>>(Messages.FlatNotFound);
+            return new ErrorDataResult<IEnumerable<FlatDto>>(Messages.FlatNotFound);
 
-        return new SuccessDataResult<List<FlatDto>>(flatDtos, Messages.FlatsListedByApartmentId);
+        return new SuccessDataResult<IEnumerable<FlatDto>>(flatDtos, Messages.FlatsListedByApartmentId);
     }
 
     public IDataResult<FlatDto> GetById(long id)

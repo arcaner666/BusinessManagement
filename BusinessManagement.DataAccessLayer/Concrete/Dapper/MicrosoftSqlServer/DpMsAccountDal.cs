@@ -55,7 +55,7 @@ public class DpMsAccountDal : IAccountDal
         connection.Execute(sql, new { @AccountId = id });
     }
 
-    public List<AccountDto> GetByAccountGroupId(short accountGroupId)
+    public IEnumerable<AccountDto> GetByAccountGroupId(short accountGroupId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -158,7 +158,7 @@ public class DpMsAccountDal : IAccountDal
         return connection.Query<AccountExtDto>(sql, new { @AccountId = id }).SingleOrDefault();
     }
 
-    public List<AccountExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<AccountExtDto> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -188,7 +188,7 @@ public class DpMsAccountDal : IAccountDal
         return connection.Query<AccountExtDto>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public List<AccountExtDto> GetExtsByBusinessIdAndAccountGroupCodes(int businessId, string[] accountGroupCodes)
+    public IEnumerable<AccountExtDto> GetExtsByBusinessIdAndAccountGroupCodes(int businessId, string[] accountGroupCodes)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

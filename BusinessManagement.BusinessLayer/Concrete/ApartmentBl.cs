@@ -43,13 +43,13 @@ public class ApartmentBl : IApartmentBl
         return new SuccessResult(Messages.ApartmentDeleted);
     }
 
-    public IDataResult<List<ApartmentDto>> GetByBusinessId(int businessId)
+    public IDataResult<IEnumerable<ApartmentDto>> GetByBusinessId(int businessId)
     {
-        List<ApartmentDto> apartmentDtos = _apartmentDal.GetByBusinessId(businessId);
-        if (apartmentDtos.Count == 0)
-            return new ErrorDataResult<List<ApartmentDto>>(Messages.ApartmentsNotFound);
+        IEnumerable<ApartmentDto> apartmentDtos = _apartmentDal.GetByBusinessId(businessId);
+        if (!apartmentDtos.Any())
+            return new ErrorDataResult<IEnumerable<ApartmentDto>>(Messages.ApartmentsNotFound);
 
-        return new SuccessDataResult<List<ApartmentDto>>(apartmentDtos, Messages.ApartmentsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<ApartmentDto>>(apartmentDtos, Messages.ApartmentsListedByBusinessId);
     }
 
     public IDataResult<ApartmentDto> GetById(long id)
@@ -61,13 +61,13 @@ public class ApartmentBl : IApartmentBl
         return new SuccessDataResult<ApartmentDto>(apartmentDto, Messages.ApartmentListedById);
     }
 
-    public IDataResult<List<ApartmentDto>> GetBySectionId(int sectionId)
+    public IDataResult<IEnumerable<ApartmentDto>> GetBySectionId(int sectionId)
     {
-        List<ApartmentDto> apartmentDtos = _apartmentDal.GetBySectionId(sectionId);
-        if (apartmentDtos.Count == 0)
-            return new ErrorDataResult<List<ApartmentDto>>(Messages.ApartmentsNotFound);
+        IEnumerable<ApartmentDto> apartmentDtos = _apartmentDal.GetBySectionId(sectionId);
+        if (!apartmentDtos.Any())
+            return new ErrorDataResult<IEnumerable<ApartmentDto>>(Messages.ApartmentsNotFound);
 
-        return new SuccessDataResult<List<ApartmentDto>>(apartmentDtos, Messages.ApartmentsListedBySectionId);
+        return new SuccessDataResult<IEnumerable<ApartmentDto>>(apartmentDtos, Messages.ApartmentsListedBySectionId);
     }
 
     public IResult Update(ApartmentDto apartmentDto)

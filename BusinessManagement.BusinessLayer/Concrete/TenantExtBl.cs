@@ -139,13 +139,13 @@ public class TenantExtBl : ITenantExtBl
         return new SuccessDataResult<TenantExtDto>(tenantExtDto, Messages.TenantExtListedById);
     }
 
-    public IDataResult<List<TenantExtDto>> GetExtsByBusinessId(int businessId)
+    public IDataResult<IEnumerable<TenantExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<TenantExtDto> tenantExtDtos = _tenantDal.GetExtsByBusinessId(businessId);
-        if (tenantExtDtos.Count == 0)
-            return new ErrorDataResult<List<TenantExtDto>>(Messages.TenantsNotFound);
+        IEnumerable<TenantExtDto> tenantExtDtos = _tenantDal.GetExtsByBusinessId(businessId);
+        if (!tenantExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<TenantExtDto>>(Messages.TenantsNotFound);
 
-        return new SuccessDataResult<List<TenantExtDto>>(tenantExtDtos, Messages.TenantExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<TenantExtDto>>(tenantExtDtos, Messages.TenantExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]

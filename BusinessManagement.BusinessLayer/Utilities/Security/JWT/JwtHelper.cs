@@ -23,7 +23,7 @@ public class JwtHelper : ITokenService
         _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
     }
 
-    public string GenerateAccessToken(long systemUserId, List<SystemUserClaimExtDto> systemUserClaimExtDtos)
+    public string GenerateAccessToken(long systemUserId, IEnumerable<SystemUserClaimExtDto> systemUserClaimExtDtos)
     {
         _accessTokenExpiration = DateTime.Now.AddSeconds(_tokenOptions.AccessTokenExpiration);
         var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
@@ -46,7 +46,7 @@ public class JwtHelper : ITokenService
         TokenOptions tokenOptions,
         long systemUserId,
         SigningCredentials signingCredentials,
-        List<SystemUserClaimExtDto> systemUserClaimExtDtos
+        IEnumerable<SystemUserClaimExtDto> systemUserClaimExtDtos
     )
     {
         var jwt = new JwtSecurityToken(
@@ -60,7 +60,7 @@ public class JwtHelper : ITokenService
         return jwt;
     }
 
-    private IEnumerable<Claim> SetOperationClaims(long systemUserId, List<SystemUserClaimExtDto> systemUserClaimExtDtos)
+    private List<Claim> SetOperationClaims(long systemUserId, IEnumerable<SystemUserClaimExtDto> systemUserClaimExtDtos)
     {
         var claims = new List<Claim>();
         claims.AddNameIdentifier(systemUserId.ToString());

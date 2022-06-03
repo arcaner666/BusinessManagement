@@ -6,5 +6,5 @@ namespace BusinessManagement.BusinessLayer.Abstract;
 public interface IManagerBl
 {
     IDataResult<ManagerDto> Add(ManagerDto managerDto);
-    IDataResult<List<ManagerDto>> GetByBusinessId(int businessId);
+    IDataResult<IEnumerable<ManagerDto>> GetByBusinessId(int businessId);
 }

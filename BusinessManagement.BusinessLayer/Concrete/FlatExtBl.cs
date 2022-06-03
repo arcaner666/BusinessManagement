@@ -38,7 +38,7 @@ public class FlatExtBl : IFlatExtBl
             return getApartmentResult;
 
         // Eşsiz bir daire kodu üretebilmek için ilgili apartmandaki tüm daireler getirilir.
-        List<FlatDto> flatDtos = _flatDal.GetByApartmentId(flatExtDto.ApartmentId);
+        IEnumerable<FlatDto> flatDtos = _flatDal.GetByApartmentId(flatExtDto.ApartmentId);
 
         // Daire kodu üretilir.
         string flatCode = _keyService.GenerateFlatCode(flatDtos, getApartmentResult.Data.ApartmentCode);
@@ -81,13 +81,13 @@ public class FlatExtBl : IFlatExtBl
         return new SuccessDataResult<FlatExtDto>(flatExtDto, Messages.FlatExtListedById);
     }
 
-    public IDataResult<List<FlatExtDto>> GetExtsByBusinessId(int businessId)
+    public IDataResult<IEnumerable<FlatExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<FlatExtDto> flatExtDtos = _flatDal.GetExtsByBusinessId(businessId);
-        if (flatExtDtos.Count == 0)
-            return new ErrorDataResult<List<FlatExtDto>>(Messages.FlatsNotFound);
+        IEnumerable<FlatExtDto> flatExtDtos = _flatDal.GetExtsByBusinessId(businessId);
+        if (!flatExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<FlatExtDto>>(Messages.FlatsNotFound);
 
-        return new SuccessDataResult<List<FlatExtDto>>(flatExtDtos, Messages.FlatExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<FlatExtDto>>(flatExtDtos, Messages.FlatExtsListedByBusinessId);
     }
 
     public IResult UpdateExt(FlatExtDto flatExtDto)

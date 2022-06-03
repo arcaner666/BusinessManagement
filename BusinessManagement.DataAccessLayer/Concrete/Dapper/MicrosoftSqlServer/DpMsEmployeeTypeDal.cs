@@ -13,7 +13,7 @@ public class DpMsEmployeeTypeDal : IEmployeeTypeDal
         _context = context;
     }
 
-    public List<EmployeeTypeDto> GetAll()
+    public IEnumerable<EmployeeTypeDto> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

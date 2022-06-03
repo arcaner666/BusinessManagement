@@ -10,6 +10,6 @@ public interface IBankExtBl
     IResult DeleteExtByAccountId(long accountId);
     IDataResult<BankExtDto> GetExtByAccountId(long accountId);
     IDataResult<BankExtDto> GetExtById(long id);
-    IDataResult<List<BankExtDto>> GetExtsByBusinessId(int businessId);
+    IDataResult<IEnumerable<BankExtDto>> GetExtsByBusinessId(int businessId);
     IResult UpdateExt(BankExtDto bankExtDto);
 }

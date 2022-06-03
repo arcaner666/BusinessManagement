@@ -5,5 +5,5 @@ namespace BusinessManagement.BusinessLayer.Abstract;
 
 public interface IManagerExtBl
 {
-    IDataResult<List<ManagerExtDto>> GetExtsByBusinessId(int businessId);
+    IDataResult<IEnumerable<ManagerExtDto>> GetExtsByBusinessId(int businessId);
 }

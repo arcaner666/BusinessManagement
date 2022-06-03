@@ -54,13 +54,13 @@ public class HouseOwnerBl : IHouseOwnerBl
         return new SuccessDataResult<HouseOwnerDto>(houseOwnerDto, Messages.HouseOwnerListedByAccountId);
     }
 
-    public IDataResult<List<HouseOwnerDto>> GetByBusinessId(int businessId)
+    public IDataResult<IEnumerable<HouseOwnerDto>> GetByBusinessId(int businessId)
     {
-        List<HouseOwnerDto> houseOwnerDtos = _houseOwnerDal.GetByBusinessId(businessId);
-        if (houseOwnerDtos.Count == 0)
-            return new ErrorDataResult<List<HouseOwnerDto>>(Messages.HouseOwnersNotFound);
+        IEnumerable<HouseOwnerDto> houseOwnerDtos = _houseOwnerDal.GetByBusinessId(businessId);
+        if (!houseOwnerDtos.Any())
+            return new ErrorDataResult<IEnumerable<HouseOwnerDto>>(Messages.HouseOwnersNotFound);
 
-        return new SuccessDataResult<List<HouseOwnerDto>>(houseOwnerDtos, Messages.HouseOwnersListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<HouseOwnerDto>>(houseOwnerDtos, Messages.HouseOwnersListedByBusinessId);
     }
 
     public IDataResult<HouseOwnerDto> GetById(long id)

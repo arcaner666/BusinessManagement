@@ -100,14 +100,12 @@ public class AuthorizationBl : IAuthorizationBl
         if (!getClaimsPrincipalResult.Success)
             return getClaimsPrincipalResult;
 
-        List<string> claimRoles = getClaimsPrincipalResult.Data.ClaimRoles();
-        List<SystemUserClaimExtDto> systemUserClaimExtDtos = new();
-        claimRoles.ForEach(role => systemUserClaimExtDtos.Add(
-            new SystemUserClaimExtDto
-            {
-                OperationClaimName = role
-            }
-        ));
+        IEnumerable<string> claimRoles = getClaimsPrincipalResult.Data.ClaimRoles();
+        IEnumerable<SystemUserClaimExtDto> systemUserClaimExtDtos = claimRoles.Select(claimRole => 
+        new SystemUserClaimExtDto
+        {
+                OperationClaimName = claimRole
+        });
 
         long systemUserId = Convert.ToInt32(getClaimsPrincipalResult.Data.ClaimSystemUserId().FirstOrDefault());
         var getSystemUserResult = _systemUserBl.GetById(systemUserId);

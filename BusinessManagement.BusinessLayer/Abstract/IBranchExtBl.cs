@@ -8,6 +8,6 @@ public interface IBranchExtBl
     IResult AddExt(BranchExtDto branchExtDto);
     IResult DeleteExt(long id);
     IDataResult<BranchExtDto> GetExtById(long id);
-    IDataResult<List<BranchExtDto>> GetExtsByBusinessId(int businessId);
+    IDataResult<IEnumerable<BranchExtDto>> GetExtsByBusinessId(int businessId);
     IResult UpdateExt(BranchExtDto branchExtDto);
 }

@@ -223,7 +223,7 @@ public class DpMsEmployeeDal : IEmployeeDal
         return connection.Query<EmployeeExtDto>(sql, new { @EmployeeId = id }).SingleOrDefault();
     }
 
-    public List<EmployeeExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<EmployeeExtDto> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

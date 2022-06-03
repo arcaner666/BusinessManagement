@@ -5,8 +5,8 @@ namespace BusinessManagement.BusinessLayer.Abstract;
 
 public interface IAccountGroupBl
 {
-    IDataResult<List<AccountGroupDto>> GetAll();
+    IDataResult<IEnumerable<AccountGroupDto>> GetAll();
     IDataResult<AccountGroupDto> GetByAccountGroupCode(string accountGroupCode);
-    IDataResult<List<AccountGroupDto>> GetByAccountGroupCodes(AccountGroupCodesDto accountGroupCodesDto);
+    IDataResult<IEnumerable<AccountGroupDto>> GetByAccountGroupCodes(AccountGroupCodesDto accountGroupCodesDto);
     IDataResult<AccountGroupDto> GetById(short id);
 }

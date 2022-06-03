@@ -8,10 +8,10 @@ public interface IApartmentDal
     long Add(ApartmentDto apartmentDto);
     void Delete(long id);
     ApartmentDto GetByApartmentCode(string apartmentCode);
-    List<ApartmentDto> GetByBusinessId(int businessId);
+    IEnumerable<ApartmentDto> GetByBusinessId(int businessId);
     ApartmentDto GetById(long id);
-    List<ApartmentDto> GetBySectionId(int sectionId);
+    IEnumerable<ApartmentDto> GetBySectionId(int sectionId);
     ApartmentExtDto GetExtById(long id);
-    List<ApartmentExtDto> GetExtsByBusinessId(int businessId);
+    IEnumerable<ApartmentExtDto> GetExtsByBusinessId(int businessId);
     void Update(ApartmentDto apartmentDto);
 }

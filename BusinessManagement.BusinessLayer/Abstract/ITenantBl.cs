@@ -8,7 +8,7 @@ public interface ITenantBl
     IDataResult<TenantDto> Add(TenantDto tenantDto);
     IResult Delete(long id);
     IDataResult<TenantDto> GetByAccountId(long accountId);
-    IDataResult<List<TenantDto>> GetByBusinessId(int businessId);
+    IDataResult<IEnumerable<TenantDto>> GetByBusinessId(int businessId);
     IDataResult<TenantDto> GetById(long id);
     IResult Update(TenantDto tenantDto);
 }

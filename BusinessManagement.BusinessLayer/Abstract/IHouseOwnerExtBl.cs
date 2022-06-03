@@ -10,6 +10,6 @@ public interface IHouseOwnerExtBl
     IResult DeleteExtByAccountId(long accountId);
     IDataResult<HouseOwnerExtDto> GetExtByAccountId(long accountId);
     IDataResult<HouseOwnerExtDto> GetExtById(long id);
-    IDataResult<List<HouseOwnerExtDto>> GetExtsByBusinessId(int businessId);
+    IDataResult<IEnumerable<HouseOwnerExtDto>> GetExtsByBusinessId(int businessId);
     IResult UpdateExt(HouseOwnerExtDto houseOwnerExtDto);
 }

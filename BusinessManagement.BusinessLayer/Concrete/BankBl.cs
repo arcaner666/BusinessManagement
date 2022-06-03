@@ -52,13 +52,13 @@ public class BankBl : IBankBl
         return new SuccessDataResult<BankDto>(bankDto, Messages.BankListedByAccountId);
     }
 
-    public IDataResult<List<BankDto>> GetByBusinessId(int businessId)
+    public IDataResult<IEnumerable<BankDto>> GetByBusinessId(int businessId)
     {
-        List<BankDto> bankDtos = _bankDal.GetByBusinessId(businessId);
-        if (bankDtos.Count == 0)
-            return new ErrorDataResult<List<BankDto>>(Messages.BankNotFound);
+        IEnumerable<BankDto> bankDtos = _bankDal.GetByBusinessId(businessId);
+        if (!bankDtos.Any())
+            return new ErrorDataResult<IEnumerable<BankDto>>(Messages.BankNotFound);
 
-        return new SuccessDataResult<List<BankDto>>(bankDtos, Messages.BankListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<BankDto>>(bankDtos, Messages.BankListedByBusinessId);
     }
 
     public IDataResult<BankDto> GetById(long id)

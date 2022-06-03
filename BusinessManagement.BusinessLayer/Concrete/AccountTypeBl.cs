@@ -18,13 +18,13 @@ public class AccountTypeBl : IAccountTypeBl
         _accountTypeDal = accountTypeDal;
     }
 
-    public IDataResult<List<AccountTypeDto>> GetAll()
+    public IDataResult<IEnumerable<AccountTypeDto>> GetAll()
     {
-        List<AccountTypeDto> accountTypeDtos = _accountTypeDal.GetAll();
-        if (accountTypeDtos.Count == 0)
-            return new ErrorDataResult<List<AccountTypeDto>>(Messages.AccountTypesNotFound);
+        IEnumerable<AccountTypeDto> accountTypeDtos = _accountTypeDal.GetAll();
+        if (!accountTypeDtos.Any())
+            return new ErrorDataResult<IEnumerable<AccountTypeDto>>(Messages.AccountTypesNotFound);
 
-        return new SuccessDataResult<List<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListed);
+        return new SuccessDataResult<IEnumerable<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListed);
     }
 
     public IDataResult<AccountTypeDto> GetById(short id)
@@ -45,12 +45,12 @@ public class AccountTypeBl : IAccountTypeBl
         return new SuccessDataResult<AccountTypeDto>(accountTypeDto, Messages.AccountTypeListedByAccountTypeName);
     }
 
-    public IDataResult<List<AccountTypeDto>> GetByAccountTypeNames(AccountTypeNamesDto accountTypeNamesDto)
+    public IDataResult<IEnumerable<AccountTypeDto>> GetByAccountTypeNames(AccountTypeNamesDto accountTypeNamesDto)
     {
-        List<AccountTypeDto> accountTypeDtos = _accountTypeDal.GetByAccountTypeNames(accountTypeNamesDto.AccountTypeNames);
+        IEnumerable<AccountTypeDto> accountTypeDtos = _accountTypeDal.GetByAccountTypeNames(accountTypeNamesDto.AccountTypeNames);
         if (accountTypeDtos.Count() == 0)
-            return new ErrorDataResult<List<AccountTypeDto>>(Messages.AccountTypesNotFound);
+            return new ErrorDataResult<IEnumerable<AccountTypeDto>>(Messages.AccountTypesNotFound);
 
-        return new SuccessDataResult<List<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListedByAccountTypeNames);
+        return new SuccessDataResult<IEnumerable<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListedByAccountTypeNames);
     }
 }

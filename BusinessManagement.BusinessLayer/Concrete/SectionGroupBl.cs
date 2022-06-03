@@ -47,13 +47,13 @@ public class SectionGroupBl : ISectionGroupBl
         return new SuccessResult(Messages.SectionGroupDeleted);
     }
 
-    public IDataResult<List<SectionGroupDto>> GetByBusinessId(int businessId)
+    public IDataResult<IEnumerable<SectionGroupDto>> GetByBusinessId(int businessId)
     {
-        List<SectionGroupDto> sectionGroupDtos = _sectionGroupDal.GetByBusinessId(businessId);
-        if (sectionGroupDtos.Count == 0)
-            return new ErrorDataResult<List<SectionGroupDto>>(Messages.SectionGroupsNotFound);
+        IEnumerable<SectionGroupDto> sectionGroupDtos = _sectionGroupDal.GetByBusinessId(businessId);
+        if (!sectionGroupDtos.Any())
+            return new ErrorDataResult<IEnumerable<SectionGroupDto>>(Messages.SectionGroupsNotFound);
 
-        return new SuccessDataResult<List<SectionGroupDto>>(sectionGroupDtos, Messages.SectionGroupsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<SectionGroupDto>>(sectionGroupDtos, Messages.SectionGroupsListedByBusinessId);
     }
 
     public IDataResult<SectionGroupDto> GetById(long id)

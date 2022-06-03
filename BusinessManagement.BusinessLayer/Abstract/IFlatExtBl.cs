@@ -8,6 +8,6 @@ public interface IFlatExtBl
     IResult AddExt(FlatExtDto flatExtDto);
     IResult DeleteExt(long id);
     IDataResult<FlatExtDto> GetExtById(long id);
-    IDataResult<List<FlatExtDto>> GetExtsByBusinessId(int businessId);
+    IDataResult<IEnumerable<FlatExtDto>> GetExtsByBusinessId(int businessId);
     IResult UpdateExt(FlatExtDto flatExtDto);
 }

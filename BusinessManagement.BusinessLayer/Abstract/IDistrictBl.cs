@@ -5,6 +5,6 @@ namespace BusinessManagement.BusinessLayer.Abstract;
 
 public interface IDistrictBl
 {
-    IDataResult<List<DistrictDto>> GetAll();
-    IDataResult<List<DistrictDto>> GetByCityId(short cityId);
+    IDataResult<IEnumerable<DistrictDto>> GetAll();
+    IDataResult<IEnumerable<DistrictDto>> GetByCityId(short cityId);
 }

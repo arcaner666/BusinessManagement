@@ -7,7 +7,7 @@ public interface ISectionBl
 {
     IDataResult<SectionDto> Add(SectionDto sectionDto);
     IResult Delete(int id);
-    IDataResult<List<SectionDto>> GetByBusinessId(int businessId);
+    IDataResult<IEnumerable<SectionDto>> GetByBusinessId(int businessId);
     IDataResult<SectionDto> GetById(int id);
     IResult Update(SectionDto sectionDto);
 }

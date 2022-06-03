@@ -139,13 +139,13 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
         return new SuccessDataResult<HouseOwnerExtDto>(houseOwnerExtDto, Messages.HouseOwnerExtListedById);
     }
 
-    public IDataResult<List<HouseOwnerExtDto>> GetExtsByBusinessId(int businessId)
+    public IDataResult<IEnumerable<HouseOwnerExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<HouseOwnerExtDto> houseOwnerExtDtos = _houseOwnerDal.GetExtsByBusinessId(businessId);
-        if (houseOwnerExtDtos.Count == 0)
-            return new ErrorDataResult<List<HouseOwnerExtDto>>(Messages.HouseOwnersNotFound);
+        IEnumerable<HouseOwnerExtDto> houseOwnerExtDtos = _houseOwnerDal.GetExtsByBusinessId(businessId);
+        if (!houseOwnerExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<HouseOwnerExtDto>>(Messages.HouseOwnersNotFound);
 
-        return new SuccessDataResult<List<HouseOwnerExtDto>>(houseOwnerExtDtos, Messages.HouseOwnerExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<HouseOwnerExtDto>>(houseOwnerExtDtos, Messages.HouseOwnerExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]

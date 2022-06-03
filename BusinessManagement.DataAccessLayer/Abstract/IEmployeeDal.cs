@@ -12,6 +12,6 @@ public interface IEmployeeDal
     EmployeeDto GetById(long id);
     EmployeeExtDto GetExtByAccountId(long accountId);
     EmployeeExtDto GetExtById(long id);
-    List<EmployeeExtDto> GetExtsByBusinessId(int businessId);
+    IEnumerable<EmployeeExtDto> GetExtsByBusinessId(int businessId);
     void Update(EmployeeDto employeeDto);
 }

@@ -55,7 +55,7 @@ public class SectionExtBl : ISectionExtBl
             return addFullAddressResult;
 
         // Eşsiz bir site kodu oluşturmak için tüm siteler getirilir.
-        List<SectionDto> sectionDtos = _sectionDal.GetAll();
+        IEnumerable<SectionDto> sectionDtos = _sectionDal.GetAll();
 
         // Site kodu üretilir.
         string sectionCode = _keyService.GenerateSectionCode(sectionDtos);
@@ -119,13 +119,13 @@ public class SectionExtBl : ISectionExtBl
         return new SuccessDataResult<SectionExtDto>(sectionExtDto, Messages.SectionExtListedById);
     }
 
-    public IDataResult<List<SectionExtDto>> GetExtsByBusinessId(int businessId)
+    public IDataResult<IEnumerable<SectionExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<SectionExtDto> sectionExtDtos = _sectionDal.GetExtsByBusinessId(businessId);
-        if (sectionExtDtos.Count == 0)
-            return new ErrorDataResult<List<SectionExtDto>>(Messages.SectionsNotFound);
+        IEnumerable<SectionExtDto> sectionExtDtos = _sectionDal.GetExtsByBusinessId(businessId);
+        if (!sectionExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<SectionExtDto>>(Messages.SectionsNotFound);
 
-        return new SuccessDataResult<List<SectionExtDto>>(sectionExtDtos, Messages.SectionExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<SectionExtDto>>(sectionExtDtos, Messages.SectionExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]

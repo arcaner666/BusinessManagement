@@ -7,11 +7,11 @@ public interface ISectionDal
 {
     int Add(SectionDto sectionDto);
     void Delete(int id);
-    List<SectionDto> GetAll();
-    List<SectionDto> GetByBusinessId(int businessId);
+    IEnumerable<SectionDto> GetAll();
+    IEnumerable<SectionDto> GetByBusinessId(int businessId);
     SectionDto GetById(int id);
     SectionDto GetBySectionCode(string sectionCode);
     SectionExtDto GetExtById(int id);
-    List<SectionExtDto> GetExtsByBusinessId(int businessId);
+    IEnumerable<SectionExtDto> GetExtsByBusinessId(int businessId);
     void Update(SectionDto sectionDto);
 }

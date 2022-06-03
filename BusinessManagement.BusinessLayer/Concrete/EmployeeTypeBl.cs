@@ -18,12 +18,12 @@ public class EmployeeTypeBl : IEmployeeTypeBl
         _employeeTypeDal = employeeTypeDal;
     }
 
-    public IDataResult<List<EmployeeTypeDto>> GetAll()
+    public IDataResult<IEnumerable<EmployeeTypeDto>> GetAll()
     {
-        List<EmployeeTypeDto> employeeTypeDtos = _employeeTypeDal.GetAll();
-        if (employeeTypeDtos.Count == 0)
-            return new ErrorDataResult<List<EmployeeTypeDto>>(Messages.EmployeeTypesNotFound);
+        IEnumerable<EmployeeTypeDto> employeeTypeDtos = _employeeTypeDal.GetAll();
+        if (!employeeTypeDtos.Any())
+            return new ErrorDataResult<IEnumerable<EmployeeTypeDto>>(Messages.EmployeeTypesNotFound);
 
-        return new SuccessDataResult<List<EmployeeTypeDto>>(employeeTypeDtos, Messages.EmployeeTypesListed);
+        return new SuccessDataResult<IEnumerable<EmployeeTypeDto>>(employeeTypeDtos, Messages.EmployeeTypesListed);
     }
 }

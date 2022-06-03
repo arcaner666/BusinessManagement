@@ -7,9 +7,9 @@ public interface ICustomerDal
 {
     long Add(CustomerDto customerDto);
     CustomerDto GetByAccountId(long accountId);
-    List<CustomerDto> GetByBusinessId(int businessId);
+    IEnumerable<CustomerDto> GetByBusinessId(int businessId);
     CustomerDto GetByBusinessIdAndSystemUserId(int businessId, long systemUserId);
     CustomerDto GetById(long id);
-    List<CustomerDto> GetExtsByBusinessId(int businessId);
+    IEnumerable<CustomerDto> GetExtsByBusinessId(int businessId);
     void Update(CustomerDto customerDto);
 }

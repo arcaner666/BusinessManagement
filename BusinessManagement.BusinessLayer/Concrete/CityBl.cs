@@ -18,12 +18,12 @@ public class CityBl : ICityBl
         _cityDal = cityDal;
     }
 
-    public IDataResult<List<CityDto>> GetAll()
+    public IDataResult<IEnumerable<CityDto>> GetAll()
     {
-        List<CityDto> cityDtos = _cityDal.GetAll();
-        if (cityDtos.Count == 0)
-            return new ErrorDataResult<List<CityDto>>(Messages.CitiesNotFound);
+        IEnumerable<CityDto> cityDtos = _cityDal.GetAll();
+        if (!cityDtos.Any())
+            return new ErrorDataResult<IEnumerable<CityDto>>(Messages.CitiesNotFound);
 
-        return new SuccessDataResult<List<CityDto>>(cityDtos, Messages.CitiesListed);
+        return new SuccessDataResult<IEnumerable<CityDto>>(cityDtos, Messages.CitiesListed);
     }
 }

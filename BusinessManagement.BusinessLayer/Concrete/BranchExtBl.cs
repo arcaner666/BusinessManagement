@@ -91,13 +91,13 @@ public class BranchExtBl : IBranchExtBl
         return new SuccessDataResult<BranchExtDto>(branchExtDto, Messages.BranchExtListedById);
     }
 
-    public IDataResult<List<BranchExtDto>> GetExtsByBusinessId(int businessId)
+    public IDataResult<IEnumerable<BranchExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<BranchExtDto> branchExtDtos = _branchDal.GetExtsByBusinessId(businessId);
-        if (branchExtDtos.Count == 0)
-            return new ErrorDataResult<List<BranchExtDto>>(Messages.BranchesNotFound);
+        IEnumerable<BranchExtDto> branchExtDtos = _branchDal.GetExtsByBusinessId(businessId);
+        if (!branchExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<BranchExtDto>>(Messages.BranchesNotFound);
 
-        return new SuccessDataResult<List<BranchExtDto>>(branchExtDtos, Messages.BranchExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<BranchExtDto>>(branchExtDtos, Messages.BranchExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]

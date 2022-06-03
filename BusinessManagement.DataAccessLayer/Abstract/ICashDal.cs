@@ -8,11 +8,11 @@ public interface ICashDal
     long Add(CashDto cashDto);
     void Delete(long id);
     CashDto GetByAccountId(long accountId);
-    List<CashDto> GetByBusinessId(int businessId);
+    IEnumerable<CashDto> GetByBusinessId(int businessId);
     CashDto GetByBusinessIdAndAccountId(int businessId, long accountId);
     CashDto GetById(long id);
     CashExtDto GetExtByAccountId(long accountId);
     CashExtDto GetExtById(long id);
-    List<CashExtDto> GetExtsByBusinessId(int businessId);
+    IEnumerable<CashExtDto> GetExtsByBusinessId(int businessId);
     void Update(CashDto cashDto);
 }

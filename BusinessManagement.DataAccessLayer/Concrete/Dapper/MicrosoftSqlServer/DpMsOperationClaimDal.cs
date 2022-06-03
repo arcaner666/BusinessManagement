@@ -13,7 +13,7 @@ public class DpMsOperationClaimDal : IOperationClaimDal
         _context = context;
     }
 
-    public List<OperationClaimDto> GetAll()
+    public IEnumerable<OperationClaimDto> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

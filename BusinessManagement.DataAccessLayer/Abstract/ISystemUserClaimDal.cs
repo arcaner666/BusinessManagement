@@ -8,5 +8,5 @@ public interface ISystemUserClaimDal
     long Add(SystemUserClaimDto systemUserClaimDto);
     void Delete(long id);
     SystemUserClaimDto GetBySystemUserIdAndOperationClaimId(long systemUserId, int operationClaimId);
-    List<SystemUserClaimExtDto> GetExtsBySystemUserId(long systemUserId);
+    IEnumerable<SystemUserClaimExtDto> GetExtsBySystemUserId(long systemUserId);
 }

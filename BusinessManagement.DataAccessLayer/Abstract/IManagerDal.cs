@@ -7,9 +7,9 @@ public interface IManagerDal
 {
     long Add(ManagerDto managerDto);
     void Delete(long id);
-    List<ManagerDto> GetByBusinessId(int businessId);
+    IEnumerable<ManagerDto> GetByBusinessId(int businessId);
     ManagerDto GetByBusinessIdAndPhone(int businessId, string phone);
     ManagerDto GetById(long id);
-    List<ManagerExtDto> GetExtsByBusinessId(int businessId);
+    IEnumerable<ManagerExtDto> GetExtsByBusinessId(int businessId);
     void Update(ManagerDto managerDto);
 }

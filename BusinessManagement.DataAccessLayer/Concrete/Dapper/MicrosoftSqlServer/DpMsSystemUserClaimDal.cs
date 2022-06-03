@@ -56,7 +56,7 @@ public class DpMsSystemUserClaimDal : ISystemUserClaimDal
         }).SingleOrDefault();
     }
 
-    public List<SystemUserClaimExtDto> GetExtsBySystemUserId(long systemUserId)
+    public IEnumerable<SystemUserClaimExtDto> GetExtsBySystemUserId(long systemUserId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

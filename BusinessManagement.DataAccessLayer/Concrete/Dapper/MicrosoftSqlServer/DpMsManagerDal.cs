@@ -58,7 +58,7 @@ public class DpMsManagerDal : IManagerDal
         connection.Execute(sql, new { @ManagerId = id });
     }
 
-    public List<ManagerDto> GetByBusinessId(int businessId)
+    public IEnumerable<ManagerDto> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -134,7 +134,7 @@ public class DpMsManagerDal : IManagerDal
         return connection.Query<ManagerDto>(sql, new { @ManagerId = id }).SingleOrDefault();
     }
 
-    public List<ManagerExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<ManagerExtDto> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

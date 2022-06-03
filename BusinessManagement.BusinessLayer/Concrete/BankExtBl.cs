@@ -63,8 +63,6 @@ public class BankExtBl : IBankExtBl
         if (!addAccountResult.Success)
             return addAccountResult;
 
-        return new ErrorResult("cari hesap eklendi fakat adres eklenemedi.");
-
         // Yeni bir adres oluşturulur.
         FullAddressDto fullAddressDto = new()
         {
@@ -163,13 +161,13 @@ public class BankExtBl : IBankExtBl
         return new SuccessDataResult<BankExtDto>(bankExtDto, Messages.BankExtListedById);
     }
 
-    public IDataResult<List<BankExtDto>> GetExtsByBusinessId(int businessId)
+    public IDataResult<IEnumerable<BankExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<BankExtDto> bankExtDtos = _bankDal.GetExtsByBusinessId(businessId);
-        if (bankExtDtos.Count == 0)
-            return new ErrorDataResult<List<BankExtDto>>(Messages.BankNotFound);
+        IEnumerable<BankExtDto> bankExtDtos = _bankDal.GetExtsByBusinessId(businessId);
+        if (!bankExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<BankExtDto>>(Messages.BankNotFound);
 
-        return new SuccessDataResult<List<BankExtDto>>(bankExtDtos, Messages.BankExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<BankExtDto>>(bankExtDtos, Messages.BankExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]

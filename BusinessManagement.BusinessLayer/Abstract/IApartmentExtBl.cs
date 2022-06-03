@@ -8,6 +8,6 @@ public interface IApartmentExtBl
     IResult AddExt(ApartmentExtDto apartmentExtDto);
     IResult DeleteExt(long id);
     IDataResult<ApartmentExtDto> GetExtById(long id);
-    IDataResult<List<ApartmentExtDto>> GetExtsByBusinessId(int businessId);
+    IDataResult<IEnumerable<ApartmentExtDto>> GetExtsByBusinessId(int businessId);
     IResult UpdateExt(ApartmentExtDto apartmentExtDto);
 }

@@ -5,6 +5,6 @@ namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IDistrictDal
 {
-    List<DistrictDto> GetAll();
-    List<DistrictDto> GetByCityId(short cityId);
+    IEnumerable<DistrictDto> GetAll();
+    IEnumerable<DistrictDto> GetByCityId(short cityId);
 }

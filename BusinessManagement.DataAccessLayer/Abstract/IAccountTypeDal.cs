@@ -5,8 +5,8 @@ namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IAccountTypeDal
 {
-    List<AccountTypeDto> GetAll();
+    IEnumerable<AccountTypeDto> GetAll();
     AccountTypeDto GetByAccountTypeName(string accountTypeName);
-    List<AccountTypeDto> GetByAccountTypeNames(string[] accountTypeNames);
+    IEnumerable<AccountTypeDto> GetByAccountTypeNames(string[] accountTypeNames);
     AccountTypeDto GetById(short id);
 }

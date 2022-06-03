@@ -88,7 +88,7 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
         return connection.Query<HouseOwnerDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public List<HouseOwnerDto> GetByBusinessId(int businessId)
+    public IEnumerable<HouseOwnerDto> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -238,7 +238,7 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
         return connection.Query<HouseOwnerExtDto>(sql, new { @HouseOwnerId = id }).SingleOrDefault();
     }
 
-    public List<HouseOwnerExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<HouseOwnerExtDto> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

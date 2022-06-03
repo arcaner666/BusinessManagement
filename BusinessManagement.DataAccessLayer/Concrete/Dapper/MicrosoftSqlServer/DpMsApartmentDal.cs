@@ -67,7 +67,7 @@ public class DpMsApartmentDal : IApartmentDal
         return connection.Query<ApartmentDto>(sql, new { @ApartmentCode = apartmentCode }).SingleOrDefault();
     }
 
-    public List<ApartmentDto> GetByBusinessId(int businessId)
+    public IEnumerable<ApartmentDto> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -105,7 +105,7 @@ public class DpMsApartmentDal : IApartmentDal
         return connection.Query<ApartmentDto>(sql, new { @ApartmentId = id }).SingleOrDefault();
     }
 
-    public List<ApartmentDto> GetBySectionId(int sectionId)
+    public IEnumerable<ApartmentDto> GetBySectionId(int sectionId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -147,7 +147,7 @@ public class DpMsApartmentDal : IApartmentDal
         return connection.Query<ApartmentExtDto>(sql, new { @ApartmentId = id }).SingleOrDefault();
     }
 
-    public List<ApartmentExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<ApartmentExtDto> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

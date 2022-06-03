@@ -7,7 +7,7 @@ public interface IFlatBl
 {
     IDataResult<FlatDto> Add(FlatDto flatDto);
     IResult Delete(long id);
-    IDataResult<List<FlatDto>> GetByApartmentId(long apartmentId);
+    IDataResult<IEnumerable<FlatDto>> GetByApartmentId(long apartmentId);
     IDataResult<FlatDto> GetById(long id);
     IResult Update(FlatDto flatDto);
 }

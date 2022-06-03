@@ -54,13 +54,13 @@ public class CashBl : ICashBl
         return new SuccessDataResult<CashDto>(cashDto, Messages.CashListedByAccountId);
     }
 
-    public IDataResult<List<CashDto>> GetByBusinessId(int businessId)
+    public IDataResult<IEnumerable<CashDto>> GetByBusinessId(int businessId)
     {
-        List<CashDto> cashDto = _cashDal.GetByBusinessId(businessId);
-        if (cashDto.Count == 0)
-            return new ErrorDataResult<List<CashDto>>(Messages.CashNotFound);
+        IEnumerable<CashDto> cashDto = _cashDal.GetByBusinessId(businessId);
+        if (!cashDto.Any())
+            return new ErrorDataResult<IEnumerable<CashDto>>(Messages.CashNotFound);
 
-        return new SuccessDataResult<List<CashDto>>(cashDto, Messages.CashListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<CashDto>>(cashDto, Messages.CashListedByBusinessId);
     }
 
     public IDataResult<CashDto> GetById(long id)

@@ -5,6 +5,6 @@ namespace BusinessManagement.BusinessLayer.Abstract;
 
 public interface IOperationClaimBl
 {
-    IDataResult<List<OperationClaimDto>> GetAll();
+    IDataResult<IEnumerable<OperationClaimDto>> GetAll();
     IDataResult<OperationClaimDto> GetByOperationClaimName(string operationClaimName);
 }

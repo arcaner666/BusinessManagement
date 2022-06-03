@@ -18,21 +18,21 @@ public class DistrictBl : IDistrictBl
         _districtDal = districtDal;
     }
 
-    public IDataResult<List<DistrictDto>> GetAll()
+    public IDataResult<IEnumerable<DistrictDto>> GetAll()
     {
-        List<DistrictDto> districtDtos = _districtDal.GetAll();
-        if (districtDtos.Count == 0)
-            return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
+        IEnumerable<DistrictDto> districtDtos = _districtDal.GetAll();
+        if (!districtDtos.Any())
+            return new ErrorDataResult<IEnumerable<DistrictDto>>(Messages.DistrictsNotFound);
 
-        return new SuccessDataResult<List<DistrictDto>>(districtDtos, Messages.DistrictsListed);
+        return new SuccessDataResult<IEnumerable<DistrictDto>>(districtDtos, Messages.DistrictsListed);
     }
 
-    public IDataResult<List<DistrictDto>> GetByCityId(short cityId)
+    public IDataResult<IEnumerable<DistrictDto>> GetByCityId(short cityId)
     {
-        List<DistrictDto> districtDto = _districtDal.GetByCityId(cityId);
-        if (districtDto.Count == 0) 
-            return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
+        IEnumerable<DistrictDto> districtDto = _districtDal.GetByCityId(cityId);
+        if (!districtDto.Any()) 
+            return new ErrorDataResult<IEnumerable<DistrictDto>>(Messages.DistrictsNotFound);
 
-        return new SuccessDataResult<List<DistrictDto>>(districtDto, Messages.DistrictsListedByCityId);
+        return new SuccessDataResult<IEnumerable<DistrictDto>>(districtDto, Messages.DistrictsListedByCityId);
     }
 }

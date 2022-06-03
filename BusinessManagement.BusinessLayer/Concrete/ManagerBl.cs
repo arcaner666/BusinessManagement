@@ -33,12 +33,12 @@ public class ManagerBl : IManagerBl
         return new SuccessDataResult<ManagerDto>(managerDto, Messages.ManagerAdded);
     }
 
-    public IDataResult<List<ManagerDto>> GetByBusinessId(int businessId)
+    public IDataResult<IEnumerable<ManagerDto>> GetByBusinessId(int businessId)
     {
-        List<ManagerDto> managerDtos = _managerDal.GetByBusinessId(businessId);
-        if (managerDtos.Count == 0)
-            return new ErrorDataResult<List<ManagerDto>>(Messages.ManagersNotFound);
+        IEnumerable<ManagerDto> managerDtos = _managerDal.GetByBusinessId(businessId);
+        if (!managerDtos.Any())
+            return new ErrorDataResult<IEnumerable<ManagerDto>>(Messages.ManagersNotFound);
 
-        return new SuccessDataResult<List<ManagerDto>>(managerDtos, Messages.ManagersListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<ManagerDto>>(managerDtos, Messages.ManagersListedByBusinessId);
     }
 }

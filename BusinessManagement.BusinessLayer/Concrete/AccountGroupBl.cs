@@ -18,15 +18,16 @@ public class AccountGroupBl : IAccountGroupBl
         _accountGroupDal = accountGroupDal;
     }
 
-    public IDataResult<List<AccountGroupDto>> GetAll()
+    public IDataResult<IEnumerable<AccountGroupDto>> GetAll()
     {
-        return new ErrorDataResult<List<AccountGroupDto>>(Messages.AccountGroupsNotFound);
-        
-        List<AccountGroupDto> accountGroupDtos = _accountGroupDal.GetAll();
-        if (accountGroupDtos.Count == 0)
-            return new ErrorDataResult<List<AccountGroupDto>>(Messages.AccountGroupsNotFound);
+        //return new ErrorDataResult<IEnumerable<AccountGroupDto>>(Messages.AccountGroupsNotFound);
+        //throw new Exception("new Exception");
 
-        return new SuccessDataResult<List<AccountGroupDto>>(accountGroupDtos, Messages.AccountGroupsListed);
+        IEnumerable<AccountGroupDto> accountGroupDtos = _accountGroupDal.GetAll();
+        if (!accountGroupDtos.Any())
+            return new ErrorDataResult<IEnumerable<AccountGroupDto>>(Messages.AccountGroupsNotFound);
+
+        return new SuccessDataResult<IEnumerable<AccountGroupDto>>(accountGroupDtos, Messages.AccountGroupsListed);
     }
 
     public IDataResult<AccountGroupDto> GetByAccountGroupCode(string accountGroupCode)
@@ -38,13 +39,13 @@ public class AccountGroupBl : IAccountGroupBl
         return new SuccessDataResult<AccountGroupDto>(accountGroupDto, Messages.AccountGroupListedByAccountGroupCode);
     }
 
-    public IDataResult<List<AccountGroupDto>> GetByAccountGroupCodes(AccountGroupCodesDto accountGroupCodesDto)
+    public IDataResult<IEnumerable<AccountGroupDto>> GetByAccountGroupCodes(AccountGroupCodesDto accountGroupCodesDto)
     {
-        List<AccountGroupDto> accountGroupDtos = _accountGroupDal.GetByAccountGroupCodes(accountGroupCodesDto.AccountGroupCodes);
-        if (accountGroupDtos.Count == 0)
-            return new ErrorDataResult<List<AccountGroupDto>>(Messages.AccountGroupsNotFound);
+        IEnumerable<AccountGroupDto> accountGroupDtos = _accountGroupDal.GetByAccountGroupCodes(accountGroupCodesDto.AccountGroupCodes);
+        if (!accountGroupDtos.Any())
+            return new ErrorDataResult<IEnumerable<AccountGroupDto>>(Messages.AccountGroupsNotFound);
 
-        return new SuccessDataResult<List<AccountGroupDto>>(accountGroupDtos, Messages.AccountGroupsListedByAccountGroupCodes);
+        return new SuccessDataResult<IEnumerable<AccountGroupDto>>(accountGroupDtos, Messages.AccountGroupsListedByAccountGroupCodes);
     }
 
     public IDataResult<AccountGroupDto> GetById(short id)

@@ -109,22 +109,22 @@ public class AccountExtBl : IAccountExtBl
         return new SuccessDataResult<AccountExtDto>(accountExtDto, Messages.AccountExtListedById);
     }
 
-    public IDataResult<List<AccountExtDto>> GetExtsByBusinessId(int businessId)
+    public IDataResult<IEnumerable<AccountExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<AccountExtDto> accountExtDtos = _accountDal.GetExtsByBusinessId(businessId);
-        if (accountExtDtos.Count == 0)
-            return new ErrorDataResult<List<AccountExtDto>>(Messages.AccountsNotFound);
+        IEnumerable<AccountExtDto> accountExtDtos = _accountDal.GetExtsByBusinessId(businessId);
+        if (!accountExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<AccountExtDto>>(Messages.AccountsNotFound);
 
-        return new SuccessDataResult<List<AccountExtDto>>(accountExtDtos, Messages.AccountExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<AccountExtDto>>(accountExtDtos, Messages.AccountExtsListedByBusinessId);
     }
 
-    public IDataResult<List<AccountExtDto>> GetExtsByBusinessIdAndAccountGroupCodes(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto)
+    public IDataResult<IEnumerable<AccountExtDto>> GetExtsByBusinessIdAndAccountGroupCodes(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto)
     {
-        List<AccountExtDto> accountExtDtos = _accountDal.GetExtsByBusinessIdAndAccountGroupCodes(accountGetByAccountGroupCodesDto.BusinessId, accountGetByAccountGroupCodesDto.AccountGroupCodes);
-        if (accountExtDtos.Count == 0)
-            return new ErrorDataResult<List<AccountExtDto>>(Messages.AccountsNotFound);
+        IEnumerable<AccountExtDto> accountExtDtos = _accountDal.GetExtsByBusinessIdAndAccountGroupCodes(accountGetByAccountGroupCodesDto.BusinessId, accountGetByAccountGroupCodesDto.AccountGroupCodes);
+        if (!accountExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<AccountExtDto>>(Messages.AccountsNotFound);
 
-        return new SuccessDataResult<List<AccountExtDto>>(accountExtDtos, Messages.AccountExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<AccountExtDto>>(accountExtDtos, Messages.AccountExtsListedByBusinessId);
     }
 
     public IResult UpdateExt(AccountExtDto accountExtDto)

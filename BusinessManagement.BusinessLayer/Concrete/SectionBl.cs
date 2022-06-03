@@ -39,13 +39,13 @@ public class SectionBl : ISectionBl
         return new SuccessResult(Messages.SectionDeleted);
     }
 
-    public IDataResult<List<SectionDto>> GetByBusinessId(int businessId)
+    public IDataResult<IEnumerable<SectionDto>> GetByBusinessId(int businessId)
     {
-        List<SectionDto> sectionDtos = _sectionDal.GetByBusinessId(businessId);
-        if (sectionDtos.Count == 0)
-            return new ErrorDataResult<List<SectionDto>>(Messages.SectionsNotFound);
+        IEnumerable<SectionDto> sectionDtos = _sectionDal.GetByBusinessId(businessId);
+        if (!sectionDtos.Any())
+            return new ErrorDataResult<IEnumerable<SectionDto>>(Messages.SectionsNotFound);
 
-        return new SuccessDataResult<List<SectionDto>>(sectionDtos, Messages.SectionsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<SectionDto>>(sectionDtos, Messages.SectionsListedByBusinessId);
     }
 
     public IDataResult<SectionDto> GetById(int id)

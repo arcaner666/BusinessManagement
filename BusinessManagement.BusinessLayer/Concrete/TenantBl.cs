@@ -54,13 +54,13 @@ public class TenantBl : ITenantBl
         return new SuccessDataResult<TenantDto>(tenantDto, Messages.TenantListedByAccountId);
     }
 
-    public IDataResult<List<TenantDto>> GetByBusinessId(int businessId)
+    public IDataResult<IEnumerable<TenantDto>> GetByBusinessId(int businessId)
     {
-        List<TenantDto> tenantDtos = _tenantDal.GetByBusinessId(businessId);
-        if (tenantDtos.Count == 0)
-            return new ErrorDataResult<List<TenantDto>>(Messages.TenantsNotFound);
+        IEnumerable<TenantDto> tenantDtos = _tenantDal.GetByBusinessId(businessId);
+        if (!tenantDtos.Any())
+            return new ErrorDataResult<IEnumerable<TenantDto>>(Messages.TenantsNotFound);
 
-        return new SuccessDataResult<List<TenantDto>>(tenantDtos, Messages.TenantsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<TenantDto>>(tenantDtos, Messages.TenantsListedByBusinessId);
     }
 
     public IDataResult<TenantDto> GetById(long id)

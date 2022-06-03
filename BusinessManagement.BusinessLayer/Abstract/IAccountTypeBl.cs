@@ -5,8 +5,8 @@ namespace BusinessManagement.BusinessLayer.Abstract;
 
 public interface IAccountTypeBl
 {
-    IDataResult<List<AccountTypeDto>> GetAll();
+    IDataResult<IEnumerable<AccountTypeDto>> GetAll();
     IDataResult<AccountTypeDto> GetByAccountTypeName(string accountTypeName);
-    IDataResult<List<AccountTypeDto>> GetByAccountTypeNames(AccountTypeNamesDto accountTypeNamesDto);
+    IDataResult<IEnumerable<AccountTypeDto>> GetByAccountTypeNames(AccountTypeNamesDto accountTypeNamesDto);
     IDataResult<AccountTypeDto> GetById(short id);
 }

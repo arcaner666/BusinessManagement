@@ -32,12 +32,12 @@ public class SystemUserClaimBl : ISystemUserClaimBl
         return new SuccessDataResult<SystemUserClaimDto>(systemUserClaimDto, Messages.SystemUserAdded);
     }
 
-    public IDataResult<List<SystemUserClaimExtDto>> GetExtsBySystemUserId(long systemUserId)
+    public IDataResult<IEnumerable<SystemUserClaimExtDto>> GetExtsBySystemUserId(long systemUserId)
     {
-        List<SystemUserClaimExtDto> systemUserClaimExtDtos = _systemUserClaimDal.GetExtsBySystemUserId(systemUserId);
-        if (systemUserClaimExtDtos.Count == 0)
-            return new ErrorDataResult<List<SystemUserClaimExtDto>>(Messages.SystemUserClaimsNotFound);
+        IEnumerable<SystemUserClaimExtDto> systemUserClaimExtDtos = _systemUserClaimDal.GetExtsBySystemUserId(systemUserId);
+        if (!systemUserClaimExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<SystemUserClaimExtDto>>(Messages.SystemUserClaimsNotFound);
 
-        return new SuccessDataResult<List<SystemUserClaimExtDto>>(systemUserClaimExtDtos, Messages.SystemUserExtsListedBySystemUserId);
+        return new SuccessDataResult<IEnumerable<SystemUserClaimExtDto>>(systemUserClaimExtDtos, Messages.SystemUserExtsListedBySystemUserId);
     }
 }

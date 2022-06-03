@@ -6,7 +6,7 @@ namespace BusinessManagement.BusinessLayer.Utilities.Security.JWT;
 
 public interface ITokenService
 {
-    string GenerateAccessToken(long systemUserId, List<SystemUserClaimExtDto> systemUserClaimExtDtos);
+    string GenerateAccessToken(long systemUserId, IEnumerable<SystemUserClaimExtDto> systemUserClaimExtDtos);
     string GenerateRefreshToken();
     IDataResult<ClaimsPrincipal> GetPrincipalFromExpiredToken(string accessToken);
 }

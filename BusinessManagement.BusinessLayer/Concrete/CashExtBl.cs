@@ -129,13 +129,13 @@ public class CashExtBl : ICashExtBl
         return new SuccessDataResult<CashExtDto>(cashExtDto, Messages.CashExtListedById);
     }
 
-    public IDataResult<List<CashExtDto>> GetExtsByBusinessId(int businessId)
+    public IDataResult<IEnumerable<CashExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<CashExtDto> cashExtDtos = _cashDal.GetExtsByBusinessId(businessId);
-        if (cashExtDtos.Count == 0)
-            return new ErrorDataResult<List<CashExtDto>>(Messages.CashNotFound);
+        IEnumerable<CashExtDto> cashExtDtos = _cashDal.GetExtsByBusinessId(businessId);
+        if (!cashExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<CashExtDto>>(Messages.CashNotFound);
 
-        return new SuccessDataResult<List<CashExtDto>>(cashExtDtos, Messages.CashExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<CashExtDto>>(cashExtDtos, Messages.CashExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]

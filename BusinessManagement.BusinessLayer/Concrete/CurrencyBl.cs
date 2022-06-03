@@ -18,13 +18,13 @@ public class CurrencyBl : ICurrencyBl
         _currencyDal = currencyDal;
     }
 
-    public IDataResult<List<CurrencyDto>> GetAll()
+    public IDataResult<IEnumerable<CurrencyDto>> GetAll()
     {
-        List<CurrencyDto> currencyDtos = _currencyDal.GetAll();
-        if (currencyDtos.Count == 0)
-            return new ErrorDataResult<List<CurrencyDto>>(Messages.CurrenciesNotFound);
+        IEnumerable<CurrencyDto> currencyDtos = _currencyDal.GetAll();
+        if (!currencyDtos.Any())
+            return new ErrorDataResult<IEnumerable<CurrencyDto>>(Messages.CurrenciesNotFound);
 
-        return new SuccessDataResult<List<CurrencyDto>>(currencyDtos, Messages.CurrenciesListed);
+        return new SuccessDataResult<IEnumerable<CurrencyDto>>(currencyDtos, Messages.CurrenciesListed);
     }
 
     public IDataResult<CurrencyDto> GetByCurrencyName(string currencyName)

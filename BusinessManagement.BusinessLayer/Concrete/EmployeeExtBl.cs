@@ -137,13 +137,13 @@ public class EmployeeExtBl : IEmployeeExtBl
         return new SuccessDataResult<EmployeeExtDto>(employeeExtDto, Messages.EmployeeExtListedById);
     }
 
-    public IDataResult<List<EmployeeExtDto>> GetExtsByBusinessId(int businessId)
+    public IDataResult<IEnumerable<EmployeeExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<EmployeeExtDto> employeeExtDtos = _employeeDal.GetExtsByBusinessId(businessId);
-        if (employeeExtDtos.Count == 0)
-            return new ErrorDataResult<List<EmployeeExtDto>>(Messages.EmployeesNotFound);
+        IEnumerable<EmployeeExtDto> employeeExtDtos = _employeeDal.GetExtsByBusinessId(businessId);
+        if (!employeeExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<EmployeeExtDto>>(Messages.EmployeesNotFound);
 
-        return new SuccessDataResult<List<EmployeeExtDto>>(employeeExtDtos, Messages.EmployeeExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<EmployeeExtDto>>(employeeExtDtos, Messages.EmployeeExtsListedByBusinessId);
     }
 
     [TransactionScopeAspect]

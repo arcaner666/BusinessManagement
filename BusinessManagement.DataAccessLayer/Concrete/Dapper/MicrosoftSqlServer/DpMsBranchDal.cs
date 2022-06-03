@@ -61,7 +61,7 @@ public class DpMsBranchDal : IBranchDal
         return connection.Query<BranchDto>(sql, new { @BranchCode = branchCode }).SingleOrDefault();
     }
 
-    public List<BranchDto> GetByBusinessId(int businessId)
+    public IEnumerable<BranchDto> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -180,7 +180,7 @@ public class DpMsBranchDal : IBranchDal
         return connection.Query<BranchExtDto>(sql, new { @BranchId = id }).SingleOrDefault();
     }
 
-    public List<BranchExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<BranchExtDto> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

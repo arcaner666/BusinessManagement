@@ -5,6 +5,6 @@ namespace BusinessManagement.BusinessLayer.Abstract;
 
 public interface ICurrencyBl
 {
-    IDataResult<List<CurrencyDto>> GetAll();
+    IDataResult<IEnumerable<CurrencyDto>> GetAll();
     IDataResult<CurrencyDto> GetByCurrencyName(string currencyName);
 }

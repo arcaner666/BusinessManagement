@@ -10,6 +10,6 @@ public interface ICashExtBl
     IResult DeleteExtByAccountId(long accountId);
     IDataResult<CashExtDto> GetExtByAccountId(long accountId);
     IDataResult<CashExtDto> GetExtById(long id);
-    IDataResult<List<CashExtDto>> GetExtsByBusinessId(int businessId);
+    IDataResult<IEnumerable<CashExtDto>> GetExtsByBusinessId(int businessId);
     IResult UpdateExt(CashExtDto cashExtDto);
 }

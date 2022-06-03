@@ -8,7 +8,7 @@ public interface IBankBl
     IDataResult<BankDto> Add(BankDto bankDto);
     IResult Delete(long id);
     IDataResult<BankDto> GetByAccountId(long accountId);
-    IDataResult<List<BankDto>> GetByBusinessId(int businessId);
+    IDataResult<IEnumerable<BankDto>> GetByBusinessId(int businessId);
     IDataResult<BankDto> GetById(long id);
     IResult Update(BankDto bankDto);
 }

@@ -7,8 +7,8 @@ public interface IApartmentBl
 {
     IDataResult<ApartmentDto> Add(ApartmentDto apartmentDto);
     IResult Delete(long id);
-    IDataResult<List<ApartmentDto>> GetByBusinessId(int businessId);
+    IDataResult<IEnumerable<ApartmentDto>> GetByBusinessId(int businessId);
     IDataResult<ApartmentDto> GetById(long id);
-    IDataResult<List<ApartmentDto>> GetBySectionId(int sectionId);
+    IDataResult<IEnumerable<ApartmentDto>> GetBySectionId(int sectionId);
     IResult Update(ApartmentDto apartmentDto);
 }

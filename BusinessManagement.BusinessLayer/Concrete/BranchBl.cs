@@ -71,13 +71,13 @@ public class BranchBl : IBranchBl
         return new SuccessDataResult<BranchCodeDto>(branchCodeDto, Messages.BranchOrderAndCodeGenerated);
     }
 
-    public IDataResult<List<BranchDto>> GetByBusinessId(int businessId)
+    public IDataResult<IEnumerable<BranchDto>> GetByBusinessId(int businessId)
     {
-        List<BranchDto> branchDtos = _branchDal.GetByBusinessId(businessId);
-        if (branchDtos.Count == 0)
-            return new ErrorDataResult<List<BranchDto>>(Messages.BranchesNotFound);
+        IEnumerable<BranchDto> branchDtos = _branchDal.GetByBusinessId(businessId);
+        if (!branchDtos.Any())
+            return new ErrorDataResult<IEnumerable<BranchDto>>(Messages.BranchesNotFound);
 
-        return new SuccessDataResult<List<BranchDto>>(branchDtos, Messages.BranchsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<BranchDto>>(branchDtos, Messages.BranchsListedByBusinessId);
     }
 
     public IDataResult<BranchDto> GetById(long id)

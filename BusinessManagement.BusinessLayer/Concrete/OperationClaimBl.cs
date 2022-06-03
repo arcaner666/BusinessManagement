@@ -18,13 +18,13 @@ public class OperationClaimBl : IOperationClaimBl
         _operationClaimDal = operationClaimDal;
     }
 
-    public IDataResult<List<OperationClaimDto>> GetAll()
+    public IDataResult<IEnumerable<OperationClaimDto>> GetAll()
     {
-        List<OperationClaimDto> operationClaimDtos = _operationClaimDal.GetAll();
-        if (operationClaimDtos.Count == 0)
-            return new ErrorDataResult<List<OperationClaimDto>>(Messages.OperationClaimsNotFound);
+        IEnumerable<OperationClaimDto> operationClaimDtos = _operationClaimDal.GetAll();
+        if (!operationClaimDtos.Any())
+            return new ErrorDataResult<IEnumerable<OperationClaimDto>>(Messages.OperationClaimsNotFound);
 
-        return new SuccessDataResult<List<OperationClaimDto>>(operationClaimDtos, Messages.OperationClaimsListed);
+        return new SuccessDataResult<IEnumerable<OperationClaimDto>>(operationClaimDtos, Messages.OperationClaimsListed);
     }
 
     public IDataResult<OperationClaimDto> GetByOperationClaimName(string operationClaimName)

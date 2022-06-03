@@ -5,5 +5,5 @@ namespace BusinessManagement.BusinessLayer.Abstract;
 
 public interface ICityBl
 {
-    IDataResult<List<CityDto>> GetAll();
+    IDataResult<IEnumerable<CityDto>> GetAll();
 }

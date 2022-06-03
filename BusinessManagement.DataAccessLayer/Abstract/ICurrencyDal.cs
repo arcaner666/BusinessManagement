@@ -5,6 +5,6 @@ namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface ICurrencyDal
 {
-    List<CurrencyDto> GetAll();
+    IEnumerable<CurrencyDto> GetAll();
     CurrencyDto GetByCurrencyName(string currencyName);
 }

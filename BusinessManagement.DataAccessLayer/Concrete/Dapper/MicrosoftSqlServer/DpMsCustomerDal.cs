@@ -89,7 +89,7 @@ public class DpMsCustomerDal : ICustomerDal
         return connection.Query<CustomerDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public List<CustomerDto> GetByBusinessId(int businessId)
+    public IEnumerable<CustomerDto> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -180,7 +180,7 @@ public class DpMsCustomerDal : ICustomerDal
         return connection.Query<CustomerDto>(sql, new { @CustomerId = id }).SingleOrDefault();
     }
 
-    public List<CustomerDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<CustomerDto> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

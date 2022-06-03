@@ -8,7 +8,7 @@ public interface ICashBl
     IDataResult<CashDto> Add(CashDto cashDto);
     IResult Delete(long id);
     IDataResult<CashDto> GetByAccountId(long accountId);
-    IDataResult<List<CashDto>> GetByBusinessId(int businessId);
+    IDataResult<IEnumerable<CashDto>> GetByBusinessId(int businessId);
     IDataResult<CashDto> GetById(long id);
     IResult Update(CashDto cashDto);
 }

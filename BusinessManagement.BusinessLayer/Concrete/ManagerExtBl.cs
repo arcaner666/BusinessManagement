@@ -22,12 +22,12 @@ public class ManagerExtBl : IManagerExtBl
         _managerDal = managerDal;
     }
 
-    public IDataResult<List<ManagerExtDto>> GetExtsByBusinessId(int businessId)
+    public IDataResult<IEnumerable<ManagerExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<ManagerExtDto> managerExtDtos = _managerDal.GetExtsByBusinessId(businessId);
-        if (managerExtDtos.Count == 0)
-            return new ErrorDataResult<List<ManagerExtDto>>(Messages.ManagerNotFound);
+        IEnumerable<ManagerExtDto> managerExtDtos = _managerDal.GetExtsByBusinessId(businessId);
+        if (!managerExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<ManagerExtDto>>(Messages.ManagerNotFound);
 
-        return new SuccessDataResult<List<ManagerExtDto>>(managerExtDtos, Messages.ManagerExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<ManagerExtDto>>(managerExtDtos, Messages.ManagerExtsListedByBusinessId);
     }
 }

@@ -13,7 +13,7 @@ public class DpMsCurrencyDal : ICurrencyDal
         _context = context;
     }
 
-    public List<CurrencyDto> GetAll()
+    public IEnumerable<CurrencyDto> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

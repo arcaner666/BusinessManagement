@@ -41,7 +41,7 @@ public class ApartmentExtBl : IApartmentExtBl
             return getSectionResult;
 
         // Eşsiz bir apartman kodu üretebilmek için ilgili sitedeki tüm apartmanlar getirilir.
-        List<ApartmentDto> apartmentDtos = _apartmentDal.GetBySectionId(apartmentExtDto.SectionId);
+        IEnumerable<ApartmentDto> apartmentDtos = _apartmentDal.GetBySectionId(apartmentExtDto.SectionId);
 
         // Apartman kodu üretilir.
         string apartmentCode = _keyService.GenerateApartmentCode(apartmentDtos, getSectionResult.Data.SectionCode);
@@ -95,13 +95,13 @@ public class ApartmentExtBl : IApartmentExtBl
         return new SuccessDataResult<ApartmentExtDto>(apartmentExtDto, Messages.ApartmentExtListedById);
     }
 
-    public IDataResult<List<ApartmentExtDto>> GetExtsByBusinessId(int businessId)
+    public IDataResult<IEnumerable<ApartmentExtDto>> GetExtsByBusinessId(int businessId)
     {
-        List<ApartmentExtDto> apartmentExtDtos = _apartmentDal.GetExtsByBusinessId(businessId);
-        if (apartmentExtDtos.Count == 0)
-            return new ErrorDataResult<List<ApartmentExtDto>>(Messages.ApartmentsNotFound);
+        IEnumerable<ApartmentExtDto> apartmentExtDtos = _apartmentDal.GetExtsByBusinessId(businessId);
+        if (!apartmentExtDtos.Any())
+            return new ErrorDataResult<IEnumerable<ApartmentExtDto>>(Messages.ApartmentsNotFound);
 
-        return new SuccessDataResult<List<ApartmentExtDto>>(apartmentExtDtos, Messages.ApartmentExtsListedByBusinessId);
+        return new SuccessDataResult<IEnumerable<ApartmentExtDto>>(apartmentExtDtos, Messages.ApartmentExtsListedByBusinessId);
     }
 
     public IResult UpdateExt(ApartmentExtDto apartmentExtDto)

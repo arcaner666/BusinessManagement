@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -10,26 +11,33 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 public class BranchBl : IBranchBl
 {
     private readonly IBranchDal _branchDal;
+    private readonly IMapper _mapper;
 
     public BranchBl(
-        IBranchDal branchDal
+        IBranchDal branchDal,
+        IMapper mapper
     )
     {
         _branchDal = branchDal;
+        _mapper = mapper;
     }
 
     public IDataResult<BranchDto> Add(BranchDto branchDto)
     {
-        BranchDto searchedBranchDto = _branchDal.GetByBusinessIdAndBranchOrderOrBranchCode(branchDto.BusinessId, branchDto.BranchOrder, branchDto.BranchCode);
-        if (searchedBranchDto is not null)
+        Branch searchedBranch = _branchDal.GetByBusinessIdAndBranchOrderOrBranchCode(branchDto.BusinessId, branchDto.BranchOrder, branchDto.BranchCode);
+        if (searchedBranch is not null)
             return new ErrorDataResult<BranchDto>(Messages.BranchAlreadyExists);
 
-        branchDto.CreatedAt = DateTimeOffset.Now;
-        branchDto.UpdatedAt = DateTimeOffset.Now;
-        long id = _branchDal.Add(branchDto);
-        branchDto.BranchId = id;
+        var addedBranch = _mapper.Map<Branch>(branchDto);
 
-        return new SuccessDataResult<BranchDto>(branchDto, Messages.BranchAdded);
+        addedBranch.CreatedAt = DateTimeOffset.Now;
+        addedBranch.UpdatedAt = DateTimeOffset.Now;
+        long id = _branchDal.Add(addedBranch);
+        addedBranch.BranchId = id;
+
+        var addedBranchDto = _mapper.Map<BranchDto>(addedBranch);
+
+        return new SuccessDataResult<BranchDto>(addedBranchDto, Messages.BranchAdded);
     }
 
     public IResult Delete(long id)
@@ -45,59 +53,65 @@ public class BranchBl : IBranchBl
 
     public IDataResult<BranchCodeDto> GenerateBranchCode(int businessId)
     {
-        BranchCodeDto branchCodeDto = new();
+        int branchOrder = 1;
+        int maxBranchOrder = _branchDal.GetMaxBranchOrderByBusinessId(businessId);
+        if (maxBranchOrder != 0)
+            branchOrder = maxBranchOrder + 1;
 
-        branchCodeDto.BranchOrder = 1;
-        BranchDto branchDto = _branchDal.GetByBusinessIdAndMaxBranchOrder(businessId);
-        if (branchDto == null)
-        {
-            return new ErrorDataResult<BranchCodeDto>(Messages.BranchNotFound);
-        }
-        branchCodeDto.BranchOrder = branchDto.BranchOrder + 1;
-
-        if (branchCodeDto.BranchOrder < 10)
-            branchCodeDto.BranchCode = $"00000{branchCodeDto.BranchOrder}";
-        else if (branchCodeDto.BranchOrder < 100)
-            branchCodeDto.BranchCode = $"0000{branchCodeDto.BranchOrder}";
-        else if (branchCodeDto.BranchOrder < 1000)
-            branchCodeDto.BranchCode = $"000{branchCodeDto.BranchOrder}";
-        else if (branchCodeDto.BranchOrder < 10000)
-            branchCodeDto.BranchCode = $"00{branchCodeDto.BranchOrder}";
-        else if (branchCodeDto.BranchOrder < 100000)
-            branchCodeDto.BranchCode = $"0{branchCodeDto.BranchOrder}";
+        string branchCode;
+        if (branchOrder < 10)
+            branchCode = $"00000{branchOrder}";
+        else if (branchOrder < 100)
+            branchCode = $"0000{branchOrder}";
+        else if (branchOrder < 1000)
+            branchCode = $"000{branchOrder}";
+        else if (branchOrder < 10000)
+            branchCode = $"00{branchOrder}";
+        else if (branchOrder < 100000)
+            branchCode = $"0{branchOrder}";
         else
-            branchCodeDto.BranchCode = $"{branchCodeDto.BranchOrder}";
+            branchCode = $"{branchOrder}";
+
+        BranchCodeDto branchCodeDto = new()
+        {
+            BranchOrder = branchOrder,
+            BranchCode = branchCode,
+        };
 
         return new SuccessDataResult<BranchCodeDto>(branchCodeDto, Messages.BranchOrderAndCodeGenerated);
     }
 
     public IDataResult<IEnumerable<BranchDto>> GetByBusinessId(int businessId)
     {
-        IEnumerable<BranchDto> branchDtos = _branchDal.GetByBusinessId(businessId);
-        if (!branchDtos.Any())
+        IEnumerable<Branch> branchs = _branchDal.GetByBusinessId(businessId);
+        if (!branchs.Any())
             return new ErrorDataResult<IEnumerable<BranchDto>>(Messages.BranchesNotFound);
+
+        var branchDtos = _mapper.Map<IEnumerable<BranchDto>>(branchs);
 
         return new SuccessDataResult<IEnumerable<BranchDto>>(branchDtos, Messages.BranchsListedByBusinessId);
     }
 
     public IDataResult<BranchDto> GetById(long id)
     {
-        BranchDto branchDto = _branchDal.GetById(id);
-        if (branchDto is null)
+        Branch branch = _branchDal.GetById(id);
+        if (branch is null)
             return new ErrorDataResult<BranchDto>(Messages.BranchNotFound);
+
+        var branchDto = _mapper.Map<BranchDto>(branch);
 
         return new SuccessDataResult<BranchDto>(branchDto, Messages.BranchListedById);
     }
 
     public IResult Update(BranchDto branchDto)
     {
-        var searchedBranchResult = GetById(branchDto.BranchId);
-        if (!searchedBranchResult.Success)
-            return searchedBranchResult;
+        Branch branch = _branchDal.GetById(branchDto.BranchId);
+        if (branch is null)
+            return new ErrorDataResult<BranchDto>(Messages.BranchNotFound);
 
-        searchedBranchResult.Data.BranchName = branchDto.BranchName;
-        searchedBranchResult.Data.UpdatedAt = DateTimeOffset.Now;
-        _branchDal.Update(searchedBranchResult.Data);
+        branch.BranchName = branchDto.BranchName;
+        branch.UpdatedAt = DateTimeOffset.Now;
+        _branchDal.Update(branch);
 
         return new SuccessResult(Messages.BranchUpdated);
     }

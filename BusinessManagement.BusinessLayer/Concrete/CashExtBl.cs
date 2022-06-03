@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
@@ -15,13 +16,15 @@ public class CashExtBl : ICashExtBl
     private readonly IAccountTypeBl _accountTypeBl;
     private readonly ICashBl _cashBl;
     private readonly ICashDal _cashDal;
+    private readonly IMapper _mapper;
 
     public CashExtBl(
         IAccountBl accountBl,
         IAccountGroupBl accountGroupBl,
         IAccountTypeBl accountTypeBl,
         ICashBl cashBl,
-        ICashDal cashDal
+        ICashDal cashDal,
+        IMapper mapper
     )
     {
         _accountBl = accountBl;
@@ -29,6 +32,7 @@ public class CashExtBl : ICashExtBl
         _accountTypeBl = accountTypeBl;
         _cashBl = cashBl;
         _cashDal = cashDal;
+        _mapper = mapper;
     }
 
     [TransactionScopeAspect]

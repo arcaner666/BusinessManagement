@@ -1,16 +1,16 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IFlatDal
 {
-    long Add(FlatDto flatDto);
+    long Add(Flat flat);
     void Delete(long id);
-    IEnumerable<FlatDto> GetByApartmentId(long apartmentId);
-    FlatDto GetByFlatCode(string flatCode);
-    FlatDto GetById(long id);
-    FlatExtDto GetExtById(long id);
-    IEnumerable<FlatExtDto> GetExtsByBusinessId(int businessId);
-    void Update(FlatDto flatDto);
+    IEnumerable<Flat> GetByApartmentId(long apartmentId);
+    Flat GetByFlatCode(string flatCode);
+    Flat GetById(long id);
+    FlatExt GetExtById(long id);
+    IEnumerable<FlatExt> GetExtsByBusinessId(int businessId);
+    void Update(Flat flat);
 }

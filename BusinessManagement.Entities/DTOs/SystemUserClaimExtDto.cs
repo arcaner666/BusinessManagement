@@ -1,4 +1,4 @@
-﻿namespace BusinessManagement.Entities.DTOs;
+﻿namespace BusinessManagement.Entities.ExtendedDatabaseModels;
 
 public class SystemUserClaimExtDto
 {

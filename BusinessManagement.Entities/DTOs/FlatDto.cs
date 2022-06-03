@@ -1,16 +1,16 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public class FlatDto
+public record FlatDto
 {
-    public long FlatId { get; set; }
-    public int SectionId { get; set; }
-    public long ApartmentId { get; set; }
-    public int BusinessId { get; set; }
-    public long BranchId { get; set; }
-    public long? HouseOwnerId { get; set; }
-    public long? TenantId { get; set; }
-    public string FlatCode { get; set; }
-    public int DoorNumber { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
+    public long FlatId { get; init; }
+    public int SectionId { get; init; }
+    public long ApartmentId { get; init; }
+    public int BusinessId { get; init; }
+    public long BranchId { get; init; }
+    public long? HouseOwnerId { get; init; }
+    public long? TenantId { get; init; }
+    public string FlatCode { get; init; }
+    public int DoorNumber { get; init; }
+    public DateTimeOffset CreatedAt { get; init; }
+    public DateTimeOffset UpdatedAt { get; init; }
 }

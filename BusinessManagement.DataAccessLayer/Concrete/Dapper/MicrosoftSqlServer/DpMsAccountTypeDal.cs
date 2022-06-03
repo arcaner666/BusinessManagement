@@ -1,5 +1,5 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,17 +13,17 @@ public class DpMsAccountTypeDal : IAccountTypeDal
         _context = context;
     }
 
-    public IEnumerable<AccountTypeDto> GetAll()
+    public IEnumerable<AccountType> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " AccountTypeId,"
             + " AccountTypeName"
             + " FROM AccountType";
-        return connection.Query<AccountTypeDto>(sql).ToList();
+        return connection.Query<AccountType>(sql).ToList();
     }
 
-    public AccountTypeDto GetByAccountTypeName(string accountTypeName)
+    public AccountType GetByAccountTypeName(string accountTypeName)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -31,10 +31,10 @@ public class DpMsAccountTypeDal : IAccountTypeDal
             + " AccountTypeName"
             + " FROM AccountType"
             + " WHERE AccountTypeName = @AccountTypeName";
-        return connection.Query<AccountTypeDto>(sql, new { @AccountTypeName = accountTypeName }).SingleOrDefault();
+        return connection.Query<AccountType>(sql, new { @AccountTypeName = accountTypeName }).SingleOrDefault();
     }
 
-    public IEnumerable<AccountTypeDto> GetByAccountTypeNames(string[] accountTypeNames)
+    public IEnumerable<AccountType> GetByAccountTypeNames(string[] accountTypeNames)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -42,10 +42,10 @@ public class DpMsAccountTypeDal : IAccountTypeDal
             + " AccountTypeName"
             + " FROM AccountType"
             + " WHERE AccountTypeName IN @AccountTypeNames";
-        return connection.Query<AccountTypeDto>(sql, new { @AccountTypeNames = accountTypeNames }).ToList();
+        return connection.Query<AccountType>(sql, new { @AccountTypeNames = accountTypeNames }).ToList();
     }
 
-    public AccountTypeDto GetById(short id)
+    public AccountType GetById(short id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -53,6 +53,6 @@ public class DpMsAccountTypeDal : IAccountTypeDal
             + " AccountTypeName"
             + " FROM AccountType"
             + " WHERE AccountTypeId = @AccountTypeId";
-        return connection.Query<AccountTypeDto>(sql, new { @AccountTypeId = id }).SingleOrDefault();
+        return connection.Query<AccountType>(sql, new { @AccountTypeId = id }).SingleOrDefault();
     }
 }

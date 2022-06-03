@@ -1,5 +1,5 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +13,7 @@ public class DpMsBusinessDal : IBusinessDal
         _context = context;
     }
 
-    public int Add(BusinessDto businessDto)
+    public int Add(Business business)
     {
         using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Business ("
@@ -31,10 +31,10 @@ public class DpMsBusinessDal : IBusinessDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS INT)";
-        return connection.Query<int>(sql, businessDto).Single();
+        return connection.Query<int>(sql, business).Single();
     }
 
-    public BusinessDto GetByBusinessName(string businessName)
+    public Business GetByBusinessName(string businessName)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -47,10 +47,10 @@ public class DpMsBusinessDal : IBusinessDal
             + " UpdatedAt"
             + " FROM Business"
             + " WHERE BusinessName = @BusinessName";
-        return connection.Query<BusinessDto>(sql, new { @BusinessName = businessName }).SingleOrDefault();
+        return connection.Query<Business>(sql, new { @BusinessName = businessName }).SingleOrDefault();
     }
 
-    public BusinessDto GetById(int id)
+    public Business GetById(int id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -63,10 +63,10 @@ public class DpMsBusinessDal : IBusinessDal
             + " UpdatedAt"
             + " FROM Business"
             + " WHERE BusinessId = @BusinessId";
-        return connection.Query<BusinessDto>(sql, new { @BusinessId = id }).SingleOrDefault();
+        return connection.Query<Business>(sql, new { @BusinessId = id }).SingleOrDefault();
     }
 
-    public BusinessDto GetByOwnerSystemUserId(long ownerSystemUserId)
+    public Business GetByOwnerSystemUserId(long ownerSystemUserId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -79,6 +79,6 @@ public class DpMsBusinessDal : IBusinessDal
             + " UpdatedAt"
             + " FROM Business"
             + " WHERE OwnerSystemUserId = @OwnerSystemUserId";
-        return connection.Query<BusinessDto>(sql, new { @OwnerSystemUserId = ownerSystemUserId }).SingleOrDefault();
+        return connection.Query<Business>(sql, new { @OwnerSystemUserId = ownerSystemUserId }).SingleOrDefault();
     }        
 }

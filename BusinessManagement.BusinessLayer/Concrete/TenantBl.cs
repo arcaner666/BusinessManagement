@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -9,29 +10,34 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 
 public class TenantBl : ITenantBl
 {
+    private readonly IMapper _mapper;
     private readonly ITenantDal _tenantDal;
 
     public TenantBl(
+        IMapper mapper,
         ITenantDal tenantDal
     )
     {
+        _mapper = mapper;
         _tenantDal = tenantDal;
     }
 
     public IDataResult<TenantDto> Add(TenantDto tenantDto)
     {
-        TenantDto searchedTenantDto = _tenantDal.GetByBusinessIdAndAccountId(tenantDto.BusinessId, tenantDto.AccountId);
-        if (searchedTenantDto is not null)
-        {
+        Tenant searchedTenant = _tenantDal.GetByBusinessIdAndAccountId(tenantDto.BusinessId, tenantDto.AccountId);
+        if (searchedTenant is not null)
             return new ErrorDataResult<TenantDto>(Messages.TenantAlreadyExists);
-        }
 
-        tenantDto.CreatedAt = DateTimeOffset.Now;
-        tenantDto.UpdatedAt = DateTimeOffset.Now;
-        long id = _tenantDal.Add(tenantDto);
-        tenantDto.TenantId = id;
+        var addedTenant = _mapper.Map<Tenant>(tenantDto);
 
-        return new SuccessDataResult<TenantDto>(tenantDto, Messages.TenantAdded);
+        addedTenant.CreatedAt = DateTimeOffset.Now;
+        addedTenant.UpdatedAt = DateTimeOffset.Now;
+        long id = _tenantDal.Add(addedTenant);
+        addedTenant.TenantId = id;
+
+        var addedTenantDto = _mapper.Map<TenantDto>(addedTenant);
+
+        return new SuccessDataResult<TenantDto>(addedTenantDto, Messages.TenantAdded);
     }
 
     public IResult Delete(long id)
@@ -47,49 +53,55 @@ public class TenantBl : ITenantBl
 
     public IDataResult<TenantDto> GetByAccountId(long accountId)
     {
-        TenantDto tenantDto = _tenantDal.GetByAccountId(accountId);
-        if (tenantDto is null)
+        Tenant tenant = _tenantDal.GetByAccountId(accountId);
+        if (tenant is null)
             return new ErrorDataResult<TenantDto>(Messages.TenantNotFound);
+
+        var tenantDto = _mapper.Map<TenantDto>(tenant);
 
         return new SuccessDataResult<TenantDto>(tenantDto, Messages.TenantListedByAccountId);
     }
 
     public IDataResult<IEnumerable<TenantDto>> GetByBusinessId(int businessId)
     {
-        IEnumerable<TenantDto> tenantDtos = _tenantDal.GetByBusinessId(businessId);
-        if (!tenantDtos.Any())
+        IEnumerable<Tenant> tenants = _tenantDal.GetByBusinessId(businessId);
+        if (!tenants.Any())
             return new ErrorDataResult<IEnumerable<TenantDto>>(Messages.TenantsNotFound);
+
+        var tenantDtos = _mapper.Map<IEnumerable<TenantDto>>(tenants);
 
         return new SuccessDataResult<IEnumerable<TenantDto>>(tenantDtos, Messages.TenantsListedByBusinessId);
     }
 
     public IDataResult<TenantDto> GetById(long id)
     {
-        TenantDto tenantDto = _tenantDal.GetById(id);
-        if (tenantDto is null)
+        Tenant tenant = _tenantDal.GetById(id);
+        if (tenant is null)
             return new ErrorDataResult<TenantDto>(Messages.TenantNotFound);
+
+        var tenantDto = _mapper.Map<TenantDto>(tenant);
 
         return new SuccessDataResult<TenantDto>(tenantDto, Messages.TenantListedById);
     }
 
     public IResult Update(TenantDto tenantDto)
     {
-        var searchedTenantResult = GetById(tenantDto.TenantId);
-        if (!searchedTenantResult.Success)
-            return searchedTenantResult;
+        Tenant tenant = _tenantDal.GetById(tenantDto.TenantId);
+        if (tenant is null)
+            return new ErrorDataResult<TenantDto>(Messages.TenantNotFound);
 
-        searchedTenantResult.Data.NameSurname = tenantDto.NameSurname;
-        searchedTenantResult.Data.Email = tenantDto.Email;
-        searchedTenantResult.Data.DateOfBirth = tenantDto.DateOfBirth;
-        searchedTenantResult.Data.Gender = tenantDto.Gender;
-        searchedTenantResult.Data.Notes = tenantDto.Notes;
-        searchedTenantResult.Data.AvatarUrl = tenantDto.AvatarUrl;
-        searchedTenantResult.Data.TaxOffice = tenantDto.TaxOffice;
-        searchedTenantResult.Data.TaxNumber = tenantDto.TaxNumber;
-        searchedTenantResult.Data.IdentityNumber = tenantDto.IdentityNumber;
-        searchedTenantResult.Data.StandartMaturity = tenantDto.StandartMaturity;
-        searchedTenantResult.Data.UpdatedAt = DateTimeOffset.Now;
-        _tenantDal.Update(searchedTenantResult.Data);
+        tenant.NameSurname = tenantDto.NameSurname;
+        tenant.Email = tenantDto.Email;
+        tenant.DateOfBirth = tenantDto.DateOfBirth;
+        tenant.Gender = tenantDto.Gender;
+        tenant.Notes = tenantDto.Notes;
+        tenant.AvatarUrl = tenantDto.AvatarUrl;
+        tenant.TaxOffice = tenantDto.TaxOffice;
+        tenant.TaxNumber = tenantDto.TaxNumber;
+        tenant.IdentityNumber = tenantDto.IdentityNumber;
+        tenant.StandartMaturity = tenantDto.StandartMaturity;
+        tenant.UpdatedAt = DateTimeOffset.Now;
+        _tenantDal.Update(tenant);
 
         return new SuccessResult(Messages.TenantUpdated);
     }

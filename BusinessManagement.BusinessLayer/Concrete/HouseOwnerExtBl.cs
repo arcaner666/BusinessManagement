@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
@@ -15,13 +16,15 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
     private readonly IAccountTypeBl _accountTypeBl;
     private readonly IHouseOwnerBl _houseOwnerBl;
     private readonly IHouseOwnerDal _houseOwnerDal;
+    private readonly IMapper _mapper;
 
     public HouseOwnerExtBl(
         IAccountBl accountBl,
         IAccountGroupBl accountGroupBl,
         IAccountTypeBl accountTypeBl,
         IHouseOwnerBl houseOwnerBl,
-        IHouseOwnerDal houseOwnerDal
+        IHouseOwnerDal houseOwnerDal,
+        IMapper mapper
     )
     {
         _accountBl = accountBl;
@@ -29,6 +32,7 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
         _accountTypeBl = accountTypeBl;
         _houseOwnerBl = houseOwnerBl;
         _houseOwnerDal = houseOwnerDal;
+        _mapper = mapper;
     }
 
     [TransactionScopeAspect]

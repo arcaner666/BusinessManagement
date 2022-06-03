@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +14,7 @@ public class DpMsAccountDal : IAccountDal
         _context = context;
     }
 
-    public long Add(AccountDto accountDto)
+    public long Add(Account account)
     {
         using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Account ("
@@ -44,7 +45,7 @@ public class DpMsAccountDal : IAccountDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return connection.Query<long>(sql, accountDto).Single();
+        return connection.Query<long>(sql, account).Single();
     }
 
     public void Delete(long id)
@@ -55,7 +56,7 @@ public class DpMsAccountDal : IAccountDal
         connection.Execute(sql, new { @AccountId = id });
     }
 
-    public IEnumerable<AccountDto> GetByAccountGroupId(short accountGroupId)
+    public IEnumerable<Account> GetByAccountGroupId(short accountGroupId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -75,10 +76,10 @@ public class DpMsAccountDal : IAccountDal
             + " UpdatedAt"
             + " FROM Account"
             + " WHERE AccountGroupId = @AccountGroupId";
-        return connection.Query<AccountDto>(sql, new { @AccountGroupId = accountGroupId }).ToList();
+        return connection.Query<Account>(sql, new { @AccountGroupId = accountGroupId }).ToList();
     }
 
-    public AccountDto GetByBusinessIdAndAccountCode(int businessId, string accountCode)
+    public Account GetByBusinessIdAndAccountCode(int businessId, string accountCode)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -98,14 +99,14 @@ public class DpMsAccountDal : IAccountDal
             + " UpdatedAt"
             + " FROM Account"
             + " WHERE BusinessId = @BusinessId AND AccountCode = @AccountCode";
-        return connection.Query<AccountDto>(sql, new
+        return connection.Query<Account>(sql, new
         {
             @BusinessId = businessId,
             @AccountCode = accountCode,
         }).SingleOrDefault();
     }
 
-    public AccountDto GetById(long id)
+    public Account GetById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -125,10 +126,10 @@ public class DpMsAccountDal : IAccountDal
             + " UpdatedAt"
             + " FROM Account"
             + " WHERE AccountId = @AccountId";
-        return connection.Query<AccountDto>(sql, new { @AccountId = id }).SingleOrDefault();
+        return connection.Query<Account>(sql, new { @AccountId = id }).SingleOrDefault();
     }
 
-    public AccountExtDto GetExtById(long id)
+    public AccountExt GetExtById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -155,10 +156,10 @@ public class DpMsAccountDal : IAccountDal
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN AccountType at ON a.AccountTypeId = at.AccountTypeId"
             + " WHERE a.AccountId = @AccountId";
-        return connection.Query<AccountExtDto>(sql, new { @AccountId = id }).SingleOrDefault();
+        return connection.Query<AccountExt>(sql, new { @AccountId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<AccountExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<AccountExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -185,10 +186,10 @@ public class DpMsAccountDal : IAccountDal
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN AccountType at ON a.AccountTypeId = at.AccountTypeId"
             + " WHERE a.BusinessId = @BusinessId";
-        return connection.Query<AccountExtDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<AccountExt>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public IEnumerable<AccountExtDto> GetExtsByBusinessIdAndAccountGroupCodes(int businessId, string[] accountGroupCodes)
+    public IEnumerable<AccountExt> GetExtsByBusinessIdAndAccountGroupCodes(int businessId, string[] accountGroupCodes)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -215,7 +216,7 @@ public class DpMsAccountDal : IAccountDal
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN AccountType at ON a.AccountTypeId = at.AccountTypeId"
             + " WHERE a.BusinessId = @BusinessId AND ag.AccountGroupCode IN @AccountGroupCodes";
-        return connection.Query<AccountExtDto>(sql, new
+        return connection.Query<AccountExt>(sql, new
             {
                 @BusinessId = businessId,
                 @AccountGroupCodes = accountGroupCodes,
@@ -238,7 +239,7 @@ public class DpMsAccountDal : IAccountDal
         }).SingleOrDefault();
     }
 
-    public void Update(AccountDto accountDto)
+    public void Update(Account account)
     {
         using var connection = _context.CreateConnection();
         var sql = "UPDATE Account SET"
@@ -256,6 +257,6 @@ public class DpMsAccountDal : IAccountDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE AccountId = @AccountId";
-        connection.Execute(sql, accountDto);
+        connection.Execute(sql, account);
     }
 }

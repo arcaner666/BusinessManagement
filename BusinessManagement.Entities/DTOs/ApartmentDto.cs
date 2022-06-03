@@ -1,15 +1,15 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public class ApartmentDto
+public record ApartmentDto
 {
-    public long ApartmentId { get; set; }
-    public int SectionId { get; set; }
-    public int BusinessId { get; set; }
-    public long BranchId { get; set; }
-    public long ManagerId { get; set; }
-    public string ApartmentName { get; set; }
-    public string ApartmentCode { get; set; }
-    public int BlockNumber { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
+    public long ApartmentId { get; init; }
+    public int SectionId { get; init; }
+    public int BusinessId { get; init; }
+    public long BranchId { get; init; }
+    public long ManagerId { get; init; }
+    public string ApartmentName { get; init; }
+    public string ApartmentCode { get; init; }
+    public int BlockNumber { get; init; }
+    public DateTimeOffset CreatedAt { get; init; }
+    public DateTimeOffset UpdatedAt { get; init; }
 }

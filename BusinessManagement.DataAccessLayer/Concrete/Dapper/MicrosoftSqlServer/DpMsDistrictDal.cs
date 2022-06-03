@@ -1,5 +1,5 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +13,7 @@ public class DpMsDistrictDal : IDistrictDal
         _context = context;
     }
 
-    public IEnumerable<DistrictDto> GetAll()
+    public IEnumerable<District> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -21,10 +21,10 @@ public class DpMsDistrictDal : IDistrictDal
             + " CityId,"
             + " DistrictName"
             + " FROM District";
-        return connection.Query<DistrictDto>(sql).ToList();
+        return connection.Query<District>(sql).ToList();
     }
 
-    public IEnumerable<DistrictDto> GetByCityId(short cityId)
+    public IEnumerable<District> GetByCityId(short cityId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -33,6 +33,6 @@ public class DpMsDistrictDal : IDistrictDal
             + " DistrictName"
             + " FROM District"
             + " WHERE CityId = @CityId";
-        return connection.Query<DistrictDto>(sql, new { @CityId = cityId }).ToList();
+        return connection.Query<District>(sql, new { @CityId = cityId }).ToList();
     }
 }

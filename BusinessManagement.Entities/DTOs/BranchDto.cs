@@ -1,13 +1,13 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public class BranchDto
+public record BranchDto
 {
-    public long BranchId { get; set; }
-    public int BusinessId { get; set; }
-    public long FullAddressId { get; set; }
-    public int BranchOrder { get; set; }
-    public string BranchName { get; set; }
-    public string BranchCode { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
+    public long BranchId { get; init; }
+    public int BusinessId { get; init; }
+    public long FullAddressId { get; init; }
+    public int BranchOrder { get; init; }
+    public string BranchName { get; init; }
+    public string BranchCode { get; init; }
+    public DateTimeOffset CreatedAt { get; init; }
+    public DateTimeOffset UpdatedAt { get; init; }
 }

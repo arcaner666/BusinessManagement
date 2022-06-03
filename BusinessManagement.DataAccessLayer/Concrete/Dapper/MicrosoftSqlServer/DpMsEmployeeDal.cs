@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +14,7 @@ public class DpMsEmployeeDal : IEmployeeDal
         _context = context;
     }
 
-    public long Add(EmployeeDto employeeDto)
+    public long Add(Employee employee)
     {
         using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Employee ("
@@ -53,7 +54,7 @@ public class DpMsEmployeeDal : IEmployeeDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return connection.Query<long>(sql, employeeDto).Single();
+        return connection.Query<long>(sql, employee).Single();
     }
 
     public void Delete(long id)
@@ -64,7 +65,7 @@ public class DpMsEmployeeDal : IEmployeeDal
         connection.Execute(sql, new { @EmployeeId = id });
     }
 
-    public EmployeeDto GetByAccountId(long accountId)
+    public Employee GetByAccountId(long accountId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -88,10 +89,10 @@ public class DpMsEmployeeDal : IEmployeeDal
             + " UpdatedAt"
             + " FROM Employee"
             + " WHERE AccountId = @AccountId";
-        return connection.Query<EmployeeDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return connection.Query<Employee>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public EmployeeDto GetByBusinessIdAndAccountId(int businessId, long accountId)
+    public Employee GetByBusinessIdAndAccountId(int businessId, long accountId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -115,14 +116,14 @@ public class DpMsEmployeeDal : IEmployeeDal
             + " UpdatedAt"
             + " FROM Employee"
             + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
-        return connection.Query<EmployeeDto>(sql, new
+        return connection.Query<Employee>(sql, new
         {
             @BusinessId = businessId,
             @AccountId = accountId,
         }).SingleOrDefault();
     }
 
-    public EmployeeDto GetById(long id)
+    public Employee GetById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -146,10 +147,10 @@ public class DpMsEmployeeDal : IEmployeeDal
             + " UpdatedAt"
             + " FROM Employee"
             + " WHERE EmployeeId = @EmployeeId";
-        return connection.Query<EmployeeDto>(sql, new { @EmployeeId = id }).SingleOrDefault();
+        return connection.Query<Employee>(sql, new { @EmployeeId = id }).SingleOrDefault();
     }
 
-    public EmployeeExtDto GetExtByAccountId(long accountId)
+    public EmployeeExt GetExtByAccountId(long accountId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -183,10 +184,10 @@ public class DpMsEmployeeDal : IEmployeeDal
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN EmployeeType et ON e.EmployeeTypeId = et.EmployeeTypeId"
             + " WHERE e.AccountId = @AccountId";
-        return connection.Query<EmployeeExtDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return connection.Query<EmployeeExt>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public EmployeeExtDto GetExtById(long id)
+    public EmployeeExt GetExtById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -220,10 +221,10 @@ public class DpMsEmployeeDal : IEmployeeDal
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN EmployeeType et ON e.EmployeeTypeId = et.EmployeeTypeId"
             + " WHERE e.EmployeeId = @EmployeeId";
-        return connection.Query<EmployeeExtDto>(sql, new { @EmployeeId = id }).SingleOrDefault();
+        return connection.Query<EmployeeExt>(sql, new { @EmployeeId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<EmployeeExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<EmployeeExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -257,10 +258,10 @@ public class DpMsEmployeeDal : IEmployeeDal
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " INNER JOIN EmployeeType et ON e.EmployeeTypeId = et.EmployeeTypeId"
             + " WHERE e.BusinessId = @BusinessId";
-        return connection.Query<EmployeeExtDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<EmployeeExt>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(EmployeeDto employeeDto)
+    public void Update(Employee employee)
     {
         using var connection = _context.CreateConnection();
         var sql = "UPDATE Employee SET"
@@ -282,6 +283,6 @@ public class DpMsEmployeeDal : IEmployeeDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE EmployeeId = @EmployeeId";
-        connection.Execute(sql, employeeDto);
+        connection.Execute(sql, employee);
     }
 }

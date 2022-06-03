@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
@@ -16,6 +17,7 @@ public class SectionExtBl : ISectionExtBl
     private readonly IFlatBl _flatBl;
     private readonly IFullAddressBl _fullAddressBl;
     private readonly IKeyService _keyService;
+    private readonly IMapper _mapper;
     private readonly ISectionBl _sectionBl;
     private readonly ISectionDal _sectionDal;
 
@@ -25,6 +27,7 @@ public class SectionExtBl : ISectionExtBl
         IFlatBl flatBl,
         IFullAddressBl fullAddressBl,
         IKeyService keyService,
+        IMapper mapper,
         ISectionBl sectionBl,
         ISectionDal sectionDal
     )
@@ -34,6 +37,7 @@ public class SectionExtBl : ISectionExtBl
         _fullAddressBl = fullAddressBl;
         _flatBl = flatBl;
         _keyService = keyService;
+        _mapper = mapper;
         _sectionBl = sectionBl;
         _sectionDal = sectionDal;
     }

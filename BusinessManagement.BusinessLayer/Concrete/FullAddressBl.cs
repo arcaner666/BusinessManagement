@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -10,26 +11,33 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 public class FullAddressBl : IFullAddressBl
 {
     private readonly IFullAddressDal _fullAddressDal;
+    private readonly IMapper _mapper;
 
     public FullAddressBl(
-        IFullAddressDal fullAddressDal
+        IFullAddressDal fullAddressDal,
+        IMapper mapper
     )
     {
         _fullAddressDal = fullAddressDal;
+        _mapper = mapper;
     }
 
     public IDataResult<FullAddressDto> Add(FullAddressDto fullAddressDto)
     {
-        FullAddressDto searchedFullAddressDto = _fullAddressDal.GetByAddressText(fullAddressDto.AddressText);
-        if (searchedFullAddressDto is not null)
+        FullAddress searchedFullAddress = _fullAddressDal.GetByAddressText(fullAddressDto.AddressText);
+        if (searchedFullAddress is not null)
             return new ErrorDataResult<FullAddressDto>(Messages.FullAddressAlreadyExists);
 
-        fullAddressDto.CreatedAt = DateTimeOffset.Now;
-        fullAddressDto.UpdatedAt = DateTimeOffset.Now;
-        long id = _fullAddressDal.Add(fullAddressDto);
-        fullAddressDto.FullAddressId = id;
+        var addedFullAddress = _mapper.Map<FullAddress>(fullAddressDto);
 
-        return new SuccessDataResult<FullAddressDto>(fullAddressDto, Messages.FullAddressAdded);
+        addedFullAddress.CreatedAt = DateTimeOffset.Now;
+        addedFullAddress.UpdatedAt = DateTimeOffset.Now;
+        long id = _fullAddressDal.Add(addedFullAddress);
+        addedFullAddress.FullAddressId = id;
+
+        var addedFullAddressDto = _mapper.Map<FullAddressDto>(addedFullAddress);
+
+        return new SuccessDataResult<FullAddressDto>(addedFullAddressDto, Messages.FullAddressAdded);
     }
 
     public IResult Delete(long id)
@@ -45,26 +53,28 @@ public class FullAddressBl : IFullAddressBl
 
     public IDataResult<FullAddressDto> GetById(long id)
     {
-        FullAddressDto fullAddressDto = _fullAddressDal.GetById(id);
-        if (fullAddressDto is null)
+        FullAddress fullAddress = _fullAddressDal.GetById(id);
+        if (fullAddress is null)
             return new ErrorDataResult<FullAddressDto>(Messages.FullAddressNotFound);
+
+        var fullAddressDto = _mapper.Map<FullAddressDto>(fullAddress);
 
         return new SuccessDataResult<FullAddressDto>(fullAddressDto, Messages.FullAddressListedById);
     }
 
     public IResult Update(FullAddressDto fullAddressDto)
     {
-        var searchedFullAddressResult = GetById(fullAddressDto.FullAddressId);
-        if (!searchedFullAddressResult.Success)
-            return searchedFullAddressResult;
+        FullAddress fullAddress = _fullAddressDal.GetById(fullAddressDto.FullAddressId);
+        if (fullAddress is null)
+            return new ErrorDataResult<FullAddressDto>(Messages.FullAddressNotFound);
 
-        searchedFullAddressResult.Data.CityId = fullAddressDto.CityId;
-        searchedFullAddressResult.Data.DistrictId = fullAddressDto.DistrictId;
-        searchedFullAddressResult.Data.AddressTitle = fullAddressDto.AddressTitle;
-        searchedFullAddressResult.Data.PostalCode = fullAddressDto.PostalCode;
-        searchedFullAddressResult.Data.AddressText = fullAddressDto.AddressText;
-        searchedFullAddressResult.Data.UpdatedAt = DateTimeOffset.Now;
-        _fullAddressDal.Update(searchedFullAddressResult.Data);
+        fullAddress.CityId = fullAddressDto.CityId;
+        fullAddress.DistrictId = fullAddressDto.DistrictId;
+        fullAddress.AddressTitle = fullAddressDto.AddressTitle;
+        fullAddress.PostalCode = fullAddressDto.PostalCode;
+        fullAddress.AddressText = fullAddressDto.AddressText;
+        fullAddress.UpdatedAt = DateTimeOffset.Now;
+        _fullAddressDal.Update(fullAddress);
 
         return new SuccessResult(Messages.FullAddressUpdated);
     }

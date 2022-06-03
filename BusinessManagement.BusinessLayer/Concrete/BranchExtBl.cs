@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
@@ -13,16 +14,19 @@ public class BranchExtBl : IBranchExtBl
     private readonly IBranchBl _branchBl;
     private readonly IBranchDal _branchDal;
     private readonly IFullAddressBl _fullAddressBl;
+    private readonly IMapper _mapper;
 
     public BranchExtBl(
         IBranchBl branchBl,
         IBranchDal branchDal,
-        IFullAddressBl fullAddressBl
+        IFullAddressBl fullAddressBl,
+        IMapper mapper
     )
     {
         _branchBl = branchBl;
         _branchDal = branchDal;
         _fullAddressBl = fullAddressBl;
+        _mapper = mapper;
     }
 
     [TransactionScopeAspect]

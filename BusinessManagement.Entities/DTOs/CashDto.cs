@@ -1,12 +1,12 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public class CashDto
+public record CashDto
 {
-    public long CashId { get; set; }
-    public int BusinessId { get; set; }
-    public long BranchId { get; set; }
-    public long AccountId { get; set; }
-    public byte CurrencyId { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
+    public long CashId { get; init; }
+    public int BusinessId { get; init; }
+    public long BranchId { get; init; }
+    public long AccountId { get; init; }
+    public byte CurrencyId { get; init; }
+    public DateTimeOffset CreatedAt { get; init; }
+    public DateTimeOffset UpdatedAt { get; init; }
 }

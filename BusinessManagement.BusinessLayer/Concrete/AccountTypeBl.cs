@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -10,46 +11,57 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 public class AccountTypeBl : IAccountTypeBl
 {
     private readonly IAccountTypeDal _accountTypeDal;
+    private readonly IMapper _mapper;
 
     public AccountTypeBl(
-        IAccountTypeDal accountTypeDal
+        IAccountTypeDal accountTypeDal,
+        IMapper mapper
     )
     {
         _accountTypeDal = accountTypeDal;
+        _mapper = mapper;
     }
 
     public IDataResult<IEnumerable<AccountTypeDto>> GetAll()
     {
-        IEnumerable<AccountTypeDto> accountTypeDtos = _accountTypeDal.GetAll();
-        if (!accountTypeDtos.Any())
+        IEnumerable<AccountType> accountTypes = _accountTypeDal.GetAll();
+        if (!accountTypes.Any())
             return new ErrorDataResult<IEnumerable<AccountTypeDto>>(Messages.AccountTypesNotFound);
+
+        var accountTypeDtos = _mapper.Map<IEnumerable<AccountTypeDto>>(accountTypes);
 
         return new SuccessDataResult<IEnumerable<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListed);
     }
 
     public IDataResult<AccountTypeDto> GetById(short id)
     {
-        AccountTypeDto accountTypeDto = _accountTypeDal.GetById(id);
-        if (accountTypeDto is null)
+        AccountType accountType = _accountTypeDal.GetById(id);
+        if (accountType is null)
             return new ErrorDataResult<AccountTypeDto>(Messages.AccountTypeNotFound);
+
+        var accountTypeDto = _mapper.Map<AccountTypeDto>(accountType);
 
         return new SuccessDataResult<AccountTypeDto>(accountTypeDto, Messages.AccountTypeListedById);
     }
 
     public IDataResult<AccountTypeDto> GetByAccountTypeName(string accountTypeName)
     {
-        AccountTypeDto accountTypeDto = _accountTypeDal.GetByAccountTypeName(accountTypeName);
-        if (accountTypeDto is null)
+        AccountType accountType = _accountTypeDal.GetByAccountTypeName(accountTypeName);
+        if (accountType is null)
             return new ErrorDataResult<AccountTypeDto>(Messages.AccountTypeNotFound);
+
+        var accountTypeDto = _mapper.Map<AccountTypeDto>(accountType);
 
         return new SuccessDataResult<AccountTypeDto>(accountTypeDto, Messages.AccountTypeListedByAccountTypeName);
     }
 
     public IDataResult<IEnumerable<AccountTypeDto>> GetByAccountTypeNames(AccountTypeNamesDto accountTypeNamesDto)
     {
-        IEnumerable<AccountTypeDto> accountTypeDtos = _accountTypeDal.GetByAccountTypeNames(accountTypeNamesDto.AccountTypeNames);
-        if (accountTypeDtos.Count() == 0)
+        IEnumerable<AccountType> accountTypes = _accountTypeDal.GetByAccountTypeNames(accountTypeNamesDto.AccountTypeNames);
+        if (accountTypes.Count() == 0)
             return new ErrorDataResult<IEnumerable<AccountTypeDto>>(Messages.AccountTypesNotFound);
+
+        var accountTypeDtos = _mapper.Map<IEnumerable<AccountTypeDto>>(accountTypes);
 
         return new SuccessDataResult<IEnumerable<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListedByAccountTypeNames);
     }

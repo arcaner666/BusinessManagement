@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -10,26 +11,33 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 public class BankBl : IBankBl
 {
     private readonly IBankDal _bankDal;
+    private readonly IMapper _mapper;
 
     public BankBl(
-        IBankDal bankDal
+        IBankDal bankDal,
+        IMapper mapper
     )
     {
         _bankDal = bankDal;
+        _mapper = mapper;
     }
 
     public IDataResult<BankDto> Add(BankDto bankDto)
     {
-        BankDto searchedBankDto = _bankDal.GetByBusinessIdAndIban(bankDto.BusinessId, bankDto.Iban);
-        if (searchedBankDto is not null)
+        Bank searchedBank = _bankDal.GetByBusinessIdAndIban(bankDto.BusinessId, bankDto.Iban);
+        if (searchedBank is not null)
             return new ErrorDataResult<BankDto>(Messages.BankAlreadyExists);
 
-        bankDto.CreatedAt = DateTimeOffset.Now;
-        bankDto.UpdatedAt = DateTimeOffset.Now;
-        long id = _bankDal.Add(bankDto);
-        bankDto.BankId = id;
+        var addedBank = _mapper.Map<Bank>(bankDto);
 
-        return new SuccessDataResult<BankDto>(bankDto, Messages.BankAdded);
+        addedBank.CreatedAt = DateTimeOffset.Now;
+        addedBank.UpdatedAt = DateTimeOffset.Now;
+        long id = _bankDal.Add(addedBank);
+        addedBank.BankId = id;
+
+        var addedBankDto = _mapper.Map<BankDto>(addedBank);
+
+        return new SuccessDataResult<BankDto>(addedBankDto, Messages.BankAdded);
     }
 
     public IResult Delete(long id)
@@ -45,47 +53,53 @@ public class BankBl : IBankBl
 
     public IDataResult<BankDto> GetByAccountId(long accountId)
     {
-        BankDto bankDto = _bankDal.GetByAccountId(accountId);
-        if (bankDto is null)
+        Bank bank = _bankDal.GetByAccountId(accountId);
+        if (bank is null)
             return new ErrorDataResult<BankDto>(Messages.BankNotFound);
+
+        var bankDto = _mapper.Map<BankDto>(bank);
 
         return new SuccessDataResult<BankDto>(bankDto, Messages.BankListedByAccountId);
     }
 
     public IDataResult<IEnumerable<BankDto>> GetByBusinessId(int businessId)
     {
-        IEnumerable<BankDto> bankDtos = _bankDal.GetByBusinessId(businessId);
-        if (!bankDtos.Any())
+        IEnumerable<Bank> banks = _bankDal.GetByBusinessId(businessId);
+        if (!banks.Any())
             return new ErrorDataResult<IEnumerable<BankDto>>(Messages.BankNotFound);
+
+        var bankDtos = _mapper.Map<IEnumerable<BankDto>>(banks);
 
         return new SuccessDataResult<IEnumerable<BankDto>>(bankDtos, Messages.BankListedByBusinessId);
     }
 
     public IDataResult<BankDto> GetById(long id)
     {
-        BankDto bankDto = _bankDal.GetById(id);
-        if (bankDto is null)
+        Bank bank = _bankDal.GetById(id);
+        if (bank is null)
             return new ErrorDataResult<BankDto>(Messages.BankNotFound);
+
+        var bankDto = _mapper.Map<BankDto>(bank);
 
         return new SuccessDataResult<BankDto>(bankDto, Messages.BankListedById);
     }
 
     public IResult Update(BankDto bankDto)
     {
-        var searchedBankResult = GetById(bankDto.BankId);
-        if (!searchedBankResult.Success)
-            return searchedBankResult;
+        Bank bank = _bankDal.GetById(bankDto.BankId);
+        if (bank is null)
+            return new ErrorDataResult<BankDto>(Messages.BankNotFound);
 
-        searchedBankResult.Data.BankName = bankDto.BankName;
-        searchedBankResult.Data.BankBranchName = bankDto.BankBranchName;
-        searchedBankResult.Data.BankCode = bankDto.BankCode;
-        searchedBankResult.Data.BankBranchCode = bankDto.BankBranchCode;
-        searchedBankResult.Data.BankAccountCode = bankDto.BankAccountCode;
-        searchedBankResult.Data.Iban = bankDto.Iban;
-        searchedBankResult.Data.OfficerName = bankDto.OfficerName;
-        searchedBankResult.Data.StandartMaturity = bankDto.StandartMaturity;
-        searchedBankResult.Data.UpdatedAt = DateTimeOffset.Now;
-        _bankDal.Update(searchedBankResult.Data);
+        bank.BankName = bankDto.BankName;
+        bank.BankBranchName = bankDto.BankBranchName;
+        bank.BankCode = bankDto.BankCode;
+        bank.BankBranchCode = bankDto.BankBranchCode;
+        bank.BankAccountCode = bankDto.BankAccountCode;
+        bank.Iban = bankDto.Iban;
+        bank.OfficerName = bankDto.OfficerName;
+        bank.StandartMaturity = bankDto.StandartMaturity;
+        bank.UpdatedAt = DateTimeOffset.Now;
+        _bankDal.Update(bank);
 
         return new SuccessResult(Messages.BankUpdated);
     }

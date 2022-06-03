@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -7,24 +8,27 @@ using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
-public class AccountExtBl : IAccountExtBl
+public record AccountExtBl : IAccountExtBl
 {
     private readonly IAccountBl _accountBl;
     private readonly IAccountDal _accountDal;
     private readonly IAccountGroupBl _accountGroupBl;
     private readonly IBranchBl _branchBl;
+    private readonly IMapper _mapper;
 
     public AccountExtBl(
         IAccountBl accountBl,
         IAccountDal accountDal,
         IAccountGroupBl accountGroupBl,
-        IBranchBl branchBl
+        IBranchBl branchBl,
+        IMapper mapper
     )
     {
         _accountBl = accountBl;
         _accountDal = accountDal;
         _accountGroupBl = accountGroupBl;
         _branchBl = branchBl;
+        _mapper = mapper;
     }
 
     public IResult AddExt(AccountExtDto accountExtDto)
@@ -72,30 +76,32 @@ public class AccountExtBl : IAccountExtBl
         int accountOrder = 1;
         int maxAccountOrder = _accountDal.GetMaxAccountOrderByBusinessIdAndBranchIdAndAccountGroupId(businessId, branchId, getAccountGroupResult.Data.AccountGroupId);
         if (maxAccountOrder != 0)
-        {
             accountOrder = maxAccountOrder + 1;
-        }
 
         // Hesap kodu oluşturulur.
-        AccountCodeDto accountCodeDto = new();
-        accountCodeDto.AccountOrder = accountOrder;
-
-        if (accountCodeDto.AccountOrder < 10)
-            accountCodeDto.AccountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}0000000{accountOrder}";
-        else if (accountCodeDto.AccountOrder < 100)
-            accountCodeDto.AccountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}000000{accountOrder}";
-        else if (accountCodeDto.AccountOrder < 1000)
-            accountCodeDto.AccountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}00000{accountOrder}";
-        else if (accountCodeDto.AccountOrder < 10000)
-            accountCodeDto.AccountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}0000{accountOrder}";
-        else if (accountCodeDto.AccountOrder < 100000)
-            accountCodeDto.AccountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}000{accountOrder}";
-        else if (accountCodeDto.AccountOrder < 1000000)
-            accountCodeDto.AccountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}00{accountOrder}";
-        else if (accountCodeDto.AccountOrder < 10000000)
-            accountCodeDto.AccountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}0{accountOrder}";
+        string accountCode;
+        if (accountOrder < 10)
+            accountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}0000000{accountOrder}";
+        else if (accountOrder < 100)
+            accountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}000000{accountOrder}";
+        else if (accountOrder < 1000)
+            accountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}00000{accountOrder}";
+        else if (accountOrder < 10000)
+            accountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}0000{accountOrder}";
+        else if (accountOrder < 100000)
+            accountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}000{accountOrder}";
+        else if (accountOrder < 1000000)
+            accountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}00{accountOrder}";
+        else if (accountOrder < 10000000)
+            accountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}0{accountOrder}";
         else
-            accountCodeDto.AccountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}{accountOrder}";
+            accountCode = $"{getAccountGroupResult.Data.AccountGroupCode}{getBranchResult.Data.BranchCode}{accountOrder}";
+
+        AccountCodeDto accountCodeDto = new()
+        {
+            AccountOrder = accountOrder,
+            AccountCode = accountCode,
+        };
 
         return new SuccessDataResult<AccountCodeDto>(accountCodeDto, Messages.AccountOrderAndCodeGenerated);
     }

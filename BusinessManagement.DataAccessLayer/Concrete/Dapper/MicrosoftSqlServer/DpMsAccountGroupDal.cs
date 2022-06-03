@@ -1,5 +1,5 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +13,7 @@ public class DpMsAccountGroupDal : IAccountGroupDal
         _context = context;
     }
 
-    public IEnumerable<AccountGroupDto> GetAll()
+    public IEnumerable<AccountGroup> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -21,10 +21,10 @@ public class DpMsAccountGroupDal : IAccountGroupDal
             + " AccountGroupName,"
             + " AccountGroupCode"
             + " FROM AccountGroup";
-        return connection.Query<AccountGroupDto>(sql).ToList();
+        return connection.Query<AccountGroup>(sql).ToList();
     }
 
-    public AccountGroupDto GetByAccountGroupCode(string accountGroupCode)
+    public AccountGroup GetByAccountGroupCode(string accountGroupCode)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -33,13 +33,13 @@ public class DpMsAccountGroupDal : IAccountGroupDal
             + " AccountGroupCode"
             + " FROM AccountGroup"
             + " WHERE AccountGroupCode = @AccountGroupCode";
-        return connection.Query<AccountGroupDto>(sql, new
+        return connection.Query<AccountGroup>(sql, new
         {
             @AccountGroupCode = accountGroupCode,
         }).SingleOrDefault();
     }
 
-    public IEnumerable<AccountGroupDto> GetByAccountGroupCodes(string[] accountGroupCodes)
+    public IEnumerable<AccountGroup> GetByAccountGroupCodes(string[] accountGroupCodes)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -48,13 +48,13 @@ public class DpMsAccountGroupDal : IAccountGroupDal
            + " AccountGroupCode"
            + " FROM AccountGroup"
            + " WHERE AccountGroupCode IN @AccountGroupCodes";
-        return connection.Query<AccountGroupDto>(sql, new
+        return connection.Query<AccountGroup>(sql, new
         {
             @AccountGroupCodes = accountGroupCodes,
         }).ToList();
     }
 
-    public AccountGroupDto GetById(short id)
+    public AccountGroup GetById(short id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -63,6 +63,6 @@ public class DpMsAccountGroupDal : IAccountGroupDal
             + " AccountGroupCode"
             + " FROM AccountGroup"
             + " WHERE AccountGroupId = @AccountGroupId";
-        return connection.Query<AccountGroupDto>(sql, new { @AccountGroupId = id }).SingleOrDefault();
+        return connection.Query<AccountGroup>(sql, new { @AccountGroupId = id }).SingleOrDefault();
     }
 }

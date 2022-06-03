@@ -1,5 +1,5 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +13,7 @@ public class DpMsSystemUserDal : ISystemUserDal
         _context = context;
     }
 
-    public long Add(SystemUserDto systemUserDto)
+    public long Add(SystemUser systemUser)
     {
         using var connection = _context.CreateConnection();
         var sql = "INSERT INTO SystemUser ("
@@ -43,7 +43,7 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return connection.Query<long>(sql, systemUserDto).Single();
+        return connection.Query<long>(sql, systemUser).Single();
     }
 
     public void Delete(long id)
@@ -54,7 +54,7 @@ public class DpMsSystemUserDal : ISystemUserDal
         connection.Execute(sql, new { @SystemUserId = id });
     }
 
-    public SystemUserDto GetByEmail(string email)
+    public SystemUser GetByEmail(string email)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -73,10 +73,10 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " UpdatedAt"
             + " FROM SystemUser su"
             + " WHERE Email = @Email";
-        return connection.Query<SystemUserDto>(sql, new { @Email = email }).SingleOrDefault();
+        return connection.Query<SystemUser>(sql, new { @Email = email }).SingleOrDefault();
     }
 
-    public SystemUserDto GetById(long id)
+    public SystemUser GetById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -95,10 +95,10 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " UpdatedAt"
             + " FROM SystemUser"
             + " WHERE SystemUserId = @SystemUserId";
-        return connection.Query<SystemUserDto>(sql, new { @SystemUserId = id }).SingleOrDefault();
+        return connection.Query<SystemUser>(sql, new { @SystemUserId = id }).SingleOrDefault();
     }
 
-    public SystemUserDto GetByPhone(string phone)
+    public SystemUser GetByPhone(string phone)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -117,10 +117,10 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " UpdatedAt"
             + " FROM SystemUser"
             + " WHERE Phone = @Phone";
-        return connection.Query<SystemUserDto>(sql, new { @Phone = phone }).SingleOrDefault();
+        return connection.Query<SystemUser>(sql, new { @Phone = phone }).SingleOrDefault();
     }
 
-    public void Update(SystemUserDto systemUserDto)
+    public void Update(SystemUser systemUser)
     {
         using var connection = _context.CreateConnection();
         var sql = "UPDATE SystemUser SET"
@@ -137,6 +137,6 @@ public class DpMsSystemUserDal : ISystemUserDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE SystemUserId = @SystemUserId";
-        connection.Execute(sql, systemUserDto);
+        connection.Execute(sql, systemUser);
     }
 }

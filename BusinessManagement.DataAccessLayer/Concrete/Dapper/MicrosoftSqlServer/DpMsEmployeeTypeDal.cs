@@ -1,5 +1,5 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,13 +13,13 @@ public class DpMsEmployeeTypeDal : IEmployeeTypeDal
         _context = context;
     }
 
-    public IEnumerable<EmployeeTypeDto> GetAll()
+    public IEnumerable<EmployeeType> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " EmployeeTypeId,"
             + " EmployeeTypeName"
             + " FROM EmployeeType";
-        return connection.Query<EmployeeTypeDto>(sql).ToList();
+        return connection.Query<EmployeeType>(sql).ToList();
     }
 }

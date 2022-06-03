@@ -1,8 +1,8 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public class AccountGroupDto
+public record AccountGroupDto
 {
-    public short AccountGroupId { get; set; }
-    public string AccountGroupName { get; set; }
-    public string AccountGroupCode { get; set; }
+    public short AccountGroupId { get; init; }
+    public string AccountGroupName { get; init; }
+    public string AccountGroupCode { get; init; }
 }

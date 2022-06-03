@@ -1,17 +1,17 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IApartmentDal
 {
-    long Add(ApartmentDto apartmentDto);
+    long Add(Apartment apartment);
     void Delete(long id);
-    ApartmentDto GetByApartmentCode(string apartmentCode);
-    IEnumerable<ApartmentDto> GetByBusinessId(int businessId);
-    ApartmentDto GetById(long id);
-    IEnumerable<ApartmentDto> GetBySectionId(int sectionId);
-    ApartmentExtDto GetExtById(long id);
-    IEnumerable<ApartmentExtDto> GetExtsByBusinessId(int businessId);
-    void Update(ApartmentDto apartmentDto);
+    Apartment GetByApartmentCode(string apartmentCode);
+    IEnumerable<Apartment> GetByBusinessId(int businessId);
+    Apartment GetById(long id);
+    IEnumerable<Apartment> GetBySectionId(int sectionId);
+    ApartmentExt GetExtById(long id);
+    IEnumerable<ApartmentExt> GetExtsByBusinessId(int businessId);
+    void Update(Apartment apartment);
 }

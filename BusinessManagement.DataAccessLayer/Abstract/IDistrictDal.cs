@@ -1,10 +1,9 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
-using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IDistrictDal
 {
-    IEnumerable<DistrictDto> GetAll();
-    IEnumerable<DistrictDto> GetByCityId(short cityId);
+    IEnumerable<District> GetAll();
+    IEnumerable<District> GetByCityId(short cityId);
 }

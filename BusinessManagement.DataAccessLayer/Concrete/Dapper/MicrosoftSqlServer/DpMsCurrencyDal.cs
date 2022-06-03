@@ -1,5 +1,5 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +13,7 @@ public class DpMsCurrencyDal : ICurrencyDal
         _context = context;
     }
 
-    public IEnumerable<CurrencyDto> GetAll()
+    public IEnumerable<Currency> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -21,10 +21,10 @@ public class DpMsCurrencyDal : ICurrencyDal
             + " CurrencyName,"
             + " CurrencySymbol"
             + " FROM Currency";
-        return connection.Query<CurrencyDto>(sql).ToList();
+        return connection.Query<Currency>(sql).ToList();
     }        
     
-    public CurrencyDto GetByCurrencyName(string currencyName)
+    public Currency GetByCurrencyName(string currencyName)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -33,6 +33,6 @@ public class DpMsCurrencyDal : ICurrencyDal
             + " CurrencySymbol"
             + " FROM Currency"
             + " WHERE CurrencyName = @CurrencyName";
-        return connection.Query<CurrencyDto>(sql, new { @CurrencyName = currencyName }).SingleOrDefault();
+        return connection.Query<Currency>(sql, new { @CurrencyName = currencyName }).SingleOrDefault();
     }
 }

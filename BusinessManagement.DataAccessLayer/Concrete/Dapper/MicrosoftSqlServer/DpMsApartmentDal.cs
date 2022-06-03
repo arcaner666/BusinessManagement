@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +14,7 @@ public class DpMsApartmentDal : IApartmentDal
         _context = context;
     }
 
-    public long Add(ApartmentDto apartmentDto)
+    public long Add(Apartment apartment)
     {
         using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Apartment ("
@@ -37,7 +38,7 @@ public class DpMsApartmentDal : IApartmentDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return connection.Query<long>(sql, apartmentDto).Single();
+        return connection.Query<long>(sql, apartment).Single();
     }
 
     public void Delete(long id)
@@ -48,7 +49,7 @@ public class DpMsApartmentDal : IApartmentDal
         connection.Execute(sql, new { @ApartmentId = id });
     }
 
-    public ApartmentDto GetByApartmentCode(string apartmentCode)
+    public Apartment GetByApartmentCode(string apartmentCode)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -64,10 +65,10 @@ public class DpMsApartmentDal : IApartmentDal
             + " UpdatedAt"
             + " FROM Apartment"
             + " WHERE ApartmentCode = @ApartmentCode";
-        return connection.Query<ApartmentDto>(sql, new { @ApartmentCode = apartmentCode }).SingleOrDefault();
+        return connection.Query<Apartment>(sql, new { @ApartmentCode = apartmentCode }).SingleOrDefault();
     }
 
-    public IEnumerable<ApartmentDto> GetByBusinessId(int businessId)
+    public IEnumerable<Apartment> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -83,10 +84,10 @@ public class DpMsApartmentDal : IApartmentDal
             + " UpdatedAt"
             + " FROM Apartment"
             + " WHERE BusinessId = @BusinessId";
-        return connection.Query<ApartmentDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<Apartment>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public ApartmentDto GetById(long id)
+    public Apartment GetById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -102,10 +103,10 @@ public class DpMsApartmentDal : IApartmentDal
             + " UpdatedAt"
             + " FROM Apartment"
             + " WHERE ApartmentId = @ApartmentId";
-        return connection.Query<ApartmentDto>(sql, new { @ApartmentId = id }).SingleOrDefault();
+        return connection.Query<Apartment>(sql, new { @ApartmentId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<ApartmentDto> GetBySectionId(int sectionId)
+    public IEnumerable<Apartment> GetBySectionId(int sectionId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -121,10 +122,10 @@ public class DpMsApartmentDal : IApartmentDal
             + " UpdatedAt"
             + " FROM Apartment"
             + " WHERE SectionId = @SectionId";
-        return connection.Query<ApartmentDto>(sql, new { @SectionId = sectionId }).ToList();
+        return connection.Query<Apartment>(sql, new { @SectionId = sectionId }).ToList();
     }
 
-    public ApartmentExtDto GetExtById(long id)
+    public ApartmentExt GetExtById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -144,10 +145,10 @@ public class DpMsApartmentDal : IApartmentDal
             + " INNER JOIN Section s ON a.SectionId = s.SectionId"
             + " INNER JOIN Manager m ON a.ManagerId = m.ManagerId"
             + " WHERE a.ApartmentId = @ApartmentId";
-        return connection.Query<ApartmentExtDto>(sql, new { @ApartmentId = id }).SingleOrDefault();
+        return connection.Query<ApartmentExt>(sql, new { @ApartmentId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<ApartmentExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<ApartmentExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -167,10 +168,10 @@ public class DpMsApartmentDal : IApartmentDal
             + " INNER JOIN Section s ON a.SectionId = s.SectionId"
             + " INNER JOIN Manager m ON a.ManagerId = m.ManagerId"
             + " WHERE a.BusinessId = @BusinessId";
-        return connection.Query<ApartmentExtDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<ApartmentExt>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(ApartmentDto apartmentDto)
+    public void Update(Apartment apartment)
     {
         using var connection = _context.CreateConnection();
         var sql = "UPDATE Apartment SET"
@@ -184,6 +185,6 @@ public class DpMsApartmentDal : IApartmentDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE ApartmentId = @ApartmentId";
-        connection.Execute(sql, apartmentDto);
+        connection.Execute(sql, apartment);
     }
 }

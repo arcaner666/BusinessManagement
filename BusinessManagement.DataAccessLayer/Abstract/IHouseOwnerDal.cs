@@ -1,18 +1,18 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IHouseOwnerDal
 {
-    long Add(HouseOwnerDto houseOwnerDto);
+    long Add(HouseOwner houseOwner);
     void Delete(long id);
-    HouseOwnerDto GetByAccountId(long accountId);
-    IEnumerable<HouseOwnerDto> GetByBusinessId(int businessId);
-    HouseOwnerDto GetByBusinessIdAndAccountId(int businessId, long accountId);
-    HouseOwnerDto GetById(long id);
-    HouseOwnerExtDto GetExtByAccountId(long accountId);
-    HouseOwnerExtDto GetExtById(long id);
-    IEnumerable<HouseOwnerExtDto> GetExtsByBusinessId(int businessId);
-    void Update(HouseOwnerDto houseOwnerDto);
+    HouseOwner GetByAccountId(long accountId);
+    IEnumerable<HouseOwner> GetByBusinessId(int businessId);
+    HouseOwner GetByBusinessIdAndAccountId(int businessId, long accountId);
+    HouseOwner GetById(long id);
+    HouseOwnerExt GetExtByAccountId(long accountId);
+    HouseOwnerExt GetExtById(long id);
+    IEnumerable<HouseOwnerExt> GetExtsByBusinessId(int businessId);
+    void Update(HouseOwner houseOwner);
 }

@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -10,31 +11,36 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 public class EmployeeBl : IEmployeeBl
 {
     private readonly IEmployeeDal _employeeDal;
+    private readonly IMapper _mapper;
 
     public EmployeeBl(
-        IEmployeeDal employeeDal
+        IEmployeeDal employeeDal,
+        IMapper mapper
     )
     {
         _employeeDal = employeeDal;
+        _mapper = mapper;
     }
 
     public IDataResult<EmployeeDto> Add(EmployeeDto employeeDto)
     {
-        EmployeeDto searchedEmployeeDto = _employeeDal.GetByBusinessIdAndAccountId(employeeDto.BusinessId, employeeDto.AccountId);
-        if (searchedEmployeeDto is not null)
-        {
+        Employee searchedEmployee = _employeeDal.GetByBusinessIdAndAccountId(employeeDto.BusinessId, employeeDto.AccountId);
+        if (searchedEmployee is not null)
             return new ErrorDataResult<EmployeeDto>(Messages.EmployeeAlreadyExists);
-        }
 
-        employeeDto.StillWorking = true;
-        employeeDto.StartDate = DateTime.Now;
-        employeeDto.QuitDate = null;
-        employeeDto.CreatedAt = DateTimeOffset.Now;
-        employeeDto.UpdatedAt = DateTimeOffset.Now;
-        long id = _employeeDal.Add(employeeDto);
-        employeeDto.EmployeeId = id;
+        var addedEmployee = _mapper.Map<Employee>(employeeDto);
 
-        return new SuccessDataResult<EmployeeDto>(employeeDto, Messages.EmployeeAdded);
+        addedEmployee.StillWorking = true;
+        addedEmployee.StartDate = DateTime.Now;
+        addedEmployee.QuitDate = null;
+        addedEmployee.CreatedAt = DateTimeOffset.Now;
+        addedEmployee.UpdatedAt = DateTimeOffset.Now;
+        long id = _employeeDal.Add(addedEmployee);
+        addedEmployee.EmployeeId = id;
+
+        var addedEmployeeDto = _mapper.Map<EmployeeDto>(addedEmployee);
+
+        return new SuccessDataResult<EmployeeDto>(addedEmployeeDto, Messages.EmployeeAdded);
     }
 
     public IResult Delete(long id)
@@ -50,41 +56,45 @@ public class EmployeeBl : IEmployeeBl
 
     public IDataResult<EmployeeDto> GetByAccountId(long accountId)
     {
-        EmployeeDto employeeDto = _employeeDal.GetByAccountId(accountId);
-        if (employeeDto is null)
+        Employee employee = _employeeDal.GetByAccountId(accountId);
+        if (employee is null)
             return new ErrorDataResult<EmployeeDto>(Messages.EmployeeNotFound);
+
+        var employeeDto = _mapper.Map<EmployeeDto>(employee);
 
         return new SuccessDataResult<EmployeeDto>(employeeDto, Messages.EmployeeListedByAccountId);
     }
 
     public IDataResult<EmployeeDto> GetById(long id)
     {
-        EmployeeDto employeeDto = _employeeDal.GetById(id);
-        if (employeeDto is null)
+        Employee employee = _employeeDal.GetById(id);
+        if (employee is null)
             return new ErrorDataResult<EmployeeDto>(Messages.EmployeeNotFound);
+
+        var employeeDto = _mapper.Map<EmployeeDto>(employee);
 
         return new SuccessDataResult<EmployeeDto>(employeeDto, Messages.EmployeeListedById);
     }
 
     public IResult Update(EmployeeDto employeeDto)
     {
-        var searchedEmployeeResult = GetById(employeeDto.EmployeeId);
-        if (!searchedEmployeeResult.Success)
-            return searchedEmployeeResult;
+        Employee employee = _employeeDal.GetById(employeeDto.EmployeeId);
+        if (employee is null)
+            return new ErrorDataResult<EmployeeDto>(Messages.EmployeeNotFound);
 
-        searchedEmployeeResult.Data.EmployeeTypeId = employeeDto.EmployeeTypeId;
-        searchedEmployeeResult.Data.NameSurname = employeeDto.NameSurname;
-        searchedEmployeeResult.Data.Email = employeeDto.Email;
-        searchedEmployeeResult.Data.DateOfBirth = employeeDto.DateOfBirth;
-        searchedEmployeeResult.Data.Gender = employeeDto.Gender;
-        searchedEmployeeResult.Data.Notes = employeeDto.Notes;
-        searchedEmployeeResult.Data.AvatarUrl = employeeDto.AvatarUrl;
-        searchedEmployeeResult.Data.IdentityNumber = employeeDto.IdentityNumber;
-        searchedEmployeeResult.Data.StillWorking = employeeDto.StillWorking;
-        searchedEmployeeResult.Data.StartDate = employeeDto.StartDate;
-        searchedEmployeeResult.Data.QuitDate = employeeDto.QuitDate;
-        searchedEmployeeResult.Data.UpdatedAt = DateTimeOffset.Now;
-        _employeeDal.Update(searchedEmployeeResult.Data);
+        employee.EmployeeTypeId = employeeDto.EmployeeTypeId;
+        employee.NameSurname = employeeDto.NameSurname;
+        employee.Email = employeeDto.Email;
+        employee.DateOfBirth = employeeDto.DateOfBirth;
+        employee.Gender = employeeDto.Gender;
+        employee.Notes = employeeDto.Notes;
+        employee.AvatarUrl = employeeDto.AvatarUrl;
+        employee.IdentityNumber = employeeDto.IdentityNumber;
+        employee.StillWorking = employeeDto.StillWorking;
+        employee.StartDate = employeeDto.StartDate;
+        employee.QuitDate = employeeDto.QuitDate;
+        employee.UpdatedAt = DateTimeOffset.Now;
+        _employeeDal.Update(employee);
 
         return new SuccessResult(Messages.EmployeeUpdated);
     }

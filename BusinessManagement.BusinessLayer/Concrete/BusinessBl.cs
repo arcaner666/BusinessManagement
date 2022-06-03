@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -10,27 +11,34 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 public class BusinessBl : IBusinessBl
 {
     private readonly IBusinessDal _businessDal;
+    private readonly IMapper _mapper;
 
     public BusinessBl(
-        IBusinessDal businessDal
+        IBusinessDal businessDal,
+        IMapper mapper
     )
     {
         _businessDal = businessDal;
+        _mapper = mapper;
     }
 
     public IDataResult<BusinessDto> Add(BusinessDto businessDto)
     {
-        BusinessDto searchedBusinessDto = _businessDal.GetByBusinessName(businessDto.BusinessName);
-        if (searchedBusinessDto is not null)
+        Business searchedBusiness = _businessDal.GetByBusinessName(businessDto.BusinessName);
+        if (searchedBusiness is not null)
             return new ErrorDataResult<BusinessDto>(Messages.BusinessAlreadyExists);
 
-        businessDto.BusinessOrder = 0; // Her işletmeye özel bir kod üretilecek.
-        businessDto.BusinessCode = ""; // Her işletmeye özel bir kod üretilecek.
-        businessDto.CreatedAt = DateTimeOffset.Now;
-        businessDto.UpdatedAt = DateTimeOffset.Now;
-        int id = _businessDal.Add(businessDto);
-        businessDto.BusinessId = id;
+        var addedBusiness = _mapper.Map<Business>(businessDto);
 
-        return new SuccessDataResult<BusinessDto>(businessDto, Messages.BusinessAdded);
+        addedBusiness.BusinessOrder = 0; // Her işletmeye özel bir kod üretilecek.
+        addedBusiness.BusinessCode = ""; // Her işletmeye özel bir kod üretilecek.
+        addedBusiness.CreatedAt = DateTimeOffset.Now;
+        addedBusiness.UpdatedAt = DateTimeOffset.Now;
+        int id = _businessDal.Add(addedBusiness);
+        addedBusiness.BusinessId = id;
+
+        var addedBusinessDto = _mapper.Map<BusinessDto>(addedBusiness);
+
+        return new SuccessDataResult<BusinessDto>(addedBusinessDto, Messages.BusinessAdded);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +14,7 @@ public class DpMsBankDal : IBankDal
         _context = context;
     }
 
-    public long Add(BankDto bankDto)
+    public long Add(Bank bank)
     {
         using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Bank (" 
@@ -49,7 +50,7 @@ public class DpMsBankDal : IBankDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return connection.Query<long>(sql, bankDto).Single();
+        return connection.Query<long>(sql, bank).Single();
     }
 
     public void Delete(long id)
@@ -60,7 +61,7 @@ public class DpMsBankDal : IBankDal
         connection.Execute(sql, new { @BankId = id });
     }
 
-    public BankDto GetByAccountId(long accountId)
+    public Bank GetByAccountId(long accountId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -82,10 +83,10 @@ public class DpMsBankDal : IBankDal
             + " UpdatedAt"
             + " FROM Bank"
             + " WHERE AccountId = @AccountId";
-        return connection.Query<BankDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return connection.Query<Bank>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public IEnumerable<BankDto> GetByBusinessId(int businessId)
+    public IEnumerable<Bank> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -107,10 +108,10 @@ public class DpMsBankDal : IBankDal
             + " UpdatedAt"
             + " FROM Bank"
             + " WHERE BusinessId = @BusinessId";
-        return connection.Query<BankDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<Bank>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public BankDto GetByBusinessIdAndIban(int businessId, string iban)
+    public Bank GetByBusinessIdAndIban(int businessId, string iban)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -132,14 +133,14 @@ public class DpMsBankDal : IBankDal
             + " UpdatedAt"
             + " FROM Bank"
             + " WHERE BusinessId = @BusinessId AND Iban = @Iban";
-        return connection.Query<BankDto>(sql, new
+        return connection.Query<Bank>(sql, new
         {
             @BusinessId = businessId,
             @Iban = iban,
         }).SingleOrDefault();
     }
 
-    public BankDto GetById(long id)
+    public Bank GetById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -161,10 +162,10 @@ public class DpMsBankDal : IBankDal
             + " UpdatedAt"
             + " FROM Bank"
             + " WHERE BankId = @BankId";
-        return connection.Query<BankDto>(sql, new { @BankId = id }).SingleOrDefault();
+        return connection.Query<Bank>(sql, new { @BankId = id }).SingleOrDefault();
     }
 
-    public BankExtDto GetExtByAccountId(long accountId)
+    public BankExt GetExtByAccountId(long accountId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT" 
@@ -204,10 +205,10 @@ public class DpMsBankDal : IBankDal
             + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
             + " INNER JOIN Currency cu ON b.CurrencyId = cu.CurrencyId"
             + " WHERE b.AccountId = @AccountId;";
-        return connection.Query<BankExtDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return connection.Query<BankExt>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public BankExtDto GetExtById(long id)
+    public BankExt GetExtById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -247,10 +248,10 @@ public class DpMsBankDal : IBankDal
             + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
             + " INNER JOIN Currency cu ON b.CurrencyId = cu.CurrencyId"
             + " WHERE b.BankId = @BankId;";
-        return connection.Query<BankExtDto>(sql, new { @BankId = id }).SingleOrDefault();
+        return connection.Query<BankExt>(sql, new { @BankId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<BankExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<BankExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -290,10 +291,10 @@ public class DpMsBankDal : IBankDal
             + " INNER JOIN District d ON fa.DistrictId = d.DistrictId"
             + " INNER JOIN Currency cu ON b.CurrencyId = cu.CurrencyId"
             + " WHERE b.BusinessId = @BusinessId;";
-        return connection.Query<BankExtDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<BankExt>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(BankDto bankDto)
+    public void Update(Bank bank)
     {
         using var connection = _context.CreateConnection();
         var sql = "UPDATE Bank SET" 
@@ -313,6 +314,6 @@ public class DpMsBankDal : IBankDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE BankId = @BankId";
-        connection.Execute(sql, bankDto);
+        connection.Execute(sql, bank);
     }
 }

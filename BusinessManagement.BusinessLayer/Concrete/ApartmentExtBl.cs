@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
@@ -15,6 +16,7 @@ public class ApartmentExtBl : IApartmentExtBl
     private readonly IApartmentDal _apartmentDal;
     private readonly IFlatBl _flatBl;
     private readonly IKeyService _keyService;
+    private readonly IMapper _mapper;
     private readonly ISectionBl _sectionBl;
 
     public ApartmentExtBl(
@@ -22,6 +24,7 @@ public class ApartmentExtBl : IApartmentExtBl
         IApartmentDal apartmentDal,
         IFlatBl flatBl,
         IKeyService keyService,
+        IMapper mapper,
         ISectionBl sectionBl
     )
     {
@@ -29,6 +32,7 @@ public class ApartmentExtBl : IApartmentExtBl
         _apartmentDal = apartmentDal;
         _flatBl = flatBl;
         _keyService = keyService;
+        _mapper = mapper;
         _sectionBl = sectionBl;
     }
 

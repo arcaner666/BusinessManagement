@@ -1,13 +1,12 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
-using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IFullAddressDal
 {
-    long Add(FullAddressDto fullAddressDto);
+    long Add(FullAddress fullAddress);
     void Delete(long id);
-    FullAddressDto GetByAddressText(string addressText);
-    FullAddressDto GetById(long id);
-    void Update(FullAddressDto fullAddressDto);
+    FullAddress GetByAddressText(string addressText);
+    FullAddress GetById(long id);
+    void Update(FullAddress fullAddress);
 }

@@ -1,18 +1,18 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public class SystemUserDto
+public record SystemUserDto
 {
-    public long SystemUserId { get; set; }
-    public string Email { get; set; }
-    public string Phone { get; set; }
-    public byte[] PasswordHash { get; set; }
-    public byte[] PasswordSalt { get; set; }
-    public string Role { get; set; }
-    public int BusinessId { get; set; }
-    public long BranchId { get; set; }
-    public bool Blocked { get; set; }
-    public string RefreshToken { get; set; }
-    public DateTime RefreshTokenExpiryTime { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
+    public long SystemUserId { get; init; }
+    public string Email { get; init; }
+    public string Phone { get; init; }
+    public byte[] PasswordHash { get; init; }
+    public byte[] PasswordSalt { get; init; }
+    public string Role { get; init; }
+    public int BusinessId { get; init; }
+    public long BranchId { get; init; }
+    public bool Blocked { get; init; }
+    public string RefreshToken { get; init; }
+    public DateTime RefreshTokenExpiryTime { get; init; }
+    public DateTimeOffset CreatedAt { get; init; }
+    public DateTimeOffset UpdatedAt { get; init; }
 }

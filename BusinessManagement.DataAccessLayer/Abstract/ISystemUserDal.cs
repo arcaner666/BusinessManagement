@@ -1,14 +1,13 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
-using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface ISystemUserDal
 {
-    long Add(SystemUserDto systemUserDto);
+    long Add(SystemUser systemUser);
     void Delete(long id);
-    SystemUserDto GetByEmail(string email);
-    SystemUserDto GetById(long id);
-    SystemUserDto GetByPhone(string phone);
-    void Update(SystemUserDto systemUserDto);
+    SystemUser GetByEmail(string email);
+    SystemUser GetById(long id);
+    SystemUser GetByPhone(string phone);
+    void Update(SystemUser systemUser);
 }

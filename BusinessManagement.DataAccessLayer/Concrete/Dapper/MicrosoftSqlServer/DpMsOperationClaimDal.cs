@@ -1,5 +1,5 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,17 +13,17 @@ public class DpMsOperationClaimDal : IOperationClaimDal
         _context = context;
     }
 
-    public IEnumerable<OperationClaimDto> GetAll()
+    public IEnumerable<OperationClaim> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
             + " oc.OperationClaimId,"
             + " oc.OperationClaimName"
             + " FROM OperationClaim oc";
-        return connection.Query<OperationClaimDto>(sql).ToList();
+        return connection.Query<OperationClaim>(sql).ToList();
     }
 
-    public OperationClaimDto GetByOperationClaimName(string operationClaimName)
+    public OperationClaim GetByOperationClaimName(string operationClaimName)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -31,6 +31,6 @@ public class DpMsOperationClaimDal : IOperationClaimDal
            + " oc.OperationClaimName"
            + " FROM OperationClaim oc"
            + " WHERE oc.OperationClaimName = @OperationClaimName";
-        return connection.Query<OperationClaimDto>(sql, new { @OperationClaimName = operationClaimName }).SingleOrDefault();
+        return connection.Query<OperationClaim>(sql, new { @OperationClaimName = operationClaimName }).SingleOrDefault();
     }
 }

@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
@@ -12,14 +13,17 @@ public class ManagerExtBl : IManagerExtBl
 {
     private readonly IManagerBl _managerBl;
     private readonly IManagerDal _managerDal;
+    private readonly IMapper _mapper;
 
     public ManagerExtBl(
         IManagerBl managerBl,
-        IManagerDal managerDal
+        IManagerDal managerDal,
+        IMapper mapper
     )
     {
         _managerBl = managerBl;
         _managerDal = managerDal;
+        _mapper = mapper;
     }
 
     public IDataResult<IEnumerable<ManagerExtDto>> GetExtsByBusinessId(int businessId)

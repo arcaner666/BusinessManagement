@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -10,49 +11,59 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 public class AccountGroupBl : IAccountGroupBl
 {
     private readonly IAccountGroupDal _accountGroupDal;
+    private readonly IMapper _mapper;
 
     public AccountGroupBl(
-        IAccountGroupDal accountGroupDal
+        IAccountGroupDal accountGroupDal,
+        IMapper mapper
     )
     {
         _accountGroupDal = accountGroupDal;
+        _mapper = mapper;
     }
 
     public IDataResult<IEnumerable<AccountGroupDto>> GetAll()
     {
-        //return new ErrorDataResult<IEnumerable<AccountGroupDto>>(Messages.AccountGroupsNotFound);
         //throw new Exception("new Exception");
 
-        IEnumerable<AccountGroupDto> accountGroupDtos = _accountGroupDal.GetAll();
-        if (!accountGroupDtos.Any())
+        IEnumerable<AccountGroup> accountGroups = _accountGroupDal.GetAll();
+        if (!accountGroups.Any())
             return new ErrorDataResult<IEnumerable<AccountGroupDto>>(Messages.AccountGroupsNotFound);
+
+        var accountGroupDtos = _mapper.Map<IEnumerable<AccountGroupDto>>(accountGroups);
 
         return new SuccessDataResult<IEnumerable<AccountGroupDto>>(accountGroupDtos, Messages.AccountGroupsListed);
     }
 
     public IDataResult<AccountGroupDto> GetByAccountGroupCode(string accountGroupCode)
     {
-        AccountGroupDto accountGroupDto = _accountGroupDal.GetByAccountGroupCode(accountGroupCode);
-        if (accountGroupDto is null)
+        AccountGroup accountGroup = _accountGroupDal.GetByAccountGroupCode(accountGroupCode);
+        if (accountGroup is null)
             return new ErrorDataResult<AccountGroupDto>(Messages.AccountGroupNotFound);
+
+        var accountGroupDto = _mapper.Map<AccountGroupDto>(accountGroup);
 
         return new SuccessDataResult<AccountGroupDto>(accountGroupDto, Messages.AccountGroupListedByAccountGroupCode);
     }
 
     public IDataResult<IEnumerable<AccountGroupDto>> GetByAccountGroupCodes(AccountGroupCodesDto accountGroupCodesDto)
     {
-        IEnumerable<AccountGroupDto> accountGroupDtos = _accountGroupDal.GetByAccountGroupCodes(accountGroupCodesDto.AccountGroupCodes);
-        if (!accountGroupDtos.Any())
+        IEnumerable<AccountGroup> accountGroups = _accountGroupDal.GetByAccountGroupCodes(accountGroupCodesDto.AccountGroupCodes);
+        if (!accountGroups.Any())
             return new ErrorDataResult<IEnumerable<AccountGroupDto>>(Messages.AccountGroupsNotFound);
+
+        var accountGroupDtos = _mapper.Map<IEnumerable<AccountGroupDto>>(accountGroups);
 
         return new SuccessDataResult<IEnumerable<AccountGroupDto>>(accountGroupDtos, Messages.AccountGroupsListedByAccountGroupCodes);
     }
 
     public IDataResult<AccountGroupDto> GetById(short id)
     {
-        AccountGroupDto accountGroupDto = _accountGroupDal.GetById(id);
-        if (accountGroupDto is null)
+        AccountGroup accountGroup = _accountGroupDal.GetById(id);
+        if (accountGroup is null)
             return new ErrorDataResult<AccountGroupDto>(Messages.AccountGroupNotFound);
+
+        var accountGroupDto = _mapper.Map<AccountGroupDto>(accountGroup);
 
         return new SuccessDataResult<AccountGroupDto>(accountGroupDto, Messages.AccountGroupListedById);
     }

@@ -1,5 +1,6 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +14,7 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
         _context = context;
     }
 
-    public long Add(HouseOwnerDto houseOwnerDto)
+    public long Add(HouseOwner houseOwner)
     {
         using var connection = _context.CreateConnection();
         var sql = "INSERT INTO HouseOwner ("
@@ -51,7 +52,7 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return connection.Query<long>(sql, houseOwnerDto).Single();
+        return connection.Query<long>(sql, houseOwner).Single();
     }
 
     public void Delete(long id)
@@ -62,7 +63,7 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
         connection.Execute(sql, new { @HouseOwnerId = id });
     }
 
-    public HouseOwnerDto GetByAccountId(long accountId)
+    public HouseOwner GetByAccountId(long accountId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -85,10 +86,10 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
             + " UpdatedAt"
             + " FROM HouseOwner"
             + " WHERE AccountId = @AccountId";
-        return connection.Query<HouseOwnerDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return connection.Query<HouseOwner>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public IEnumerable<HouseOwnerDto> GetByBusinessId(int businessId)
+    public IEnumerable<HouseOwner> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -111,10 +112,10 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
             + " UpdatedAt"
             + " FROM HouseOwner"
             + " WHERE BusinessId = @BusinessId";
-        return connection.Query<HouseOwnerDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<HouseOwner>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public HouseOwnerDto GetByBusinessIdAndAccountId(int businessId, long accountId)
+    public HouseOwner GetByBusinessIdAndAccountId(int businessId, long accountId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -137,14 +138,14 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
             + " UpdatedAt"
             + " FROM HouseOwner"
             + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
-        return connection.Query<HouseOwnerDto>(sql, new
+        return connection.Query<HouseOwner>(sql, new
         {
             @BusinessId = businessId,
             @AccountId = accountId,
         }).SingleOrDefault();
     }
 
-    public HouseOwnerDto GetById(long id)
+    public HouseOwner GetById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -167,10 +168,10 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
             + " UpdatedAt"
             + " FROM HouseOwner"
             + " WHERE HouseOwnerId = @HouseOwnerId";
-        return connection.Query<HouseOwnerDto>(sql, new { @HouseOwnerId = id }).SingleOrDefault();
+        return connection.Query<HouseOwner>(sql, new { @HouseOwnerId = id }).SingleOrDefault();
     }
 
-    public HouseOwnerExtDto GetExtByAccountId(long accountId)
+    public HouseOwnerExt GetExtByAccountId(long accountId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -201,10 +202,10 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
             + " INNER JOIN Account a ON ho.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " WHERE ho.AccountId = @AccountId";
-        return connection.Query<HouseOwnerExtDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return connection.Query<HouseOwnerExt>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public HouseOwnerExtDto GetExtById(long id)
+    public HouseOwnerExt GetExtById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -235,10 +236,10 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
             + " INNER JOIN Account a ON ho.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " WHERE ho.HouseOwnerId = @HouseOwnerId";
-        return connection.Query<HouseOwnerExtDto>(sql, new { @HouseOwnerId = id }).SingleOrDefault();
+        return connection.Query<HouseOwnerExt>(sql, new { @HouseOwnerId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<HouseOwnerExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<HouseOwnerExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -269,10 +270,10 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
             + " INNER JOIN Account a ON ho.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " WHERE ho.BusinessId = @BusinessId";
-        return connection.Query<HouseOwnerExtDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<HouseOwnerExt>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(HouseOwnerDto houseOwnerDto)
+    public void Update(HouseOwner houseOwner)
     {
         using var connection = _context.CreateConnection();
         var sql = "UPDATE HouseOwner SET"
@@ -293,6 +294,6 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE HouseOwnerId = @HouseOwnerId";
-        connection.Execute(sql, houseOwnerDto);
+        connection.Execute(sql, houseOwner);
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public class AccountTypeDto
+public record AccountTypeDto
 {
-    public short AccountTypeId { get; set; }
-    public string AccountTypeName { get; set; }
+    public short AccountTypeId { get; init; }
+    public string AccountTypeName { get; init; }
 }

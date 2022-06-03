@@ -1,21 +1,21 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public class BankDto
+public record BankDto
 {
-    public long BankId { get; set; }
-    public int BusinessId { get; set; }
-    public long BranchId { get; set; }
-    public long AccountId { get; set; }
-    public long FullAddressId { get; set; }
-    public byte CurrencyId { get; set; }
-    public string BankName { get; set; }
-    public string BankBranchName { get; set; }
-    public string BankCode { get; set; }
-    public string BankBranchCode { get; set; }
-    public string BankAccountCode { get; set; }
-    public string Iban { get; set; }
-    public string OfficerName { get; set; }
-    public short StandartMaturity { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
+    public long BankId { get; init; }
+    public int BusinessId { get; init; }
+    public long BranchId { get; init; }
+    public long AccountId { get; init; }
+    public long FullAddressId { get; init; }
+    public byte CurrencyId { get; init; }
+    public string BankName { get; init; }
+    public string BankBranchName { get; init; }
+    public string BankCode { get; init; }
+    public string BankBranchCode { get; init; }
+    public string BankAccountCode { get; init; }
+    public string Iban { get; init; }
+    public string OfficerName { get; init; }
+    public short StandartMaturity { get; init; }
+    public DateTimeOffset CreatedAt { get; init; }
+    public DateTimeOffset UpdatedAt { get; init; }
 }

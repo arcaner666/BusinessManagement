@@ -1,12 +1,11 @@
 ﻿using BusinessManagement.Entities.DatabaseModels;
-using BusinessManagement.Entities.DTOs;
 
 namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IAccountTypeDal
 {
-    IEnumerable<AccountTypeDto> GetAll();
-    AccountTypeDto GetByAccountTypeName(string accountTypeName);
-    IEnumerable<AccountTypeDto> GetByAccountTypeNames(string[] accountTypeNames);
-    AccountTypeDto GetById(short id);
+    IEnumerable<AccountType> GetAll();
+    AccountType GetByAccountTypeName(string accountTypeName);
+    IEnumerable<AccountType> GetByAccountTypeNames(string[] accountTypeNames);
+    AccountType GetById(short id);
 }

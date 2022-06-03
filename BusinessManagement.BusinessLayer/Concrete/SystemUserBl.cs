@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.BusinessLayer.Utilities.Security.Hashing;
@@ -10,83 +11,95 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 
 public class SystemUserBl : ISystemUserBl
 {
+    private readonly IMapper _mapper;
     private readonly ISystemUserDal _systemUserDal;
 
     public SystemUserBl(
+        IMapper mapper,
         ISystemUserDal systemUserDal
     )
     {
+        _mapper = mapper;
         _systemUserDal = systemUserDal;
     }
 
     public IDataResult<SystemUserDto> Add(SystemUserDto systemUserDto)
     {
-        SystemUserDto searchedSystemUserDto = _systemUserDal.GetByPhone(systemUserDto.Phone);
-        if (searchedSystemUserDto is not null)
+        SystemUser searchedSystemUser = _systemUserDal.GetByPhone(systemUserDto.Phone);
+        if (searchedSystemUser is not null)
             return new ErrorDataResult<SystemUserDto>(Messages.SystemUserAlreadyExists);
 
         // Şu aşamada, kayıt olan kullanıcıya SMS ile şifre gönderilemediği için şifre 123456 yapıldı.
         HashingHelper.CreatePasswordHash("123456", out byte[] passwordHash, out byte[] passwordSalt);
 
-        systemUserDto.Email = "";
-        systemUserDto.PasswordHash = passwordHash;
-        systemUserDto.PasswordSalt = passwordSalt;
-        systemUserDto.BusinessId = 0;
-        systemUserDto.BranchId = 0;
-        systemUserDto.Blocked = false;
-        systemUserDto.RefreshToken = "";
-        systemUserDto.RefreshTokenExpiryTime = DateTime.Now;
-        systemUserDto.CreatedAt = DateTimeOffset.Now;
-        systemUserDto.UpdatedAt = DateTimeOffset.Now;
+        var addedSystemUser = _mapper.Map<SystemUser>(systemUserDto);
 
-        long id = _systemUserDal.Add(systemUserDto);
-        systemUserDto.SystemUserId = id;
+        addedSystemUser.Email = "";
+        addedSystemUser.PasswordHash = passwordHash;
+        addedSystemUser.PasswordSalt = passwordSalt;
+        addedSystemUser.BusinessId = 0;
+        addedSystemUser.BranchId = 0;
+        addedSystemUser.Blocked = false;
+        addedSystemUser.RefreshToken = "";
+        addedSystemUser.RefreshTokenExpiryTime = DateTime.Now;
+        addedSystemUser.CreatedAt = DateTimeOffset.Now;
+        addedSystemUser.UpdatedAt = DateTimeOffset.Now;
+        long id = _systemUserDal.Add(addedSystemUser);
+        addedSystemUser.SystemUserId = id;
 
-        return new SuccessDataResult<SystemUserDto>(systemUserDto, Messages.SystemUserAdded);
+        var addedSystemUserDto = _mapper.Map<SystemUserDto>(addedSystemUser);
+
+        return new SuccessDataResult<SystemUserDto>(addedSystemUserDto, Messages.SystemUserAdded);
     }
 
     public IDataResult<SystemUserDto> GetByEmail(string email)
     {
-        SystemUserDto systemUserDto = _systemUserDal.GetByEmail(email);
-        if (systemUserDto is null)
+        SystemUser systemUser = _systemUserDal.GetByEmail(email);
+        if (systemUser is null)
             return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
+
+        var systemUserDto = _mapper.Map<SystemUserDto>(systemUser);
 
         return new SuccessDataResult<SystemUserDto>(systemUserDto, Messages.SystemUserListedByEmail);
     }
 
     public IDataResult<SystemUserDto> GetById(long id)
     {
-        SystemUserDto systemUserDto = _systemUserDal.GetById(id);
-        if (systemUserDto is null)
+        SystemUser systemUser = _systemUserDal.GetById(id);
+        if (systemUser is null)
             return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
+
+        var systemUserDto = _mapper.Map<SystemUserDto>(systemUser);
 
         return new SuccessDataResult<SystemUserDto>(systemUserDto, Messages.SystemUserListedById);
     }
 
     public IDataResult<SystemUserDto> GetByPhone(string phone)
     {
-        SystemUserDto systemUserDto = _systemUserDal.GetByPhone(phone);
-        if (systemUserDto is null)
+        SystemUser systemUser = _systemUserDal.GetByPhone(phone);
+        if (systemUser is null)
             return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
+
+        var systemUserDto = _mapper.Map<SystemUserDto>(systemUser);
 
         return new SuccessDataResult<SystemUserDto>(systemUserDto, Messages.SystemUserListedByPhone);
     }
 
     public IResult Update(SystemUserDto systemUserDto)
     {
-        var searchedSystemUserResult = GetById(systemUserDto.SystemUserId);
-        if (searchedSystemUserResult is null)
+        SystemUser systemUser = _systemUserDal.GetById(systemUserDto.SystemUserId);
+        if (systemUser is null)
             return new ErrorDataResult<SystemUserDto>(Messages.SystemUserNotFound);
 
-        searchedSystemUserResult.Data.Email = systemUserDto.Email;
-        searchedSystemUserResult.Data.Role = systemUserDto.Role;
-        searchedSystemUserResult.Data.BusinessId = systemUserDto.BusinessId;
-        searchedSystemUserResult.Data.BranchId = systemUserDto.BranchId;
-        searchedSystemUserResult.Data.Blocked = systemUserDto.Blocked;
-        searchedSystemUserResult.Data.RefreshToken = systemUserDto.RefreshToken;
-        searchedSystemUserResult.Data.RefreshTokenExpiryTime = systemUserDto.RefreshTokenExpiryTime;
-        searchedSystemUserResult.Data.UpdatedAt = DateTimeOffset.Now;
-        _systemUserDal.Update(searchedSystemUserResult.Data);
+        systemUser.Email = systemUserDto.Email;
+        systemUser.Role = systemUserDto.Role;
+        systemUser.BusinessId = systemUserDto.BusinessId;
+        systemUser.BranchId = systemUserDto.BranchId;
+        systemUser.Blocked = systemUserDto.Blocked;
+        systemUser.RefreshToken = systemUserDto.RefreshToken;
+        systemUser.RefreshTokenExpiryTime = systemUserDto.RefreshTokenExpiryTime;
+        systemUser.UpdatedAt = DateTimeOffset.Now;
+        _systemUserDal.Update(systemUser);
 
         return new SuccessResult(Messages.SystemUserUpdated);
     }

@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
@@ -13,6 +14,7 @@ public class TenantExtBl : ITenantExtBl
     private readonly IAccountBl _accountBl;
     private readonly IAccountGroupBl _accountGroupBl;
     private readonly IAccountTypeBl _accountTypeBl;
+    private readonly IMapper _mapper;
     private readonly ITenantBl _tenantBl;
     private readonly ITenantDal _tenantDal;
 
@@ -20,6 +22,7 @@ public class TenantExtBl : ITenantExtBl
         IAccountBl accountBl,
         IAccountGroupBl accountGroupBl,
         IAccountTypeBl accountTypeBl,
+        IMapper mapper,
         ITenantBl tenantBl,
         ITenantDal tenantDal
     )
@@ -27,6 +30,7 @@ public class TenantExtBl : ITenantExtBl
         _accountBl = accountBl;
         _accountGroupBl = accountGroupBl;
         _accountTypeBl = accountTypeBl;
+        _mapper = mapper;
         _tenantBl = tenantBl;
         _tenantDal = tenantDal;
     }

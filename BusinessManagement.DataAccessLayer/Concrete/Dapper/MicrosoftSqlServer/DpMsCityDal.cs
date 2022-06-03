@@ -1,5 +1,5 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +13,7 @@ public class DpMsCityDal : ICityDal
         _context = context;
     }
 
-    public IEnumerable<CityDto> GetAll()
+    public IEnumerable<City> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT" 
@@ -21,6 +21,6 @@ public class DpMsCityDal : ICityDal
             + " PlateCode,"
             + " CityName"
             + " FROM City";
-        return connection.Query<CityDto>(sql).ToList();
+        return connection.Query<City>(sql).ToList();
     }
 }

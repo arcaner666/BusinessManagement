@@ -1,0 +1,81 @@
+﻿using AutoMapper;
+using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
+
+namespace BusinessManagement.BusinessLayer.CrossCuttingConcerns.Mapping;
+
+public class MappingProfile : Profile
+{
+    public MappingProfile()
+    {
+        CreateMap<Account, AccountDto>();
+        CreateMap<Account, AccountDto>().ReverseMap();
+        CreateMap<AccountExt, AccountExtDto>();
+        CreateMap<AccountExt, AccountExtDto>().ReverseMap();
+        CreateMap<AccountGroup, AccountGroupDto>();
+        CreateMap<AccountGroup, AccountGroupDto>().ReverseMap();
+        CreateMap<AccountType, AccountTypeDto>();
+        CreateMap<AccountType, AccountTypeDto>().ReverseMap();
+        CreateMap<Apartment, ApartmentDto>();
+        CreateMap<Apartment, ApartmentDto>().ReverseMap();
+        CreateMap<ApartmentExt, ApartmentExtDto>();
+        CreateMap<ApartmentExt, ApartmentExtDto>().ReverseMap();
+        CreateMap<Bank, BankDto>();
+        CreateMap<Bank, BankDto>().ReverseMap();
+        CreateMap<BankExt, BankExtDto>();
+        CreateMap<BankExt, BankExtDto>().ReverseMap();
+        CreateMap<Branch, BranchDto>();
+        CreateMap<Branch, BranchDto>().ReverseMap();
+        CreateMap<BranchExt, BranchExtDto>();
+        CreateMap<BranchExt, BranchExtDto>().ReverseMap();
+        CreateMap<Business, BusinessDto>();
+        CreateMap<Business, BusinessDto>().ReverseMap();
+        CreateMap<Cash, CashDto>();
+        CreateMap<Cash, CashDto>().ReverseMap();
+        CreateMap<CashExt, CashExtDto>();
+        CreateMap<CashExt, CashExtDto>().ReverseMap();
+        CreateMap<City, CityDto>();
+        CreateMap<City, CityDto>().ReverseMap();
+        CreateMap<Currency, CurrencyDto>();
+        CreateMap<Currency, CurrencyDto>().ReverseMap();
+        CreateMap<District, DistrictDto>();
+        CreateMap<District, DistrictDto>().ReverseMap();
+        CreateMap<Employee, EmployeeDto>();
+        CreateMap<Employee, EmployeeDto>().ReverseMap();
+        CreateMap<EmployeeExt, EmployeeExtDto>();
+        CreateMap<EmployeeExt, EmployeeExtDto>().ReverseMap();
+        CreateMap<EmployeeType, EmployeeTypeDto>();
+        CreateMap<EmployeeType, EmployeeTypeDto>().ReverseMap();
+        CreateMap<Flat, FlatDto>();
+        CreateMap<Flat, FlatDto>().ReverseMap();
+        CreateMap<FlatExt, FlatExtDto>();
+        CreateMap<FlatExt, FlatExtDto>().ReverseMap();
+        CreateMap<FullAddress, FullAddressDto>();
+        CreateMap<FullAddress, FullAddressDto>().ReverseMap();
+        CreateMap<HouseOwner, HouseOwnerDto>();
+        CreateMap<HouseOwner, HouseOwnerDto>().ReverseMap();
+        CreateMap<HouseOwnerExt, HouseOwnerExtDto>();
+        CreateMap<HouseOwnerExt, HouseOwnerExtDto>().ReverseMap();
+        CreateMap<Manager, ManagerDto>();
+        CreateMap<Manager, ManagerDto>().ReverseMap();
+        CreateMap<ManagerExt, ManagerExtDto>();
+        CreateMap<ManagerExt, ManagerExtDto>().ReverseMap();
+        CreateMap<OperationClaim, OperationClaimDto>();
+        CreateMap<OperationClaim, OperationClaimDto>().ReverseMap();
+        CreateMap<Section, SectionDto>();
+        CreateMap<Section, SectionDto>().ReverseMap();
+        CreateMap<SectionExt, SectionExtDto>();
+        CreateMap<SectionExt, SectionExtDto>().ReverseMap();
+        CreateMap<SectionGroup, SectionGroupDto>();
+        CreateMap<SectionGroup, SectionGroupDto>().ReverseMap();
+        CreateMap<SystemUser, SystemUserDto>();
+        CreateMap<SystemUser, SystemUserDto>().ReverseMap();
+        CreateMap<SystemUserClaim, SystemUserClaimDto>();
+        CreateMap<SystemUserClaim, SystemUserClaimDto>().ReverseMap();
+        CreateMap<Tenant, TenantDto>();
+        CreateMap<Tenant, TenantDto>().ReverseMap();
+        CreateMap<TenantExt, TenantExtDto>();
+        CreateMap<TenantExt, TenantExtDto>().ReverseMap();
+    }
+}

@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
@@ -10,31 +11,36 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 public class AccountBl : IAccountBl
 {
     private readonly IAccountDal _accountDal;
+    private readonly IMapper _mapper;
 
     public AccountBl(
-        IAccountDal accountDal
+        IAccountDal accountDal,
+        IMapper mapper
     )
     {
         _accountDal = accountDal;
+        _mapper = mapper;
     }
 
     public IDataResult<AccountDto> Add(AccountDto accountDto)
     {
-        AccountDto searchedAccountDto = _accountDal.GetByBusinessIdAndAccountCode(accountDto.BusinessId, accountDto.AccountCode);
-        if (searchedAccountDto is not null)
-        {
+        Account searchedAccount = _accountDal.GetByBusinessIdAndAccountCode(accountDto.BusinessId, accountDto.AccountCode);
+        if (searchedAccount is not null)
             return new ErrorDataResult<AccountDto>(Messages.AccountAlreadyExists);
-        }
 
-        accountDto.DebitBalance = 0;
-        accountDto.CreditBalance = 0;
-        accountDto.Balance = 0;
-        accountDto.CreatedAt = DateTimeOffset.Now;
-        accountDto.UpdatedAt = DateTimeOffset.Now;
-        long id = _accountDal.Add(accountDto);
-        accountDto.AccountId = id;
+        var addedAccount = _mapper.Map<Account>(accountDto);
 
-        return new SuccessDataResult<AccountDto>(accountDto, Messages.AccountAdded);
+        addedAccount.DebitBalance = 0;
+        addedAccount.CreditBalance = 0;
+        addedAccount.Balance = 0;
+        addedAccount.CreatedAt = DateTimeOffset.Now;
+        addedAccount.UpdatedAt = DateTimeOffset.Now;
+        long id = _accountDal.Add(addedAccount);
+        addedAccount.AccountId = id;
+
+        var addedAccountDto = _mapper.Map<AccountDto>(addedAccount);
+
+        return new SuccessDataResult<AccountDto>(addedAccountDto, Messages.AccountAdded);
     }
 
     public IResult Delete(long id)
@@ -50,26 +56,28 @@ public class AccountBl : IAccountBl
 
     public IDataResult<AccountDto> GetById(long id)
     {
-        AccountDto accountDto = _accountDal.GetById(id);
-        if (accountDto is null)
+        Account account = _accountDal.GetById(id);
+        if (account is null)
             return new ErrorDataResult<AccountDto>(Messages.AccountNotFound);
+
+        var accountDto = _mapper.Map<AccountDto>(account);
 
         return new SuccessDataResult<AccountDto>(accountDto, Messages.AccountListedById);
     }
 
     public IResult Update(AccountDto accountDto)
     {
-        var searchedAccountResult = GetById(accountDto.AccountId);
-        if (!searchedAccountResult.Success)
-            return searchedAccountResult;
+        Account account = _accountDal.GetById(accountDto.AccountId);
+        if (account is null)
+            return new ErrorDataResult<AccountDto>(Messages.AccountNotFound);
 
-        searchedAccountResult.Data.AccountName = accountDto.AccountName;
-        searchedAccountResult.Data.DebitBalance = accountDto.DebitBalance;
-        searchedAccountResult.Data.CreditBalance = accountDto.CreditBalance;
-        searchedAccountResult.Data.Balance = accountDto.Balance;
-        searchedAccountResult.Data.Limit = accountDto.Limit;
-        searchedAccountResult.Data.UpdatedAt = DateTimeOffset.Now;
-        _accountDal.Update(searchedAccountResult.Data);
+        account.AccountName = accountDto.AccountName;
+        account.DebitBalance = accountDto.DebitBalance;
+        account.CreditBalance = accountDto.CreditBalance;
+        account.Balance = accountDto.Balance;
+        account.Limit = accountDto.Limit;
+        account.UpdatedAt = DateTimeOffset.Now;
+        _accountDal.Update(account);
 
         return new SuccessResult(Messages.AccountUpdated);
     }

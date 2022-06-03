@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
@@ -16,6 +17,7 @@ public class BankExtBl : IBankExtBl
     private readonly IBankBl _bankBl;
     private readonly IBankDal _bankDal;
     private readonly IFullAddressBl _fullAddressBl;
+    private readonly IMapper _mapper;
 
     public BankExtBl(
         IAccountBl accountBl,
@@ -23,7 +25,8 @@ public class BankExtBl : IBankExtBl
         IAccountTypeBl accountTypeBl,
         IBankBl bankBl,
         IBankDal bankDal,
-        IFullAddressBl fullAddressBl
+        IFullAddressBl fullAddressBl,
+        IMapper mapper
     )
     {
         _accountBl = accountBl;
@@ -32,6 +35,7 @@ public class BankExtBl : IBankExtBl
         _bankBl = bankBl;
         _bankDal = bankDal;
         _fullAddressBl = fullAddressBl;
+        _mapper = mapper;
     }
 
     [TransactionScopeAspect]

@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
@@ -15,18 +16,21 @@ public class FlatExtBl : IFlatExtBl
     private readonly IFlatBl _flatBl;
     private readonly IFlatDal _flatDal;
     private readonly IKeyService _keyService;
+    private readonly IMapper _mapper;
 
     public FlatExtBl(
         IApartmentBl apartmentBl,
         IFlatBl flatBl,
         IFlatDal flatDal,
-        IKeyService keyService
+        IKeyService keyService,
+        IMapper mapper
     )
     {
         _apartmentBl = apartmentBl;
         _flatBl = flatBl;
         _flatDal = flatDal;
         _keyService = keyService;
+        _mapper = mapper;
     }
 
     [TransactionScopeAspect]

@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace BusinessManagement.Entities.DTOs;
 
-public class AccountOperationDetailDto
+public record AccountOperationDetailDto
 {
-    public long AccountOperationDetailId { get; set; }
-    public int BusinessId { get; set; }
-    public long BranchId { get; set; }
-    public long AccountOperationId { get; set; }
-    public long AccountId { get; set; }
-    public byte CurrencyId { get; set; }
-    public string DocumentCode { get; set; }
-    public decimal DebitBalance { get; set; }
-    public decimal CreditBalance { get; set; }
-    public decimal ExchangeRate { get; set; }
+    public long AccountOperationDetailId { get; init; }
+    public int BusinessId { get; init; }
+    public long BranchId { get; init; }
+    public long AccountOperationId { get; init; }
+    public long AccountId { get; init; }
+    public byte CurrencyId { get; init; }
+    public string DocumentCode { get; init; }
+    public decimal DebitBalance { get; init; }
+    public decimal CreditBalance { get; init; }
+    public decimal ExchangeRate { get; init; }
 }

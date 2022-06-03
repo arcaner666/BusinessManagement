@@ -1,5 +1,7 @@
 ﻿using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.DatabaseModels;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
+
 using Dapper;
 
 namespace BusinessManagement.DataAccessLayer.Concrete.Dapper.MicrosoftSqlServer;
@@ -13,7 +15,7 @@ public class DpMsTenantDal : ITenantDal
         _context = context;
     }
 
-    public long Add(TenantDto tenantDto)
+    public long Add(Tenant tenant)
     {
         using var connection = _context.CreateConnection();
         var sql = "INSERT INTO Tenant ("
@@ -51,7 +53,7 @@ public class DpMsTenantDal : ITenantDal
             + " @CreatedAt,"
             + " @UpdatedAt)"
             + " SELECT CAST(SCOPE_IDENTITY() AS BIGINT)";
-        return connection.Query<long>(sql, tenantDto).Single();
+        return connection.Query<long>(sql, tenant).Single();
     }
 
     public void Delete(long id)
@@ -62,7 +64,7 @@ public class DpMsTenantDal : ITenantDal
         connection.Execute(sql, new { @TenantId = id });
     }
 
-    public TenantDto GetByAccountId(long accountId)
+    public Tenant GetByAccountId(long accountId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -85,10 +87,10 @@ public class DpMsTenantDal : ITenantDal
             + " UpdatedAt"
             + " FROM Tenant"
             + " WHERE AccountId = @AccountId";
-        return connection.Query<TenantDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return connection.Query<Tenant>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public IEnumerable<TenantDto> GetByBusinessId(int businessId)
+    public IEnumerable<Tenant> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -111,10 +113,10 @@ public class DpMsTenantDal : ITenantDal
             + " UpdatedAt"
             + " FROM Tenant"
             + " WHERE BusinessId = @BusinessId";
-        return connection.Query<TenantDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<Tenant>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public TenantDto GetByBusinessIdAndAccountId(int businessId, long accountId)
+    public Tenant GetByBusinessIdAndAccountId(int businessId, long accountId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -137,14 +139,14 @@ public class DpMsTenantDal : ITenantDal
             + " UpdatedAt"
             + " FROM Tenant"
             + " WHERE BusinessId = @BusinessId AND AccountId = @AccountId";
-        return connection.Query<TenantDto>(sql, new
+        return connection.Query<Tenant>(sql, new
         {
             @BusinessId = businessId,
             @AccountId = accountId,
         }).SingleOrDefault();
     }
 
-    public TenantDto GetById(long id)
+    public Tenant GetById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -167,10 +169,10 @@ public class DpMsTenantDal : ITenantDal
             + " UpdatedAt"
             + " FROM Tenant"
             + " WHERE TenantId = @TenantId";
-        return connection.Query<TenantDto>(sql, new { @TenantId = id }).SingleOrDefault();
+        return connection.Query<Tenant>(sql, new { @TenantId = id }).SingleOrDefault();
     }
 
-    public TenantExtDto GetExtByAccountId(long accountId)
+    public TenantExt GetExtByAccountId(long accountId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -201,10 +203,10 @@ public class DpMsTenantDal : ITenantDal
             + " INNER JOIN Account a ON t.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " WHERE t.AccountId = @AccountId";
-        return connection.Query<TenantExtDto>(sql, new { @AccountId = accountId }).SingleOrDefault();
+        return connection.Query<TenantExt>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public TenantExtDto GetExtById(long id)
+    public TenantExt GetExtById(long id)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -235,10 +237,10 @@ public class DpMsTenantDal : ITenantDal
             + " INNER JOIN Account a ON t.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " WHERE t.TenantId = @TenantId";
-        return connection.Query<TenantExtDto>(sql, new { @TenantId = id }).SingleOrDefault();
+        return connection.Query<TenantExt>(sql, new { @TenantId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<TenantExtDto> GetExtsByBusinessId(int businessId)
+    public IEnumerable<TenantExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -269,10 +271,10 @@ public class DpMsTenantDal : ITenantDal
             + " INNER JOIN Account a ON t.AccountId = a.AccountId"
             + " INNER JOIN AccountGroup ag ON a.AccountGroupId = ag.AccountGroupId"
             + " WHERE t.BusinessId = @BusinessId";
-        return connection.Query<TenantExtDto>(sql, new { @BusinessId = businessId }).ToList();
+        return connection.Query<TenantExt>(sql, new { @BusinessId = businessId }).ToList();
     }
 
-    public void Update(TenantDto tenantDto)
+    public void Update(Tenant tenant)
     {
         using var connection = _context.CreateConnection();
         var sql = "UPDATE Tenant SET"
@@ -293,6 +295,6 @@ public class DpMsTenantDal : ITenantDal
             + " CreatedAt = @CreatedAt,"
             + " UpdatedAt = @UpdatedAt"
             + " WHERE TenantId = @TenantId";
-        connection.Execute(sql, tenantDto);
+        connection.Execute(sql, tenant);
     }
 }

@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Validation;
 using BusinessManagement.BusinessLayer.Constants;
@@ -19,6 +20,7 @@ public class AuthorizationBl : IAuthorizationBl
     private readonly ICurrencyBl _currencyBl;
     private readonly IFullAddressBl _fullAddressBl;
     private readonly IManagerBl _managerBl;
+    private readonly IMapper _mapper;
     private readonly IOperationClaimBl _operationClaimBl;
     private readonly ISectionGroupBl _sectionGroupBl;
     private readonly ISystemUserBl _systemUserBl;
@@ -32,6 +34,7 @@ public class AuthorizationBl : IAuthorizationBl
         ICurrencyBl currencyBl,
         IFullAddressBl fullAddressBl,
         IManagerBl managerBl,
+        IMapper mapper,
         IOperationClaimBl operationClaimBl,
         ISectionGroupBl sectionGroupBl,
         ISystemUserBl systemUserBl,
@@ -45,6 +48,7 @@ public class AuthorizationBl : IAuthorizationBl
         _currencyBl = currencyBl;
         _fullAddressBl = fullAddressBl;
         _managerBl = managerBl;
+        _mapper = mapper;
         _operationClaimBl = operationClaimBl;
         _sectionGroupBl = sectionGroupBl;
         _systemUserBl = systemUserBl;

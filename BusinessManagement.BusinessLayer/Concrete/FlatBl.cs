@@ -1,4 +1,5 @@
-﻿using BusinessManagement.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
@@ -12,26 +13,33 @@ namespace BusinessManagement.BusinessLayer.Concrete;
 public class FlatBl : IFlatBl
 {
     private readonly IFlatDal _flatDal;
+    private readonly IMapper _mapper;
 
     public FlatBl(
-        IFlatDal flatDal
+        IFlatDal flatDal,
+        IMapper mapper
     )
     {
         _flatDal = flatDal;
+        _mapper = mapper;
     }
 
     public IDataResult<FlatDto> Add(FlatDto flatDto)
     {
-        FlatDto searchedFlatDto = _flatDal.GetByFlatCode(flatDto.FlatCode);
-        if (searchedFlatDto is not null)
+        Flat searchedFlat = _flatDal.GetByFlatCode(flatDto.FlatCode);
+        if (searchedFlat is not null)
             return new ErrorDataResult<FlatDto>(Messages.FlatAlreadyExists);
 
-        flatDto.CreatedAt = DateTimeOffset.Now;
-        flatDto.UpdatedAt = DateTimeOffset.Now;
-        long id = _flatDal.Add(flatDto);
-        flatDto.FlatId = id;
+        var addedFlat = _mapper.Map<Flat>(flatDto);
 
-        return new SuccessDataResult<FlatDto>(flatDto, Messages.FlatAdded);
+        addedFlat.CreatedAt = DateTimeOffset.Now;
+        addedFlat.UpdatedAt = DateTimeOffset.Now;
+        long id = _flatDal.Add(addedFlat);
+        addedFlat.FlatId = id;
+
+        var addedFlatDto = _mapper.Map<FlatDto>(addedFlat);
+
+        return new SuccessDataResult<FlatDto>(addedFlatDto, Messages.FlatAdded);
     }
 
     public IResult Delete(long id)
@@ -47,34 +55,38 @@ public class FlatBl : IFlatBl
 
     public IDataResult<IEnumerable<FlatDto>> GetByApartmentId(long apartmentId)
     {
-        IEnumerable<FlatDto> flatDtos = _flatDal.GetByApartmentId(apartmentId);
-        if (flatDtos is null)
+        IEnumerable<Flat> flats = _flatDal.GetByApartmentId(apartmentId);
+        if (flats is null)
             return new ErrorDataResult<IEnumerable<FlatDto>>(Messages.FlatNotFound);
+
+        var flatDtos = _mapper.Map<IEnumerable<FlatDto>>(flats);
 
         return new SuccessDataResult<IEnumerable<FlatDto>>(flatDtos, Messages.FlatsListedByApartmentId);
     }
 
     public IDataResult<FlatDto> GetById(long id)
     {
-        FlatDto flatDto = _flatDal.GetById(id);
-        if (flatDto is null)
+        Flat flat = _flatDal.GetById(id);
+        if (flat is null)
             return new ErrorDataResult<FlatDto>(Messages.FlatNotFound);
+
+        var flatDto = _mapper.Map<FlatDto>(flat);
 
         return new SuccessDataResult<FlatDto>(flatDto, Messages.FlatListedById);
     }
 
     public IResult Update(FlatDto flatDto)
     {
-        var searchedFlatResult = GetById(flatDto.FlatId);
-        if (!searchedFlatResult.Success)
-            return searchedFlatResult;
+        Flat flat = _flatDal.GetById(flatDto.FlatId);
+        if (flat is null)
+            return new ErrorDataResult<FlatDto>(Messages.FlatNotFound);
 
-        searchedFlatResult.Data.BranchId = flatDto.BranchId;
-        searchedFlatResult.Data.HouseOwnerId = flatDto.HouseOwnerId;
-        searchedFlatResult.Data.TenantId = flatDto.TenantId;
-        searchedFlatResult.Data.DoorNumber = flatDto.DoorNumber;
-        searchedFlatResult.Data.UpdatedAt = DateTimeOffset.Now;
-        _flatDal.Update(searchedFlatResult.Data);
+        flat.BranchId = flatDto.BranchId;
+        flat.HouseOwnerId = flatDto.HouseOwnerId;
+        flat.TenantId = flatDto.TenantId;
+        flat.DoorNumber = flatDto.DoorNumber;
+        flat.UpdatedAt = DateTimeOffset.Now;
+        _flatDal.Update(flat);
 
         return new SuccessResult(Messages.FlatUpdated);
     }

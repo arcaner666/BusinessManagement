@@ -1,11 +1,11 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public class SectionGroupDto
+public record SectionGroupDto
 {
-    public long SectionGroupId { get; set; }
-    public int BusinessId { get; set; }
-    public long BranchId { get; set; }
-    public string SectionGroupName { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public DateTimeOffset UpdatedAt { get; set; }
+    public long SectionGroupId { get; init; }
+    public int BusinessId { get; init; }
+    public long BranchId { get; init; }
+    public string SectionGroupName { get; init; }
+    public DateTimeOffset CreatedAt { get; init; }
+    public DateTimeOffset UpdatedAt { get; init; }
 }

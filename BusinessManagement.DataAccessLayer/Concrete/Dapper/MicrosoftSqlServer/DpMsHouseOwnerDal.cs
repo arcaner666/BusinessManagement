@@ -89,7 +89,7 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
         return connection.Query<HouseOwner>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public IEnumerable<HouseOwner> GetByBusinessId(int businessId)
+    public List<HouseOwner> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -239,7 +239,7 @@ public class DpMsHouseOwnerDal : IHouseOwnerDal
         return connection.Query<HouseOwnerExt>(sql, new { @HouseOwnerId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<HouseOwnerExt> GetExtsByBusinessId(int businessId)
+    public List<HouseOwnerExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

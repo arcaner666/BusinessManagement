@@ -55,15 +55,15 @@ public class SectionGroupBl : ISectionGroupBl
         return new SuccessResult(Messages.SectionGroupDeleted);
     }
 
-    public IDataResult<IEnumerable<SectionGroupDto>> GetByBusinessId(int businessId)
+    public IDataResult<List<SectionGroupDto>> GetByBusinessId(int businessId)
     {
-        IEnumerable<SectionGroup> sectionGroups = _sectionGroupDal.GetByBusinessId(businessId);
+        List<SectionGroup> sectionGroups = _sectionGroupDal.GetByBusinessId(businessId);
         if (!sectionGroups.Any())
-            return new ErrorDataResult<IEnumerable<SectionGroupDto>>(Messages.SectionGroupsNotFound);
+            return new ErrorDataResult<List<SectionGroupDto>>(Messages.SectionGroupsNotFound);
 
-        var sectionGroupDtos = _mapper.Map<IEnumerable<SectionGroupDto>>(sectionGroups);
+        var sectionGroupDtos = _mapper.Map<List<SectionGroupDto>>(sectionGroups);
 
-        return new SuccessDataResult<IEnumerable<SectionGroupDto>>(sectionGroupDtos, Messages.SectionGroupsListedByBusinessId);
+        return new SuccessDataResult<List<SectionGroupDto>>(sectionGroupDtos, Messages.SectionGroupsListedByBusinessId);
     }
 
     public IDataResult<SectionGroupDto> GetById(long id)

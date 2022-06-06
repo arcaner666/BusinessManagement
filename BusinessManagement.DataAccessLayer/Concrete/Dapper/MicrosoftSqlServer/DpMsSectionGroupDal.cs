@@ -40,7 +40,7 @@ public class DpMsSectionGroupDal : ISectionGroupDal
         connection.Execute(sql, new { @SectionGroupId = id });
     }
 
-    public IEnumerable<SectionGroup> GetByBusinessId(int businessId)
+    public List<SectionGroup> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

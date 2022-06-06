@@ -6,10 +6,11 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
-public class TenantExtBl : ITenantExtBl
+public class TenantAdvBl : ITenantAdvBl
 {
     private readonly IAccountBl _accountBl;
     private readonly IAccountGroupBl _accountGroupBl;
@@ -18,7 +19,7 @@ public class TenantExtBl : ITenantExtBl
     private readonly ITenantBl _tenantBl;
     private readonly ITenantDal _tenantDal;
 
-    public TenantExtBl(
+    public TenantAdvBl(
         IAccountBl accountBl,
         IAccountGroupBl accountGroupBl,
         IAccountTypeBl accountTypeBl,
@@ -36,7 +37,7 @@ public class TenantExtBl : ITenantExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult AddExt(TenantExtDto tenantExtDto)
+    public IResult Add(TenantExtDto tenantExtDto)
     {
         // Kiracının hesap grubunun id'si getirilir.
         var getAccountGroupResult = _accountGroupBl.GetByAccountGroupCode("120");
@@ -90,7 +91,7 @@ public class TenantExtBl : ITenantExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExt(long id)
+    public IResult Delete(long id)
     {
         var searchedTenantResult = _tenantBl.GetById(id);
         if (!searchedTenantResult.Success)
@@ -108,7 +109,7 @@ public class TenantExtBl : ITenantExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExtByAccountId(long accountId)
+    public IResult DeleteByAccountId(long accountId)
     {
         var searchedTenantResult = _tenantBl.GetByAccountId(accountId);
         if (!searchedTenantResult.Success)
@@ -125,35 +126,8 @@ public class TenantExtBl : ITenantExtBl
         return new SuccessResult(Messages.TenantExtDeletedByAccountId);
     }
 
-    public IDataResult<TenantExtDto> GetExtByAccountId(long accountId)
-    {
-        TenantExtDto tenantExtDto = _tenantDal.GetExtByAccountId(accountId);
-        if (tenantExtDto is null)
-            return new ErrorDataResult<TenantExtDto>(Messages.TenantNotFound);
-
-        return new SuccessDataResult<TenantExtDto>(tenantExtDto, Messages.TenantExtListedByAccountId);
-    }
-
-    public IDataResult<TenantExtDto> GetExtById(long id)
-    {
-        TenantExtDto tenantExtDto = _tenantDal.GetExtById(id);
-        if (tenantExtDto is null)
-            return new ErrorDataResult<TenantExtDto>(Messages.TenantNotFound);
-
-        return new SuccessDataResult<TenantExtDto>(tenantExtDto, Messages.TenantExtListedById);
-    }
-
-    public IDataResult<IEnumerable<TenantExtDto>> GetExtsByBusinessId(int businessId)
-    {
-        IEnumerable<TenantExtDto> tenantExtDtos = _tenantDal.GetExtsByBusinessId(businessId);
-        if (!tenantExtDtos.Any())
-            return new ErrorDataResult<IEnumerable<TenantExtDto>>(Messages.TenantsNotFound);
-
-        return new SuccessDataResult<IEnumerable<TenantExtDto>>(tenantExtDtos, Messages.TenantExtsListedByBusinessId);
-    }
-
     [TransactionScopeAspect]
-    public IResult UpdateExt(TenantExtDto tenantExtDto)
+    public IResult Update(TenantExtDto tenantExtDto)
     {
         // Kiracının cari hesabı güncellenir.
         AccountDto updatedAccountDto = new()

@@ -13,7 +13,7 @@ public class DpMsCityDal : ICityDal
         _context = context;
     }
 
-    public IEnumerable<City> GetAll()
+    public List<City> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT" 

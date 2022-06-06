@@ -5,6 +5,7 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
@@ -40,14 +41,25 @@ public class ManagerBl : IManagerBl
         return new SuccessDataResult<ManagerDto>(addedManagerDto, Messages.ManagerAdded);
     }
 
-    public IDataResult<IEnumerable<ManagerDto>> GetByBusinessId(int businessId)
+    public IDataResult<List<ManagerDto>> GetByBusinessId(int businessId)
     {
-        IEnumerable<Manager> managers = _managerDal.GetByBusinessId(businessId);
+        List<Manager> managers = _managerDal.GetByBusinessId(businessId);
         if (!managers.Any())
-            return new ErrorDataResult<IEnumerable<ManagerDto>>(Messages.ManagersNotFound);
+            return new ErrorDataResult<List<ManagerDto>>(Messages.ManagersNotFound);
 
-        var managerDtos = _mapper.Map<IEnumerable<ManagerDto>>(managers);
+        var managerDtos = _mapper.Map<List<ManagerDto>>(managers);
 
-        return new SuccessDataResult<IEnumerable<ManagerDto>>(managerDtos, Messages.ManagersListedByBusinessId);
+        return new SuccessDataResult<List<ManagerDto>>(managerDtos, Messages.ManagersListedByBusinessId);
+    }
+
+    public IDataResult<List<ManagerExtDto>> GetExtsByBusinessId(int businessId)
+    {
+        List<ManagerExt> managerExts = _managerDal.GetExtsByBusinessId(businessId);
+        if (!managerExts.Any())
+            return new ErrorDataResult<List<ManagerExtDto>>(Messages.ManagerNotFound);
+
+        var managerExtDtos = _mapper.Map<List<ManagerExtDto>>(managerExts);
+
+        return new SuccessDataResult<List<ManagerExtDto>>(managerExtDtos, Messages.ManagerExtsListedByBusinessId);
     }
 }

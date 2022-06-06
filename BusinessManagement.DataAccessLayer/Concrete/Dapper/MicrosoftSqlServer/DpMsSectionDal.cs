@@ -49,7 +49,7 @@ public class DpMsSectionDal : ISectionDal
         connection.Execute(sql, new { @SectionId = id });
     }
 
-    public IEnumerable<Section> GetAll()
+    public List<Section> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -67,7 +67,7 @@ public class DpMsSectionDal : ISectionDal
         return connection.Query<Section>(sql).ToList();
     }
 
-    public IEnumerable<Section> GetByBusinessId(int businessId)
+    public List<Section> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -157,7 +157,7 @@ public class DpMsSectionDal : ISectionDal
         return connection.Query<SectionExt>(sql, new { @SectionId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<SectionExt> GetExtsByBusinessId(int businessId)
+    public List<SectionExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

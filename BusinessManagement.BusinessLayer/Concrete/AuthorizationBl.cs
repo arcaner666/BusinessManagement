@@ -9,6 +9,7 @@ using BusinessManagement.BusinessLayer.Utilities.Security.Hashing;
 using BusinessManagement.BusinessLayer.Utilities.Security.JWT;
 using BusinessManagement.BusinessLayer.ValidationRules.FluentValidation;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
@@ -16,7 +17,7 @@ public class AuthorizationBl : IAuthorizationBl
 {
     private readonly IBranchBl _branchBl;
     private readonly IBusinessBl _businessBl;
-    private readonly ICashExtBl _cashExtBl;
+    private readonly ICashAdvBl _cashAdvBl;
     private readonly ICurrencyBl _currencyBl;
     private readonly IFullAddressBl _fullAddressBl;
     private readonly IManagerBl _managerBl;
@@ -30,7 +31,7 @@ public class AuthorizationBl : IAuthorizationBl
     public AuthorizationBl(
         IBranchBl branchBl,
         IBusinessBl businessBl,
-        ICashExtBl cashExtBl,
+        ICashAdvBl cashAdvBl,
         ICurrencyBl currencyBl,
         IFullAddressBl fullAddressBl,
         IManagerBl managerBl,
@@ -44,7 +45,7 @@ public class AuthorizationBl : IAuthorizationBl
     {
         _branchBl = branchBl;
         _businessBl = businessBl;
-        _cashExtBl = cashExtBl;
+        _cashAdvBl = cashAdvBl;
         _currencyBl = currencyBl;
         _fullAddressBl = fullAddressBl;
         _managerBl = managerBl;
@@ -90,7 +91,7 @@ public class AuthorizationBl : IAuthorizationBl
             return getSystemUserResult;
 
         getSystemUserResult.Data.RefreshToken = "";
-        getSystemUserResult.Data.RefreshTokenExpiryTime = DateTime.Now;
+        getSystemUserResult.Data.UpdatedAt = DateTime.Now;
         var updateSystemUserResult = _systemUserBl.Update(getSystemUserResult.Data);
         if (!updateSystemUserResult.Success)
             return updateSystemUserResult;
@@ -104,12 +105,15 @@ public class AuthorizationBl : IAuthorizationBl
         if (!getClaimsPrincipalResult.Success)
             return getClaimsPrincipalResult;
 
-        IEnumerable<string> claimRoles = getClaimsPrincipalResult.Data.ClaimRoles();
-        IEnumerable<SystemUserClaimExtDto> systemUserClaimExtDtos = claimRoles.Select(claimRole => 
-        new SystemUserClaimExtDto
+        List<string> claimRoles = getClaimsPrincipalResult.Data.ClaimRoles();
+        List<SystemUserClaimExtDto> systemUserClaimExtDtos = new();
+        foreach (var claimRole in claimRoles)
         {
+            systemUserClaimExtDtos.Add(new SystemUserClaimExtDto
+            {
                 OperationClaimName = claimRole
-        });
+            });
+        }
 
         long systemUserId = Convert.ToInt32(getClaimsPrincipalResult.Data.ClaimSystemUserId().FirstOrDefault());
         var getSystemUserResult = _systemUserBl.GetById(systemUserId);
@@ -217,7 +221,7 @@ public class AuthorizationBl : IAuthorizationBl
             AccountCode = "10000000100000001",
             Limit = 0,
         };
-        var addCashExtResult = _cashExtBl.AddExt(cashExtDto);
+        var addCashExtResult = _cashAdvBl.Add(cashExtDto);
         if (!addCashExtResult.Success)
             return addCashExtResult;
 

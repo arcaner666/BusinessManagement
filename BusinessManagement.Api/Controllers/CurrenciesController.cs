@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
 
-[Route("api/[controller]/")]
+[Route("api/currencies/")]
 [ApiController]
 public class CurrenciesController : ControllerBase
 {

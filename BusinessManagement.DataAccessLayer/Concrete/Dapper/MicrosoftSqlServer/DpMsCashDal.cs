@@ -59,7 +59,7 @@ public class DpMsCashDal : ICashDal
         return connection.Query<Cash>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public IEnumerable<Cash> GetByBusinessId(int businessId)
+    public List<Cash> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -167,7 +167,7 @@ public class DpMsCashDal : ICashDal
         return connection.Query<CashExt>(sql, new { @CashId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<CashExt> GetExtsByBusinessId(int businessId)
+    public List<CashExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

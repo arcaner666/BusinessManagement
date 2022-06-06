@@ -22,15 +22,15 @@ public class OperationClaimBl : IOperationClaimBl
         _mapper = mapper;
     }
 
-    public IDataResult<IEnumerable<OperationClaimDto>> GetAll()
+    public IDataResult<List<OperationClaimDto>> GetAll()
     {
-        IEnumerable<OperationClaim> operationClaims = _operationClaimDal.GetAll();
+        List<OperationClaim> operationClaims = _operationClaimDal.GetAll();
         if (!operationClaims.Any())
-            return new ErrorDataResult<IEnumerable<OperationClaimDto>>(Messages.OperationClaimsNotFound);
+            return new ErrorDataResult<List<OperationClaimDto>>(Messages.OperationClaimsNotFound);
 
-        var operationClaimDtos = _mapper.Map<IEnumerable<OperationClaimDto>>(operationClaims);
+        var operationClaimDtos = _mapper.Map<List<OperationClaimDto>>(operationClaims);
 
-        return new SuccessDataResult<IEnumerable<OperationClaimDto>>(operationClaimDtos, Messages.OperationClaimsListed);
+        return new SuccessDataResult<List<OperationClaimDto>>(operationClaimDtos, Messages.OperationClaimsListed);
     }
 
     public IDataResult<OperationClaimDto> GetByOperationClaimName(string operationClaimName)

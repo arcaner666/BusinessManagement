@@ -22,17 +22,17 @@ public class AccountGroupBl : IAccountGroupBl
         _mapper = mapper;
     }
 
-    public IDataResult<IEnumerable<AccountGroupDto>> GetAll()
+    public IDataResult<List<AccountGroupDto>> GetAll()
     {
         //throw new Exception("new Exception");
 
-        IEnumerable<AccountGroup> accountGroups = _accountGroupDal.GetAll();
+        List<AccountGroup> accountGroups = _accountGroupDal.GetAll();
         if (!accountGroups.Any())
-            return new ErrorDataResult<IEnumerable<AccountGroupDto>>(Messages.AccountGroupsNotFound);
+            return new ErrorDataResult<List<AccountGroupDto>>(Messages.AccountGroupsNotFound);
 
-        var accountGroupDtos = _mapper.Map<IEnumerable<AccountGroupDto>>(accountGroups);
+        var accountGroupDtos = _mapper.Map<List<AccountGroupDto>>(accountGroups);
 
-        return new SuccessDataResult<IEnumerable<AccountGroupDto>>(accountGroupDtos, Messages.AccountGroupsListed);
+        return new SuccessDataResult<List<AccountGroupDto>>(accountGroupDtos, Messages.AccountGroupsListed);
     }
 
     public IDataResult<AccountGroupDto> GetByAccountGroupCode(string accountGroupCode)
@@ -46,15 +46,15 @@ public class AccountGroupBl : IAccountGroupBl
         return new SuccessDataResult<AccountGroupDto>(accountGroupDto, Messages.AccountGroupListedByAccountGroupCode);
     }
 
-    public IDataResult<IEnumerable<AccountGroupDto>> GetByAccountGroupCodes(AccountGroupCodesDto accountGroupCodesDto)
+    public IDataResult<List<AccountGroupDto>> GetByAccountGroupCodes(AccountGroupCodesDto accountGroupCodesDto)
     {
-        IEnumerable<AccountGroup> accountGroups = _accountGroupDal.GetByAccountGroupCodes(accountGroupCodesDto.AccountGroupCodes);
+        List<AccountGroup> accountGroups = _accountGroupDal.GetByAccountGroupCodes(accountGroupCodesDto.AccountGroupCodes);
         if (!accountGroups.Any())
-            return new ErrorDataResult<IEnumerable<AccountGroupDto>>(Messages.AccountGroupsNotFound);
+            return new ErrorDataResult<List<AccountGroupDto>>(Messages.AccountGroupsNotFound);
 
-        var accountGroupDtos = _mapper.Map<IEnumerable<AccountGroupDto>>(accountGroups);
+        var accountGroupDtos = _mapper.Map<List<AccountGroupDto>>(accountGroups);
 
-        return new SuccessDataResult<IEnumerable<AccountGroupDto>>(accountGroupDtos, Messages.AccountGroupsListedByAccountGroupCodes);
+        return new SuccessDataResult<List<AccountGroupDto>>(accountGroupDtos, Messages.AccountGroupsListedByAccountGroupCodes);
     }
 
     public IDataResult<AccountGroupDto> GetById(short id)

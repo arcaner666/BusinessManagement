@@ -7,10 +7,11 @@ using BusinessManagement.BusinessLayer.Utilities.Security.Cryptography;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
-public class ApartmentExtBl : IApartmentExtBl
+public class ApartmentAdvBl : IApartmentAdvBl
 {
     private readonly IApartmentBl _apartmentBl;
     private readonly IApartmentDal _apartmentDal;
@@ -19,7 +20,7 @@ public class ApartmentExtBl : IApartmentExtBl
     private readonly IMapper _mapper;
     private readonly ISectionBl _sectionBl;
 
-    public ApartmentExtBl(
+    public ApartmentAdvBl(
         IApartmentBl apartmentBl,
         IApartmentDal apartmentDal,
         IFlatBl flatBl,
@@ -37,7 +38,7 @@ public class ApartmentExtBl : IApartmentExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult AddExt(ApartmentExtDto apartmentExtDto)
+    public IResult Add(ApartmentExtDto apartmentExtDto)
     {
         // Arayüzden gelen id'ye sahip bir site var mı kontrol edilir.
         var getSectionResult = _sectionBl.GetById(apartmentExtDto.SectionId);
@@ -45,7 +46,9 @@ public class ApartmentExtBl : IApartmentExtBl
             return getSectionResult;
 
         // Eşsiz bir apartman kodu üretebilmek için ilgili sitedeki tüm apartmanlar getirilir.
-        IEnumerable<ApartmentDto> apartmentDtos = _apartmentDal.GetBySectionId(apartmentExtDto.SectionId);
+        List<Apartment> apartments = _apartmentDal.GetBySectionId(apartmentExtDto.SectionId);
+
+        var apartmentDtos = _mapper.Map<List<ApartmentDto>>(apartments);
 
         // Apartman kodu üretilir.
         string apartmentCode = _keyService.GenerateApartmentCode(apartmentDtos, getSectionResult.Data.SectionCode);
@@ -69,7 +72,7 @@ public class ApartmentExtBl : IApartmentExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExt(long id)
+    public IResult Delete(long id)
     {
         // Apartmandaki daireler getirilir.
         var getFlatsResult = _flatBl.GetByApartmentId(id);
@@ -90,25 +93,7 @@ public class ApartmentExtBl : IApartmentExtBl
         return new SuccessResult(Messages.ApartmentExtDeleted);
     }
 
-    public IDataResult<ApartmentExtDto> GetExtById(long id)
-    {
-        ApartmentExtDto apartmentExtDto = _apartmentDal.GetExtById(id);
-        if (apartmentExtDto is null)
-            return new ErrorDataResult<ApartmentExtDto>(Messages.ApartmentNotFound);
-
-        return new SuccessDataResult<ApartmentExtDto>(apartmentExtDto, Messages.ApartmentExtListedById);
-    }
-
-    public IDataResult<IEnumerable<ApartmentExtDto>> GetExtsByBusinessId(int businessId)
-    {
-        IEnumerable<ApartmentExtDto> apartmentExtDtos = _apartmentDal.GetExtsByBusinessId(businessId);
-        if (!apartmentExtDtos.Any())
-            return new ErrorDataResult<IEnumerable<ApartmentExtDto>>(Messages.ApartmentsNotFound);
-
-        return new SuccessDataResult<IEnumerable<ApartmentExtDto>>(apartmentExtDtos, Messages.ApartmentExtsListedByBusinessId);
-    }
-
-    public IResult UpdateExt(ApartmentExtDto apartmentExtDto)
+    public IResult Update(ApartmentExtDto apartmentExtDto)
     {
         ApartmentDto apartmentDto = new()
         {

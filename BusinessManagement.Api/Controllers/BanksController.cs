@@ -1,44 +1,47 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
 
-[Route("api/[controller]/")]
+[Route("api/banks/")]
 [ApiController]
-public class BankExtsController : ControllerBase
+public class BanksController : ControllerBase
 {
-    private readonly IBankExtBl _bankExtBl;
+    private readonly IBankAdvBl _bankAdvBl;
+    private readonly IBankBl _bankBl;
 
-    public BankExtsController(
-        IBankExtBl bankExtBl
+    public BanksController(
+        IBankAdvBl bankAdvBl,
+        IBankBl bankBl
     )
     {
-        _bankExtBl = bankExtBl;
+        _bankAdvBl = bankAdvBl;
+        _bankBl = bankBl;
     }
 
-    [HttpPost("addext")]
-    public IActionResult AddExt(BankExtDto bankExtDto)
+    [HttpPost("add")]
+    public IActionResult Add(BankExtDto bankExtDto)
     {
-        var result = _bankExtBl.AddExt(bankExtDto);
+        var result = _bankAdvBl.Add(bankExtDto);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
-    [HttpDelete("deleteext/{id}")]
-    public IActionResult DeleteExt(long id)
+    [HttpDelete("delete/{id}")]
+    public IActionResult Delete(long id)
     {
-        var result = _bankExtBl.DeleteExt(id);
+        var result = _bankAdvBl.Delete(id);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
-    [HttpDelete("deleteextbyaccountid/{accountId}")]
-    public IActionResult DeleteExtByAccountId(long accountId)
+    [HttpDelete("deletebyaccountid/{accountId}")]
+    public IActionResult DeleteByAccountId(long accountId)
     {
-        var result = _bankExtBl.DeleteExtByAccountId(accountId);
+        var result = _bankAdvBl.DeleteByAccountId(accountId);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -47,7 +50,7 @@ public class BankExtsController : ControllerBase
     [HttpGet("getextbyaccountid/{accountId}")]
     public IActionResult GetExtByAccountId(long accountId)
     {
-        var result = _bankExtBl.GetExtByAccountId(accountId);
+        var result = _bankBl.GetExtByAccountId(accountId);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -56,7 +59,7 @@ public class BankExtsController : ControllerBase
     [HttpGet("getextbyid/{id}")]
     public IActionResult GetExtById(long id)
     {
-        var result = _bankExtBl.GetExtById(id);
+        var result = _bankBl.GetExtById(id);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -65,16 +68,16 @@ public class BankExtsController : ControllerBase
     [HttpGet("getextsbybusinessid/{businessId}")]
     public IActionResult GetExtsByBusinessId(int businessId)
     {
-        var result = _bankExtBl.GetExtsByBusinessId(businessId);
+        var result = _bankBl.GetExtsByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
-    [HttpPost("updateext")]
-    public IActionResult UpdateExt(BankExtDto bankExtDto)
+    [HttpPost("update")]
+    public IActionResult Update(BankExtDto bankExtDto)
     {
-        var result = _bankExtBl.UpdateExt(bankExtDto);
+        var result = _bankAdvBl.Update(bankExtDto);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);

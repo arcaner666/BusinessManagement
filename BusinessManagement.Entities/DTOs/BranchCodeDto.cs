@@ -1,7 +1,7 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public record BranchCodeDto
+public class BranchCodeDto
 {
-    public int BranchOrder { get; init; }
-    public string BranchCode { get; init; }
+    public int BranchOrder { get; set; }
+    public string BranchCode { get; set; }
 }

@@ -5,6 +5,7 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
@@ -62,15 +63,15 @@ public class BankBl : IBankBl
         return new SuccessDataResult<BankDto>(bankDto, Messages.BankListedByAccountId);
     }
 
-    public IDataResult<IEnumerable<BankDto>> GetByBusinessId(int businessId)
+    public IDataResult<List<BankDto>> GetByBusinessId(int businessId)
     {
-        IEnumerable<Bank> banks = _bankDal.GetByBusinessId(businessId);
+        List<Bank> banks = _bankDal.GetByBusinessId(businessId);
         if (!banks.Any())
-            return new ErrorDataResult<IEnumerable<BankDto>>(Messages.BankNotFound);
+            return new ErrorDataResult<List<BankDto>>(Messages.BankNotFound);
 
-        var bankDtos = _mapper.Map<IEnumerable<BankDto>>(banks);
+        var bankDtos = _mapper.Map<List<BankDto>>(banks);
 
-        return new SuccessDataResult<IEnumerable<BankDto>>(bankDtos, Messages.BankListedByBusinessId);
+        return new SuccessDataResult<List<BankDto>>(bankDtos, Messages.BankListedByBusinessId);
     }
 
     public IDataResult<BankDto> GetById(long id)
@@ -82,6 +83,39 @@ public class BankBl : IBankBl
         var bankDto = _mapper.Map<BankDto>(bank);
 
         return new SuccessDataResult<BankDto>(bankDto, Messages.BankListedById);
+    }
+
+    public IDataResult<BankExtDto> GetExtByAccountId(long accountId)
+    {
+        BankExt bankExt = _bankDal.GetExtByAccountId(accountId);
+        if (bankExt is null)
+            return new ErrorDataResult<BankExtDto>(Messages.BankNotFound);
+
+        var bankExtDto = _mapper.Map<BankExtDto>(bankExt);
+
+        return new SuccessDataResult<BankExtDto>(bankExtDto, Messages.BankExtListedByAccountId);
+    }
+
+    public IDataResult<BankExtDto> GetExtById(long id)
+    {
+        BankExt bankExt = _bankDal.GetExtById(id);
+        if (bankExt is null)
+            return new ErrorDataResult<BankExtDto>(Messages.BankNotFound);
+
+        var bankExtDto = _mapper.Map<BankExtDto>(bankExt);
+
+        return new SuccessDataResult<BankExtDto>(bankExtDto, Messages.BankExtListedById);
+    }
+
+    public IDataResult<List<BankExtDto>> GetExtsByBusinessId(int businessId)
+    {
+        List<BankExt> bankExts = _bankDal.GetExtsByBusinessId(businessId);
+        if (!bankExts.Any())
+            return new ErrorDataResult<List<BankExtDto>>(Messages.BankNotFound);
+
+        var bankExtDtos = _mapper.Map<List<BankExtDto>>(bankExts);
+
+        return new SuccessDataResult<List<BankExtDto>>(bankExtDtos, Messages.BankExtsListedByBusinessId);
     }
 
     public IResult Update(BankDto bankDto)

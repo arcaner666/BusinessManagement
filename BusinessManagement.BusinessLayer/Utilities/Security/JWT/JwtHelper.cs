@@ -3,6 +3,7 @@ using BusinessManagement.BusinessLayer.Extensions;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.BusinessLayer.Utilities.Security.Encryption;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -23,7 +24,7 @@ public class JwtHelper : ITokenService
         _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
     }
 
-    public string GenerateAccessToken(long systemUserId, IEnumerable<SystemUserClaimExtDto> systemUserClaimExtDtos)
+    public string GenerateAccessToken(long systemUserId, List<SystemUserClaimExtDto> systemUserClaimExtDtos)
     {
         _accessTokenExpiration = DateTime.Now.AddSeconds(_tokenOptions.AccessTokenExpiration);
         var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
@@ -46,7 +47,7 @@ public class JwtHelper : ITokenService
         TokenOptions tokenOptions,
         long systemUserId,
         SigningCredentials signingCredentials,
-        IEnumerable<SystemUserClaimExtDto> systemUserClaimExtDtos
+        List<SystemUserClaimExtDto> systemUserClaimExtDtos
     )
     {
         var jwt = new JwtSecurityToken(
@@ -60,7 +61,7 @@ public class JwtHelper : ITokenService
         return jwt;
     }
 
-    private List<Claim> SetOperationClaims(long systemUserId, IEnumerable<SystemUserClaimExtDto> systemUserClaimExtDtos)
+    private List<Claim> SetOperationClaims(long systemUserId, List<SystemUserClaimExtDto> systemUserClaimExtDtos)
     {
         var claims = new List<Claim>();
         claims.AddNameIdentifier(systemUserId.ToString());

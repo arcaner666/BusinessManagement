@@ -4,12 +4,12 @@ using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
-public class BankExtBl : IBankExtBl
+public class BankAdvBl : IBankAdvBl
 {
     private readonly IAccountBl _accountBl;
     private readonly IAccountGroupBl _accountGroupBl;
@@ -19,7 +19,7 @@ public class BankExtBl : IBankExtBl
     private readonly IFullAddressBl _fullAddressBl;
     private readonly IMapper _mapper;
 
-    public BankExtBl(
+    public BankAdvBl(
         IAccountBl accountBl,
         IAccountGroupBl accountGroupBl,
         IAccountTypeBl accountTypeBl,
@@ -39,7 +39,7 @@ public class BankExtBl : IBankExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult AddExt(BankExtDto bankExtDto)
+    public IResult Add(BankExtDto bankExtDto)
     {
         // Bankanın hesap grubunun id'si getirilir.
         var getAccountGroupResult = _accountGroupBl.GetByAccountGroupCode("102");
@@ -105,7 +105,7 @@ public class BankExtBl : IBankExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExt(long id)
+    public IResult Delete(long id)
     {
         var searchedBankResult = _bankBl.GetById(id);
         if (!searchedBankResult.Success)
@@ -127,7 +127,7 @@ public class BankExtBl : IBankExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExtByAccountId(long accountId)
+    public IResult DeleteByAccountId(long accountId)
     {
         var searchedBankResult = _bankBl.GetByAccountId(accountId);
         if (!searchedBankResult.Success)
@@ -147,35 +147,8 @@ public class BankExtBl : IBankExtBl
         return new SuccessResult(Messages.BankExtDeletedByAccountId);
     }
 
-    public IDataResult<BankExtDto> GetExtByAccountId(long accountId)
-    {
-        BankExtDto bankExtDto = _bankDal.GetExtByAccountId(accountId);
-        if (bankExtDto is null)
-            return new ErrorDataResult<BankExtDto>(Messages.BankNotFound);
-
-        return new SuccessDataResult<BankExtDto>(bankExtDto, Messages.BankExtListedByAccountId);
-    }
-
-    public IDataResult<BankExtDto> GetExtById(long id)
-    {
-        BankExtDto bankExtDto = _bankDal.GetExtById(id);
-        if (bankExtDto is null)
-            return new ErrorDataResult<BankExtDto>(Messages.BankNotFound);
-
-        return new SuccessDataResult<BankExtDto>(bankExtDto, Messages.BankExtListedById);
-    }
-
-    public IDataResult<IEnumerable<BankExtDto>> GetExtsByBusinessId(int businessId)
-    {
-        IEnumerable<BankExtDto> bankExtDtos = _bankDal.GetExtsByBusinessId(businessId);
-        if (!bankExtDtos.Any())
-            return new ErrorDataResult<IEnumerable<BankExtDto>>(Messages.BankNotFound);
-
-        return new SuccessDataResult<IEnumerable<BankExtDto>>(bankExtDtos, Messages.BankExtsListedByBusinessId);
-    }
-
     [TransactionScopeAspect]
-    public IResult UpdateExt(BankExtDto bankExtDto)
+    public IResult Update(BankExtDto bankExtDto)
     {
         // Bankanın cari hesabı güncellenir.
         AccountDto updatedAccountDto = new()

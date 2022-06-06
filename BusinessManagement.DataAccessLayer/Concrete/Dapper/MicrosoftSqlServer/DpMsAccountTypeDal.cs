@@ -13,7 +13,7 @@ public class DpMsAccountTypeDal : IAccountTypeDal
         _context = context;
     }
 
-    public IEnumerable<AccountType> GetAll()
+    public List<AccountType> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -34,7 +34,7 @@ public class DpMsAccountTypeDal : IAccountTypeDal
         return connection.Query<AccountType>(sql, new { @AccountTypeName = accountTypeName }).SingleOrDefault();
     }
 
-    public IEnumerable<AccountType> GetByAccountTypeNames(string[] accountTypeNames)
+    public List<AccountType> GetByAccountTypeNames(string[] accountTypeNames)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

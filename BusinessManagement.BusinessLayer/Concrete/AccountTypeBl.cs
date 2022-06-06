@@ -22,15 +22,15 @@ public class AccountTypeBl : IAccountTypeBl
         _mapper = mapper;
     }
 
-    public IDataResult<IEnumerable<AccountTypeDto>> GetAll()
+    public IDataResult<List<AccountTypeDto>> GetAll()
     {
-        IEnumerable<AccountType> accountTypes = _accountTypeDal.GetAll();
+        List<AccountType> accountTypes = _accountTypeDal.GetAll();
         if (!accountTypes.Any())
-            return new ErrorDataResult<IEnumerable<AccountTypeDto>>(Messages.AccountTypesNotFound);
+            return new ErrorDataResult<List<AccountTypeDto>>(Messages.AccountTypesNotFound);
 
-        var accountTypeDtos = _mapper.Map<IEnumerable<AccountTypeDto>>(accountTypes);
+        var accountTypeDtos = _mapper.Map<List<AccountTypeDto>>(accountTypes);
 
-        return new SuccessDataResult<IEnumerable<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListed);
+        return new SuccessDataResult<List<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListed);
     }
 
     public IDataResult<AccountTypeDto> GetById(short id)
@@ -55,14 +55,14 @@ public class AccountTypeBl : IAccountTypeBl
         return new SuccessDataResult<AccountTypeDto>(accountTypeDto, Messages.AccountTypeListedByAccountTypeName);
     }
 
-    public IDataResult<IEnumerable<AccountTypeDto>> GetByAccountTypeNames(AccountTypeNamesDto accountTypeNamesDto)
+    public IDataResult<List<AccountTypeDto>> GetByAccountTypeNames(AccountTypeNamesDto accountTypeNamesDto)
     {
-        IEnumerable<AccountType> accountTypes = _accountTypeDal.GetByAccountTypeNames(accountTypeNamesDto.AccountTypeNames);
+        List<AccountType> accountTypes = _accountTypeDal.GetByAccountTypeNames(accountTypeNamesDto.AccountTypeNames);
         if (accountTypes.Count() == 0)
-            return new ErrorDataResult<IEnumerable<AccountTypeDto>>(Messages.AccountTypesNotFound);
+            return new ErrorDataResult<List<AccountTypeDto>>(Messages.AccountTypesNotFound);
 
-        var accountTypeDtos = _mapper.Map<IEnumerable<AccountTypeDto>>(accountTypes);
+        var accountTypeDtos = _mapper.Map<List<AccountTypeDto>>(accountTypes);
 
-        return new SuccessDataResult<IEnumerable<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListedByAccountTypeNames);
+        return new SuccessDataResult<List<AccountTypeDto>>(accountTypeDtos, Messages.AccountTypesListedByAccountTypeNames);
     }
 }

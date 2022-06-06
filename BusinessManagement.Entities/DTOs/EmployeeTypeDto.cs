@@ -1,7 +1,7 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public record EmployeeTypeDto
+public class EmployeeTypeDto
 {
-    public short EmployeeTypeId { get; init; }
-    public string EmployeeTypeName { get; init; }
+    public short EmployeeTypeId { get; set; }
+    public string EmployeeTypeName { get; set; }
 }

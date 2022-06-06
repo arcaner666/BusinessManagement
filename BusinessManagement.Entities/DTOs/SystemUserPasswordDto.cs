@@ -1,8 +1,8 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public record SystemUserPasswordDto
+public class SystemUserPasswordDto
 {
-    public long SystemUserId { get; init; }
-    public string OldPassword { get; init; }
-    public string NewPassword { get; init; }
+    public long SystemUserId { get; set; }
+    public string OldPassword { get; set; }
+    public string NewPassword { get; set; }
 }

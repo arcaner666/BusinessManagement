@@ -4,18 +4,18 @@ namespace BusinessManagement.BusinessLayer.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {
-    public static IEnumerable<string> Claims(this ClaimsPrincipal claimsPrincipal, string claimType)
+    public static List<string> Claims(this ClaimsPrincipal claimsPrincipal, string claimType)
     {
         var result = claimsPrincipal?.FindAll(claimType)?.Select(x => x.Value).ToList();
         return result;
     }
 
-    public static IEnumerable<string> ClaimRoles(this ClaimsPrincipal claimsPrincipal)
+    public static List<string> ClaimRoles(this ClaimsPrincipal claimsPrincipal)
     {
         return claimsPrincipal?.Claims(ClaimTypes.Role);
     }
 
-    public static IEnumerable<string> ClaimSystemUserId(this ClaimsPrincipal claimsPrincipal)
+    public static List<string> ClaimSystemUserId(this ClaimsPrincipal claimsPrincipal)
     {
         return claimsPrincipal?.Claims(ClaimTypes.NameIdentifier);
     }

@@ -1,6 +1,6 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public record AccountGroupCodesDto
+public class AccountGroupCodesDto
 {
-    public string[] AccountGroupCodes { get; init; }
+    public string[] AccountGroupCodes { get; set; }
 }

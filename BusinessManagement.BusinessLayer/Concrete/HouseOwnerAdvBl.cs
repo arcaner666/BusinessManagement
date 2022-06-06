@@ -6,10 +6,11 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
-public class HouseOwnerExtBl : IHouseOwnerExtBl
+public class HouseOwnerAdvBl : IHouseOwnerAdvBl
 {
     private readonly IAccountBl _accountBl;
     private readonly IAccountGroupBl _accountGroupBl;
@@ -18,7 +19,7 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
     private readonly IHouseOwnerDal _houseOwnerDal;
     private readonly IMapper _mapper;
 
-    public HouseOwnerExtBl(
+    public HouseOwnerAdvBl(
         IAccountBl accountBl,
         IAccountGroupBl accountGroupBl,
         IAccountTypeBl accountTypeBl,
@@ -36,7 +37,7 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult AddExt(HouseOwnerExtDto houseOwnerExtDto)
+    public IResult Add(HouseOwnerExtDto houseOwnerExtDto)
     {
         // Mülk sahibinin hesap grubunun id'si getirilir.
         var getAccountGroupResult = _accountGroupBl.GetByAccountGroupCode("120");
@@ -90,7 +91,7 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExt(long id)
+    public IResult Delete(long id)
     {
         var searchedHouseOwnerResult = _houseOwnerBl.GetById(id);
         if (!searchedHouseOwnerResult.Success)
@@ -108,7 +109,7 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExtByAccountId(long accountId)
+    public IResult DeleteByAccountId(long accountId)
     {
         var searchedHouseOwnerResult = _houseOwnerBl.GetByAccountId(accountId);
         if (!searchedHouseOwnerResult.Success)
@@ -125,35 +126,8 @@ public class HouseOwnerExtBl : IHouseOwnerExtBl
         return new SuccessResult(Messages.HouseOwnerExtDeletedByAccountId);
     }
 
-    public IDataResult<HouseOwnerExtDto> GetExtByAccountId(long accountId)
-    {
-        HouseOwnerExtDto houseOwnerExtDto = _houseOwnerDal.GetExtByAccountId(accountId);
-        if (houseOwnerExtDto is null)
-            return new ErrorDataResult<HouseOwnerExtDto>(Messages.HouseOwnerNotFound);
-
-        return new SuccessDataResult<HouseOwnerExtDto>(houseOwnerExtDto, Messages.HouseOwnerExtListedByAccountId);
-    }
-
-    public IDataResult<HouseOwnerExtDto> GetExtById(long id)
-    {
-        HouseOwnerExtDto houseOwnerExtDto = _houseOwnerDal.GetExtById(id);
-        if (houseOwnerExtDto is null)
-            return new ErrorDataResult<HouseOwnerExtDto>(Messages.HouseOwnerNotFound);
-
-        return new SuccessDataResult<HouseOwnerExtDto>(houseOwnerExtDto, Messages.HouseOwnerExtListedById);
-    }
-
-    public IDataResult<IEnumerable<HouseOwnerExtDto>> GetExtsByBusinessId(int businessId)
-    {
-        IEnumerable<HouseOwnerExtDto> houseOwnerExtDtos = _houseOwnerDal.GetExtsByBusinessId(businessId);
-        if (!houseOwnerExtDtos.Any())
-            return new ErrorDataResult<IEnumerable<HouseOwnerExtDto>>(Messages.HouseOwnersNotFound);
-
-        return new SuccessDataResult<IEnumerable<HouseOwnerExtDto>>(houseOwnerExtDtos, Messages.HouseOwnerExtsListedByBusinessId);
-    }
-
     [TransactionScopeAspect]
-    public IResult UpdateExt(HouseOwnerExtDto houseOwnerExtDto)
+    public IResult Update(HouseOwnerExtDto houseOwnerExtDto)
     {
         // Mülk sahibinin cari hesabı güncellenir.
         AccountDto updatedAccountDto = new()

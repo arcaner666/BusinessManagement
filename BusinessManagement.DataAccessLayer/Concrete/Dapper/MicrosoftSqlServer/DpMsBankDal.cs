@@ -86,7 +86,7 @@ public class DpMsBankDal : IBankDal
         return connection.Query<Bank>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public IEnumerable<Bank> GetByBusinessId(int businessId)
+    public List<Bank> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -251,7 +251,7 @@ public class DpMsBankDal : IBankDal
         return connection.Query<BankExt>(sql, new { @BankId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<BankExt> GetExtsByBusinessId(int businessId)
+    public List<BankExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

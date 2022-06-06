@@ -7,10 +7,11 @@ using BusinessManagement.BusinessLayer.Utilities.Security.Cryptography;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
-public class FlatExtBl : IFlatExtBl
+public class FlatAdvBl : IFlatAdvBl
 {
     private readonly IApartmentBl _apartmentBl;
     private readonly IFlatBl _flatBl;
@@ -18,7 +19,7 @@ public class FlatExtBl : IFlatExtBl
     private readonly IKeyService _keyService;
     private readonly IMapper _mapper;
 
-    public FlatExtBl(
+    public FlatAdvBl(
         IApartmentBl apartmentBl,
         IFlatBl flatBl,
         IFlatDal flatDal,
@@ -34,7 +35,7 @@ public class FlatExtBl : IFlatExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult AddExt(FlatExtDto flatExtDto)
+    public IResult Add(FlatExtDto flatExtDto)
     {
         // Arayüzden gelen id'ye sahip bir apartman var mı kontrol edilir.
         var getApartmentResult = _apartmentBl.GetById(flatExtDto.ApartmentId);
@@ -42,7 +43,9 @@ public class FlatExtBl : IFlatExtBl
             return getApartmentResult;
 
         // Eşsiz bir daire kodu üretebilmek için ilgili apartmandaki tüm daireler getirilir.
-        IEnumerable<FlatDto> flatDtos = _flatDal.GetByApartmentId(flatExtDto.ApartmentId);
+        List<Flat> flats = _flatDal.GetByApartmentId(flatExtDto.ApartmentId);
+
+        var flatDtos = _mapper.Map<List<FlatDto>>(flats);
 
         // Daire kodu üretilir.
         string flatCode = _keyService.GenerateFlatCode(flatDtos, getApartmentResult.Data.ApartmentCode);
@@ -67,7 +70,7 @@ public class FlatExtBl : IFlatExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExt(long id)
+    public IResult Delete(long id)
     {
         var deleteFlatResult = _flatBl.Delete(id);
         if (!deleteFlatResult.Success)
@@ -76,25 +79,7 @@ public class FlatExtBl : IFlatExtBl
         return new SuccessResult(Messages.FlatExtDeleted);
     }
 
-    public IDataResult<FlatExtDto> GetExtById(long id)
-    {
-        FlatExtDto flatExtDto = _flatDal.GetExtById(id);
-        if (flatExtDto is null)
-            return new ErrorDataResult<FlatExtDto>(Messages.FlatNotFound);
-
-        return new SuccessDataResult<FlatExtDto>(flatExtDto, Messages.FlatExtListedById);
-    }
-
-    public IDataResult<IEnumerable<FlatExtDto>> GetExtsByBusinessId(int businessId)
-    {
-        IEnumerable<FlatExtDto> flatExtDtos = _flatDal.GetExtsByBusinessId(businessId);
-        if (!flatExtDtos.Any())
-            return new ErrorDataResult<IEnumerable<FlatExtDto>>(Messages.FlatsNotFound);
-
-        return new SuccessDataResult<IEnumerable<FlatExtDto>>(flatExtDtos, Messages.FlatExtsListedByBusinessId);
-    }
-
-    public IResult UpdateExt(FlatExtDto flatExtDto)
+    public IResult Update(FlatExtDto flatExtDto)
     {
         FlatDto flatDto = new()
         {

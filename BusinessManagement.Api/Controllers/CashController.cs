@@ -1,44 +1,48 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
 
-[Route("api/[controller]/")]
+[Route("api/cash/")]
 [ApiController]
-public class EmployeeExtsController : ControllerBase
+public class CashController : ControllerBase
 {
-    private readonly IEmployeeExtBl _employeeExtBl;
+    private readonly ICashAdvBl _cashAdvBl;
+    private readonly ICashBl _cashBl;
 
-    public EmployeeExtsController(
-        IEmployeeExtBl employeeExtBl
+    public CashController(
+        ICashAdvBl cashAdvBl,
+        ICashBl cashBl
     )
     {
-        _employeeExtBl = employeeExtBl;
+        _cashAdvBl = cashAdvBl;
+        _cashBl = cashBl;
     }
 
-    [HttpPost("addext")]
-    public IActionResult AddExt(EmployeeExtDto employeeExtDto)
+    [HttpPost("add")]
+    public IActionResult Add(CashExtDto cashExtDto)
     {
-        var result = _employeeExtBl.AddExt(employeeExtDto);
+        var result = _cashAdvBl.Add(cashExtDto);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
-    [HttpDelete("deleteext/{id}")]
-    public IActionResult DeleteExt(long id)
+    [HttpDelete("delete/{id}")]
+    public IActionResult Delete(long id)
     {
-        var result = _employeeExtBl.DeleteExt(id);
+        var result = _cashAdvBl.Delete(id);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
-    [HttpDelete("deleteextbyaccountid/{accountId}")]
-    public IActionResult DeleteExtByAccountId(long accountId)
+    [HttpDelete("deletebyaccountid/{accountId}")]
+    public IActionResult DeleteByAccountId(long accountId)
     {
-        var result = _employeeExtBl.DeleteExtByAccountId(accountId);
+        var result = _cashAdvBl.DeleteByAccountId(accountId);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -47,7 +51,7 @@ public class EmployeeExtsController : ControllerBase
     [HttpGet("getextbyaccountid/{accountId}")]
     public IActionResult GetExtByAccountId(long accountId)
     {
-        var result = _employeeExtBl.GetExtByAccountId(accountId);
+        var result = _cashBl.GetExtByAccountId(accountId);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -56,7 +60,7 @@ public class EmployeeExtsController : ControllerBase
     [HttpGet("getextbyid/{id}")]
     public IActionResult GetExtById(long id)
     {
-        var result = _employeeExtBl.GetExtById(id);
+        var result = _cashBl.GetExtById(id);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -65,16 +69,16 @@ public class EmployeeExtsController : ControllerBase
     [HttpGet("getextsbybusinessid/{businessId}")]
     public IActionResult GetExtsByBusinessId(int businessId)
     {
-        var result = _employeeExtBl.GetExtsByBusinessId(businessId);
+        var result = _cashBl.GetExtsByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
-    [HttpPost("updateext")]
-    public IActionResult UpdateExt(EmployeeExtDto employeeExtDto)
+    [HttpPost("update")]
+    public IActionResult Update(CashExtDto cashExtDto)
     {
-        var result = _employeeExtBl.UpdateExt(employeeExtDto);
+        var result = _cashAdvBl.Update(cashExtDto);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);

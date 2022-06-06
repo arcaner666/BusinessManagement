@@ -5,6 +5,7 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
@@ -62,15 +63,15 @@ public class CashBl : ICashBl
         return new SuccessDataResult<CashDto>(cashDto, Messages.CashListedByAccountId);
     }
 
-    public IDataResult<IEnumerable<CashDto>> GetByBusinessId(int businessId)
+    public IDataResult<List<CashDto>> GetByBusinessId(int businessId)
     {
-        IEnumerable<Cash> cash = _cashDal.GetByBusinessId(businessId);
+        List<Cash> cash = _cashDal.GetByBusinessId(businessId);
         if (!cash.Any())
-            return new ErrorDataResult<IEnumerable<CashDto>>(Messages.CashNotFound);
+            return new ErrorDataResult<List<CashDto>>(Messages.CashNotFound);
 
-        var cashDtos = _mapper.Map<IEnumerable<CashDto>>(cash);
+        var cashDtos = _mapper.Map<List<CashDto>>(cash);
 
-        return new SuccessDataResult<IEnumerable<CashDto>>(cashDtos, Messages.CashListedByBusinessId);
+        return new SuccessDataResult<List<CashDto>>(cashDtos, Messages.CashListedByBusinessId);
     }
 
     public IDataResult<CashDto> GetById(long id)
@@ -82,6 +83,39 @@ public class CashBl : ICashBl
         var cashDto = _mapper.Map<CashDto>(cash);
 
         return new SuccessDataResult<CashDto>(cashDto, Messages.CashListedById);
+    }
+
+    public IDataResult<CashExtDto> GetExtByAccountId(long accountId)
+    {
+        CashExt cashExt = _cashDal.GetExtByAccountId(accountId);
+        if (cashExt is null)
+            return new ErrorDataResult<CashExtDto>(Messages.CashNotFound);
+
+        var cashExtDto = _mapper.Map<CashExtDto>(cashExt);
+
+        return new SuccessDataResult<CashExtDto>(cashExtDto, Messages.CashExtListedByAccountId);
+    }
+
+    public IDataResult<CashExtDto> GetExtById(long id)
+    {
+        CashExt cashExt = _cashDal.GetExtById(id);
+        if (cashExt is null)
+            return new ErrorDataResult<CashExtDto>(Messages.CashNotFound);
+
+        var cashExtDto = _mapper.Map<CashExtDto>(cashExt);
+
+        return new SuccessDataResult<CashExtDto>(cashExtDto, Messages.CashExtListedById);
+    }
+
+    public IDataResult<List<CashExtDto>> GetExtsByBusinessId(int businessId)
+    {
+        List<CashExt> cashExts = _cashDal.GetExtsByBusinessId(businessId);
+        if (!cashExts.Any())
+            return new ErrorDataResult<List<CashExtDto>>(Messages.CashNotFound);
+
+        var cashExtDtos = _mapper.Map<List<CashExtDto>>(cashExts);
+
+        return new SuccessDataResult<List<CashExtDto>>(cashExtDtos, Messages.CashExtsListedByBusinessId);
     }
 
     public IResult Update(CashDto cashDto)

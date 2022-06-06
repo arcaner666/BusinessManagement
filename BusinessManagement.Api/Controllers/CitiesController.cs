@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
 
-[Route("api/[controller]/")]
+[Route("api/cities/")]
 [ApiController]
 public class CitiesController : ControllerBase
 {

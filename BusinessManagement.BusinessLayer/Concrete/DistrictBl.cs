@@ -22,25 +22,25 @@ public class DistrictBl : IDistrictBl
         _mapper = mapper;
     }
 
-    public IDataResult<IEnumerable<DistrictDto>> GetAll()
+    public IDataResult<List<DistrictDto>> GetAll()
     {
-        IEnumerable<District> districts = _districtDal.GetAll();
+        List<District> districts = _districtDal.GetAll();
         if (!districts.Any())
-            return new ErrorDataResult<IEnumerable<DistrictDto>>(Messages.DistrictsNotFound);
+            return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
 
-        var districtDtos = _mapper.Map<IEnumerable<DistrictDto>>(districts);
+        var districtDtos = _mapper.Map<List<DistrictDto>>(districts);
 
-        return new SuccessDataResult<IEnumerable<DistrictDto>>(districtDtos, Messages.DistrictsListed);
+        return new SuccessDataResult<List<DistrictDto>>(districtDtos, Messages.DistrictsListed);
     }
 
-    public IDataResult<IEnumerable<DistrictDto>> GetByCityId(short cityId)
+    public IDataResult<List<DistrictDto>> GetByCityId(short cityId)
     {
-        IEnumerable<District> district = _districtDal.GetByCityId(cityId);
+        List<District> district = _districtDal.GetByCityId(cityId);
         if (!district.Any()) 
-            return new ErrorDataResult<IEnumerable<DistrictDto>>(Messages.DistrictsNotFound);
+            return new ErrorDataResult<List<DistrictDto>>(Messages.DistrictsNotFound);
 
-        var districtDto = _mapper.Map<IEnumerable<DistrictDto>>(district);
+        var districtDto = _mapper.Map<List<DistrictDto>>(district);
 
-        return new SuccessDataResult<IEnumerable<DistrictDto>>(districtDto, Messages.DistrictsListedByCityId);
+        return new SuccessDataResult<List<DistrictDto>>(districtDto, Messages.DistrictsListedByCityId);
     }
 }

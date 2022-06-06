@@ -22,14 +22,14 @@ public class EmployeeTypeBl : IEmployeeTypeBl
         _mapper = mapper;
     }
 
-    public IDataResult<IEnumerable<EmployeeTypeDto>> GetAll()
+    public IDataResult<List<EmployeeTypeDto>> GetAll()
     {
-        IEnumerable<EmployeeType> employeeTypes = _employeeTypeDal.GetAll();
+        List<EmployeeType> employeeTypes = _employeeTypeDal.GetAll();
         if (!employeeTypes.Any())
-            return new ErrorDataResult<IEnumerable<EmployeeTypeDto>>(Messages.EmployeeTypesNotFound);
+            return new ErrorDataResult<List<EmployeeTypeDto>>(Messages.EmployeeTypesNotFound);
 
-        var employeeTypeDtos = _mapper.Map<IEnumerable<EmployeeTypeDto>>(employeeTypes);
+        var employeeTypeDtos = _mapper.Map<List<EmployeeTypeDto>>(employeeTypes);
 
-        return new SuccessDataResult<IEnumerable<EmployeeTypeDto>>(employeeTypeDtos, Messages.EmployeeTypesListed);
+        return new SuccessDataResult<List<EmployeeTypeDto>>(employeeTypeDtos, Messages.EmployeeTypesListed);
     }
 }

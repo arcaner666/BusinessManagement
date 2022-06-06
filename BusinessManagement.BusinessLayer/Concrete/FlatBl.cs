@@ -7,6 +7,7 @@ using BusinessManagement.BusinessLayer.Utilities.Security.Cryptography;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
@@ -53,15 +54,15 @@ public class FlatBl : IFlatBl
         return new SuccessResult(Messages.FlatDeleted);
     }
 
-    public IDataResult<IEnumerable<FlatDto>> GetByApartmentId(long apartmentId)
+    public IDataResult<List<FlatDto>> GetByApartmentId(long apartmentId)
     {
-        IEnumerable<Flat> flats = _flatDal.GetByApartmentId(apartmentId);
+        List<Flat> flats = _flatDal.GetByApartmentId(apartmentId);
         if (flats is null)
-            return new ErrorDataResult<IEnumerable<FlatDto>>(Messages.FlatNotFound);
+            return new ErrorDataResult<List<FlatDto>>(Messages.FlatNotFound);
 
-        var flatDtos = _mapper.Map<IEnumerable<FlatDto>>(flats);
+        var flatDtos = _mapper.Map<List<FlatDto>>(flats);
 
-        return new SuccessDataResult<IEnumerable<FlatDto>>(flatDtos, Messages.FlatsListedByApartmentId);
+        return new SuccessDataResult<List<FlatDto>>(flatDtos, Messages.FlatsListedByApartmentId);
     }
 
     public IDataResult<FlatDto> GetById(long id)
@@ -73,6 +74,28 @@ public class FlatBl : IFlatBl
         var flatDto = _mapper.Map<FlatDto>(flat);
 
         return new SuccessDataResult<FlatDto>(flatDto, Messages.FlatListedById);
+    }
+
+    public IDataResult<FlatExtDto> GetExtById(long id)
+    {
+        FlatExt flatExt = _flatDal.GetExtById(id);
+        if (flatExt is null)
+            return new ErrorDataResult<FlatExtDto>(Messages.FlatNotFound);
+
+        var flatExtDto = _mapper.Map<FlatExtDto>(flatExt);
+
+        return new SuccessDataResult<FlatExtDto>(flatExtDto, Messages.FlatExtListedById);
+    }
+
+    public IDataResult<List<FlatExtDto>> GetExtsByBusinessId(int businessId)
+    {
+        List<FlatExt> flatExts = _flatDal.GetExtsByBusinessId(businessId);
+        if (!flatExts.Any())
+            return new ErrorDataResult<List<FlatExtDto>>(Messages.FlatsNotFound);
+
+        var flatExtDtos = _mapper.Map<List<FlatExtDto>>(flatExts);
+
+        return new SuccessDataResult<List<FlatExtDto>>(flatExtDtos, Messages.FlatExtsListedByBusinessId);
     }
 
     public IResult Update(FlatDto flatDto)

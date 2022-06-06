@@ -22,14 +22,14 @@ public class CityBl : ICityBl
         _mapper = mapper;
     }
 
-    public IDataResult<IEnumerable<CityDto>> GetAll()
+    public IDataResult<List<CityDto>> GetAll()
     {
-        IEnumerable<City> cities = _cityDal.GetAll();
+        List<City> cities = _cityDal.GetAll();
         if (!cities.Any())
-            return new ErrorDataResult<IEnumerable<CityDto>>(Messages.CitiesNotFound);
+            return new ErrorDataResult<List<CityDto>>(Messages.CitiesNotFound);
 
-        var cityDtos = _mapper.Map<IEnumerable<CityDto>>(cities);
+        var cityDtos = _mapper.Map<List<CityDto>>(cities);
 
-        return new SuccessDataResult<IEnumerable<CityDto>>(cityDtos, Messages.CitiesListed);
+        return new SuccessDataResult<List<CityDto>>(cityDtos, Messages.CitiesListed);
     }
 }

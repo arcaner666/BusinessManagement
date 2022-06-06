@@ -41,14 +41,14 @@ public class SystemUserClaimBl : ISystemUserClaimBl
         return new SuccessDataResult<SystemUserClaimDto>(addedSystemUserClaimDto, Messages.SystemUserAdded);
     }
 
-    public IDataResult<IEnumerable<SystemUserClaimExtDto>> GetExtsBySystemUserId(long systemUserId)
+    public IDataResult<List<SystemUserClaimExtDto>> GetExtsBySystemUserId(long systemUserId)
     {
-        IEnumerable<SystemUserClaimExt> systemUserClaimExts = _systemUserClaimDal.GetExtsBySystemUserId(systemUserId);
+        List<SystemUserClaimExt> systemUserClaimExts = _systemUserClaimDal.GetExtsBySystemUserId(systemUserId);
         if (!systemUserClaimExts.Any())
-            return new ErrorDataResult<IEnumerable<SystemUserClaimExtDto>>(Messages.SystemUserClaimsNotFound);
+            return new ErrorDataResult<List<SystemUserClaimExtDto>>(Messages.SystemUserClaimsNotFound);
 
-        var systemUserClaimExtDtos = _mapper.Map<IEnumerable<SystemUserClaimExtDto>>(systemUserClaimExts);
+        var systemUserClaimExtDtos = _mapper.Map<List<SystemUserClaimExtDto>>(systemUserClaimExts);
 
-        return new SuccessDataResult<IEnumerable<SystemUserClaimExtDto>>(systemUserClaimExtDtos, Messages.SystemUserExtsListedBySystemUserId);
+        return new SuccessDataResult<List<SystemUserClaimExtDto>>(systemUserClaimExtDtos, Messages.SystemUserExtsListedBySystemUserId);
     }
 }

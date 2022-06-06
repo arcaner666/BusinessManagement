@@ -5,6 +5,7 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
@@ -62,15 +63,15 @@ public class HouseOwnerBl : IHouseOwnerBl
         return new SuccessDataResult<HouseOwnerDto>(houseOwnerDto, Messages.HouseOwnerListedByAccountId);
     }
 
-    public IDataResult<IEnumerable<HouseOwnerDto>> GetByBusinessId(int businessId)
+    public IDataResult<List<HouseOwnerDto>> GetByBusinessId(int businessId)
     {
-        IEnumerable<HouseOwner> houseOwners = _houseOwnerDal.GetByBusinessId(businessId);
+        List<HouseOwner> houseOwners = _houseOwnerDal.GetByBusinessId(businessId);
         if (!houseOwners.Any())
-            return new ErrorDataResult<IEnumerable<HouseOwnerDto>>(Messages.HouseOwnersNotFound);
+            return new ErrorDataResult<List<HouseOwnerDto>>(Messages.HouseOwnersNotFound);
 
-        var houseOwnerDtos = _mapper.Map<IEnumerable<HouseOwnerDto>>(houseOwners);
+        var houseOwnerDtos = _mapper.Map<List<HouseOwnerDto>>(houseOwners);
 
-        return new SuccessDataResult<IEnumerable<HouseOwnerDto>>(houseOwnerDtos, Messages.HouseOwnersListedByBusinessId);
+        return new SuccessDataResult<List<HouseOwnerDto>>(houseOwnerDtos, Messages.HouseOwnersListedByBusinessId);
     }
 
     public IDataResult<HouseOwnerDto> GetById(long id)
@@ -82,6 +83,39 @@ public class HouseOwnerBl : IHouseOwnerBl
         var houseOwnerDto = _mapper.Map<HouseOwnerDto>(houseOwner);
 
         return new SuccessDataResult<HouseOwnerDto>(houseOwnerDto, Messages.HouseOwnerListedById);
+    }
+
+    public IDataResult<HouseOwnerExtDto> GetExtByAccountId(long accountId)
+    {
+        HouseOwnerExt houseOwnerExt = _houseOwnerDal.GetExtByAccountId(accountId);
+        if (houseOwnerExt is null)
+            return new ErrorDataResult<HouseOwnerExtDto>(Messages.HouseOwnerNotFound);
+
+        var houseOwnerExtDto = _mapper.Map<HouseOwnerExtDto>(houseOwnerExt);
+
+        return new SuccessDataResult<HouseOwnerExtDto>(houseOwnerExtDto, Messages.HouseOwnerExtListedByAccountId);
+    }
+
+    public IDataResult<HouseOwnerExtDto> GetExtById(long id)
+    {
+        HouseOwnerExt houseOwnerExt = _houseOwnerDal.GetExtById(id);
+        if (houseOwnerExt is null)
+            return new ErrorDataResult<HouseOwnerExtDto>(Messages.HouseOwnerNotFound);
+
+        var houseOwnerExtDto = _mapper.Map<HouseOwnerExtDto>(houseOwnerExt);
+
+        return new SuccessDataResult<HouseOwnerExtDto>(houseOwnerExtDto, Messages.HouseOwnerExtListedById);
+    }
+
+    public IDataResult<List<HouseOwnerExtDto>> GetExtsByBusinessId(int businessId)
+    {
+        List<HouseOwnerExt> houseOwnerExts = _houseOwnerDal.GetExtsByBusinessId(businessId);
+        if (!houseOwnerExts.Any())
+            return new ErrorDataResult<List<HouseOwnerExtDto>>(Messages.HouseOwnersNotFound);
+
+        var houseOwnerExtDtos = _mapper.Map<List<HouseOwnerExtDto>>(houseOwnerExts);
+
+        return new SuccessDataResult<List<HouseOwnerExtDto>>(houseOwnerExtDtos, Messages.HouseOwnerExtsListedByBusinessId);
     }
 
     public IResult Update(HouseOwnerDto houseOwnerDto)

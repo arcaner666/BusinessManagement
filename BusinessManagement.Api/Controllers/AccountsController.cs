@@ -1,35 +1,39 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
 
-[Route("api/[controller]/")]
+[Route("api/accounts/")]
 [ApiController]
 public class AccountExtsController : ControllerBase
 {
-    private readonly IAccountExtBl _accountExtBl;
+    private readonly IAccountAdvBl _accountAdvBl;
+    private readonly IAccountBl _accountBl;
 
     public AccountExtsController(
-        IAccountExtBl accountExtBl
+        IAccountAdvBl accountAdvBl,
+        IAccountBl accountBl
     )
     {
-        _accountExtBl = accountExtBl;
+        _accountAdvBl = accountAdvBl;
+        _accountBl = accountBl;
     }
 
-    [HttpPost("addext")]
-    public IActionResult AddExt(AccountExtDto accountExtDto)
+    [HttpPost("add")]
+    public IActionResult Add(AccountExtDto accountExtDto)
     {
-        var result = _accountExtBl.AddExt(accountExtDto);
+        var result = _accountAdvBl.Add(accountExtDto);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
-    [HttpDelete("deleteext/{id}")]
-    public IActionResult DeleteExt(long id)
+    [HttpDelete("delete/{id}")]
+    public IActionResult Delete(long id)
     {
-        var result = _accountExtBl.DeleteExt(id);
+        var result = _accountAdvBl.Delete(id);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -38,7 +42,7 @@ public class AccountExtsController : ControllerBase
     [HttpGet("generateaccountcode/{businessId}/{branchId}/{accountGroupCode}")]
     public IActionResult GenerateAccountCode(int businessId, long branchId, string accountGroupCode)
     {
-        var result = _accountExtBl.GenerateAccountCode(businessId, branchId, accountGroupCode);
+        var result = _accountAdvBl.GenerateAccountCode(businessId, branchId, accountGroupCode);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -47,7 +51,7 @@ public class AccountExtsController : ControllerBase
     [HttpGet("getextbyid/{id}")]
     public IActionResult GetExtById(long id)
     {
-        var result = _accountExtBl.GetExtById(id);
+        var result = _accountBl.GetExtById(id);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -56,7 +60,7 @@ public class AccountExtsController : ControllerBase
     [HttpGet("getextsbybusinessid/{businessId}")]
     public IActionResult GetExtsByBusinessId(int businessId)
     {
-        var result = _accountExtBl.GetExtsByBusinessId(businessId);
+        var result = _accountBl.GetExtsByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -65,16 +69,16 @@ public class AccountExtsController : ControllerBase
     [HttpPost("getextsbybusinessidandaccountgroupcodes")]
     public IActionResult GetExtsByBusinessIdAndAccountGroupCodes(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto)
     {
-        var result = _accountExtBl.GetExtsByBusinessIdAndAccountGroupCodes(accountGetByAccountGroupCodesDto);
+        var result = _accountBl.GetExtsByBusinessIdAndAccountGroupCodes(accountGetByAccountGroupCodesDto);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
-    [HttpPost("updateext")]
-    public IActionResult UpdateExt(AccountExtDto accountExtDto)
+    [HttpPost("update")]
+    public IActionResult Update(AccountExtDto accountExtDto)
     {
-        var result = _accountExtBl.UpdateExt(accountExtDto);
+        var result = _accountAdvBl.Update(accountExtDto);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);

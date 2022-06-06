@@ -4,8 +4,8 @@ namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IAccountGroupDal
 {
-    IEnumerable<AccountGroup> GetAll();
+    List<AccountGroup> GetAll();
     AccountGroup GetByAccountGroupCode(string accountGroupCode);
-    IEnumerable<AccountGroup> GetByAccountGroupCodes(string[] accountGroupCodes);
+    List<AccountGroup> GetByAccountGroupCodes(string[] accountGroupCodes);
     AccountGroup GetById(short id);
 }

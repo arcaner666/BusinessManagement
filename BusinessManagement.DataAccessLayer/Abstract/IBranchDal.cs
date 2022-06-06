@@ -8,12 +8,12 @@ public interface IBranchDal
     long Add(Branch branch);
     void Delete(long id);
     Branch GetByBranchCode(string branchCode);
-    IEnumerable<Branch> GetByBusinessId(int businessId);
+    List<Branch> GetByBusinessId(int businessId);
     Branch GetByBusinessIdAndBranchName(int businessId, string branchName);
     Branch GetByBusinessIdAndBranchOrderOrBranchCode(int businessId, int branchOrder, string branchCode);
     Branch GetById(long id);
     BranchExt GetExtById(long id);
-    IEnumerable<BranchExt> GetExtsByBusinessId(int businessId);
+    List<BranchExt> GetExtsByBusinessId(int businessId);
     int GetMaxBranchOrderByBusinessId(int businessId);
     void Update(Branch branch);
 }

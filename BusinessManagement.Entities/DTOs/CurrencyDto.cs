@@ -1,8 +1,8 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public record CurrencyDto
+public class CurrencyDto
 {
-    public byte CurrencyId { get; init; }
-    public string CurrencyName { get; init; }
-    public string CurrencySymbol { get; init; }
+    public byte CurrencyId { get; set; }
+    public string CurrencyName { get; set; }
+    public string CurrencySymbol { get; set; }
 }

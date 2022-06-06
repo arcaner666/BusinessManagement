@@ -6,10 +6,11 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
-public class EmployeeExtBl : IEmployeeExtBl
+public class EmployeeAdvBl : IEmployeeAdvBl
 {
     private readonly IAccountBl _accountBl;
     private readonly IAccountGroupBl _accountGroupBl;
@@ -18,7 +19,7 @@ public class EmployeeExtBl : IEmployeeExtBl
     private readonly IEmployeeDal _employeeDal;
     private readonly IMapper _mapper;
 
-    public EmployeeExtBl(
+    public EmployeeAdvBl(
         IAccountBl accountBl,
         IAccountGroupBl accountGroupBl,
         IAccountTypeBl accountTypeBl,
@@ -36,7 +37,7 @@ public class EmployeeExtBl : IEmployeeExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult AddExt(EmployeeExtDto employeeExtDto)
+    public IResult Add(EmployeeExtDto employeeExtDto)
     {
         // Personelin hesap grubunun id'si getirilir.
         var getAccountGroupResult = _accountGroupBl.GetByAccountGroupCode("335");
@@ -88,7 +89,7 @@ public class EmployeeExtBl : IEmployeeExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExt(long id)
+    public IResult Delete(long id)
     {
         var searchedEmployeeResult = _employeeBl.GetById(id);
         if (!searchedEmployeeResult.Success)
@@ -106,7 +107,7 @@ public class EmployeeExtBl : IEmployeeExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExtByAccountId(long accountId)
+    public IResult DeleteByAccountId(long accountId)
     {
         var searchedEmployeeResult = _employeeBl.GetByAccountId(accountId);
         if (!searchedEmployeeResult.Success)
@@ -123,35 +124,8 @@ public class EmployeeExtBl : IEmployeeExtBl
         return new SuccessResult(Messages.EmployeeExtDeletedByAccountId);
     }
 
-    public IDataResult<EmployeeExtDto> GetExtByAccountId(long accountId)
-    {
-        EmployeeExtDto employeeExtDto = _employeeDal.GetExtByAccountId(accountId);
-        if (employeeExtDto is null)
-            return new ErrorDataResult<EmployeeExtDto>(Messages.EmployeeNotFound);
-
-        return new SuccessDataResult<EmployeeExtDto>(employeeExtDto, Messages.EmployeeExtListedByAccountId);
-    }
-
-    public IDataResult<EmployeeExtDto> GetExtById(long id)
-    {
-        EmployeeExtDto employeeExtDto = _employeeDal.GetExtById(id);
-        if (employeeExtDto is null)
-            return new ErrorDataResult<EmployeeExtDto>(Messages.EmployeeNotFound);
-
-        return new SuccessDataResult<EmployeeExtDto>(employeeExtDto, Messages.EmployeeExtListedById);
-    }
-
-    public IDataResult<IEnumerable<EmployeeExtDto>> GetExtsByBusinessId(int businessId)
-    {
-        IEnumerable<EmployeeExtDto> employeeExtDtos = _employeeDal.GetExtsByBusinessId(businessId);
-        if (!employeeExtDtos.Any())
-            return new ErrorDataResult<IEnumerable<EmployeeExtDto>>(Messages.EmployeesNotFound);
-
-        return new SuccessDataResult<IEnumerable<EmployeeExtDto>>(employeeExtDtos, Messages.EmployeeExtsListedByBusinessId);
-    }
-
     [TransactionScopeAspect]
-    public IResult UpdateExt(EmployeeExtDto employeeExtDto)
+    public IResult Update(EmployeeExtDto employeeExtDto)
     {
         // Personelin cari hesabı güncellenir.
         AccountDto updatedAccountDto = new()

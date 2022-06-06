@@ -1,6 +1,6 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public record AccountTypeNamesDto
+public class AccountTypeNamesDto
 {
-    public string[] AccountTypeNames { get; init; }
+    public string[] AccountTypeNames { get; set; }
 }

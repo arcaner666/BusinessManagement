@@ -4,12 +4,12 @@ using BusinessManagement.BusinessLayer.Aspects.Autofac.Transaction;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
-public class CashExtBl : ICashExtBl
+public class CashAdvBl : ICashAdvBl
 {
     private readonly IAccountBl _accountBl;
     private readonly IAccountGroupBl _accountGroupBl;
@@ -18,7 +18,7 @@ public class CashExtBl : ICashExtBl
     private readonly ICashDal _cashDal;
     private readonly IMapper _mapper;
 
-    public CashExtBl(
+    public CashAdvBl(
         IAccountBl accountBl,
         IAccountGroupBl accountGroupBl,
         IAccountTypeBl accountTypeBl,
@@ -36,7 +36,7 @@ public class CashExtBl : ICashExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult AddExt(CashExtDto cashExtDto)
+    public IResult Add(CashExtDto cashExtDto)
     {
         // Kasanın hesap grubunun id'si getirilir.
         var getAccountGroupResult = _accountGroupBl.GetByAccountGroupCode("100");
@@ -80,7 +80,7 @@ public class CashExtBl : ICashExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExt(long id)
+    public IResult Delete(long id)
     {
         var searchedCashResult = _cashBl.GetById(id);
         if (!searchedCashResult.Success)
@@ -98,7 +98,7 @@ public class CashExtBl : ICashExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExtByAccountId(long accountId)
+    public IResult DeleteByAccountId(long accountId)
     {
         var searchedCashResult = _cashBl.GetByAccountId(accountId);
         if (!searchedCashResult.Success)
@@ -115,35 +115,8 @@ public class CashExtBl : ICashExtBl
         return new SuccessResult(Messages.CashExtDeletedByAccountId);
     }
 
-    public IDataResult<CashExtDto> GetExtByAccountId(long accountId)
-    {
-        CashExtDto cashExtDto = _cashDal.GetExtByAccountId(accountId);
-        if (cashExtDto is null)
-            return new ErrorDataResult<CashExtDto>(Messages.CashNotFound);
-
-        return new SuccessDataResult<CashExtDto>(cashExtDto, Messages.CashExtListedByAccountId);
-    }
-
-    public IDataResult<CashExtDto> GetExtById(long id)
-    {
-        CashExtDto cashExtDto = _cashDal.GetExtById(id);
-        if (cashExtDto is null)
-            return new ErrorDataResult<CashExtDto>(Messages.CashNotFound);
-
-        return new SuccessDataResult<CashExtDto>(cashExtDto, Messages.CashExtListedById);
-    }
-
-    public IDataResult<IEnumerable<CashExtDto>> GetExtsByBusinessId(int businessId)
-    {
-        IEnumerable<CashExtDto> cashExtDtos = _cashDal.GetExtsByBusinessId(businessId);
-        if (!cashExtDtos.Any())
-            return new ErrorDataResult<IEnumerable<CashExtDto>>(Messages.CashNotFound);
-
-        return new SuccessDataResult<IEnumerable<CashExtDto>>(cashExtDtos, Messages.CashExtsListedByBusinessId);
-    }
-
     [TransactionScopeAspect]
-    public IResult UpdateExt(CashExtDto cashExtDto)
+    public IResult Update(CashExtDto cashExtDto)
     {
         // Mülk sahibinin cari hesabı güncellenir.
         AccountDto updatedAccountDto = new()

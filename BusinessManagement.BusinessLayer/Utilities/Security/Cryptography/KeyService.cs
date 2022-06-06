@@ -19,7 +19,7 @@ public class KeyService : IKeyService
     private readonly char[] testCharacters =
         "123456789".ToCharArray();
 
-    public string GenerateApartmentCode(IEnumerable<ApartmentDto> apartmentDtos, string sectionCode)
+    public string GenerateApartmentCode(List<ApartmentDto> apartmentDtos, string sectionCode)
     {
         string apartmentCode = GenerateUniqueKey(2, secureUppercaseLettersAndNumbers);
         if (apartmentDtos is not null)
@@ -32,7 +32,7 @@ public class KeyService : IKeyService
         return $"{sectionCode}{apartmentCode}";
     }
 
-    public string GenerateFlatCode(IEnumerable<FlatDto> flatDtos, string apartmentCode)
+    public string GenerateFlatCode(List<FlatDto> flatDtos, string apartmentCode)
     {
         string flatCode = GenerateUniqueKey(2, secureUppercaseLettersAndNumbers);
         if (flatDtos is not null)
@@ -45,7 +45,7 @@ public class KeyService : IKeyService
         return $"{apartmentCode}{flatCode}";
     }
 
-    public string GenerateSectionCode(IEnumerable<SectionDto> sectionDtos)
+    public string GenerateSectionCode(List<SectionDto> sectionDtos)
     {
         string sectionCode = GenerateUniqueKey(4, secureUppercaseLettersAndNumbers);
         if (sectionDtos is not null)
@@ -75,7 +75,7 @@ public class KeyService : IKeyService
         return result.ToString();
     }
 
-    private bool SearchApartmentWithSameCode(IEnumerable<ApartmentDto> apartmentDtos, string apartmentCode)
+    private bool SearchApartmentWithSameCode(List<ApartmentDto> apartmentDtos, string apartmentCode)
     {
         bool isExists = false;
         foreach (ApartmentDto apartmentDto in apartmentDtos)
@@ -90,7 +90,7 @@ public class KeyService : IKeyService
         return isExists;
     }
 
-    private bool SearchFlatWithSameCode(IEnumerable<FlatDto> flatDtos, string flatCode)
+    private bool SearchFlatWithSameCode(List<FlatDto> flatDtos, string flatCode)
     {
         bool isExists = false;
         foreach (FlatDto flatDto in flatDtos)
@@ -105,7 +105,7 @@ public class KeyService : IKeyService
         return isExists;
     }
 
-    private bool SearchSectionWithSameCode(IEnumerable<SectionDto> sectionDtos, string sectionCode)
+    private bool SearchSectionWithSameCode(List<SectionDto> sectionDtos, string sectionCode)
     {
         bool isExists = false;
         foreach (SectionDto sectionDto in sectionDtos)

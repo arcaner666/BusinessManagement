@@ -1,15 +1,15 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public record SectionDto
+public class SectionDto
 {
-    public int SectionId { get; init; }
-    public long SectionGroupId { get; init; }
-    public int BusinessId { get; init; }
-    public long BranchId { get; init; }
-    public long ManagerId { get; init; }
-    public long FullAddressId { get; init; }
-    public string SectionName { get; init; }
-    public string SectionCode { get; init; }
-    public DateTimeOffset CreatedAt { get; init; }
-    public DateTimeOffset UpdatedAt { get; init; }
+    public int SectionId { get; set; }
+    public long SectionGroupId { get; set; }
+    public int BusinessId { get; set; }
+    public long BranchId { get; set; }
+    public long ManagerId { get; set; }
+    public long FullAddressId { get; set; }
+    public string SectionName { get; set; }
+    public string SectionCode { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 }

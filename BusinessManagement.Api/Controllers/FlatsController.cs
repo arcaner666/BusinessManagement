@@ -1,35 +1,38 @@
 ﻿using BusinessManagement.BusinessLayer.Abstract;
-using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BusinessManagement.Api.Controllers;
 
-[Route("api/[controller]/")]
+[Route("api/flats/")]
 [ApiController]
-public class ApartmentExtsController : ControllerBase
+public class FlatsController : ControllerBase
 {
-    private readonly IApartmentExtBl _apartmentExtBl;
+    private readonly IFlatAdvBl _flatAdvBl;
+    private readonly IFlatBl _flatBl;
 
-    public ApartmentExtsController(
-        IApartmentExtBl apartmentExtBl
+    public FlatsController(
+        IFlatAdvBl flatAdvBl,
+        IFlatBl flatBl
     )
     {
-        _apartmentExtBl = apartmentExtBl;
+        _flatAdvBl = flatAdvBl;
+        _flatBl = flatBl;
     }
 
-    [HttpPost("addext")]
-    public IActionResult AddExt(ApartmentExtDto apartmentExtDto)
+    [HttpPost("add")]
+    public IActionResult Add(FlatExtDto flatExtDto)
     {
-        var result = _apartmentExtBl.AddExt(apartmentExtDto);
+        var result = _flatAdvBl.Add(flatExtDto);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
-    [HttpDelete("deleteext/{id}")]
-    public IActionResult DeleteExt(int id)
+    [HttpDelete("delete/{id}")]
+    public IActionResult Delete(long id)
     {
-        var result = _apartmentExtBl.DeleteExt(id);
+        var result = _flatAdvBl.Delete(id);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -38,7 +41,7 @@ public class ApartmentExtsController : ControllerBase
     [HttpGet("getextbyid/{id}")]
     public IActionResult GetExtById(long id)
     {
-        var result = _apartmentExtBl.GetExtById(id);
+        var result = _flatBl.GetExtById(id);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
@@ -47,16 +50,16 @@ public class ApartmentExtsController : ControllerBase
     [HttpGet("getextsbybusinessid/{businessId}")]
     public IActionResult GetExtsByBusinessId(int businessId)
     {
-        var result = _apartmentExtBl.GetExtsByBusinessId(businessId);
+        var result = _flatBl.GetExtsByBusinessId(businessId);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);
     }
 
-    [HttpPost("updateext")]
-    public IActionResult UpdateExt(ApartmentExtDto apartmentExtDto)
+    [HttpPost("update")]
+    public IActionResult Update(FlatExtDto flatExtDto)
     {
-        var result = _apartmentExtBl.UpdateExt(apartmentExtDto);
+        var result = _flatAdvBl.Update(flatExtDto);
         if (result.Success)
             return Ok(result);
         return StatusCode(StatusCodes.Status500InternalServerError, result);

@@ -1,25 +1,25 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public record CustomerDto
+public class CustomerDto
 {
-    public long CustomerId { get; init; }
-    public int BusinessId { get; init; }
-    public long BranchId { get; init; }
-    public long AccountId { get; init; }
-    public string NameSurname { get; init; }
-    public string Email { get; init; }
-    public string Phone { get; init; }
-    public DateTime? DateOfBirth { get; init; }
-    public string Gender { get; init; }
-    public string Notes { get; init; }
-    public string AvatarUrl { get; init; }
-    public string TaxOffice { get; init; }
-    public long? TaxNumber { get; init; }
-    public long? IdentityNumber { get; init; }
-    public short StandartMaturity { get; init; }
-    public int AppointmentsMade { get; init; }
-    public int ProductsPurchased { get; init; }
-    public DateTimeOffset? LastPurchaseDate { get; init; }
-    public DateTimeOffset CreatedAt { get; init; }
-    public DateTimeOffset UpdatedAt { get; init; }
+    public long CustomerId { get; set; }
+    public int BusinessId { get; set; }
+    public long BranchId { get; set; }
+    public long AccountId { get; set; }
+    public string NameSurname { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public string Gender { get; set; }
+    public string Notes { get; set; }
+    public string AvatarUrl { get; set; }
+    public string TaxOffice { get; set; }
+    public long? TaxNumber { get; set; }
+    public long? IdentityNumber { get; set; }
+    public short StandartMaturity { get; set; }
+    public int AppointmentsMade { get; set; }
+    public int ProductsPurchased { get; set; }
+    public DateTimeOffset? LastPurchaseDate { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 }

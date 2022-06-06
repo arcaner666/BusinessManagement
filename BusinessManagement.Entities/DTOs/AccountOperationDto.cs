@@ -1,16 +1,16 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public record AccountOperationDto
+public class AccountOperationDto
 {
-    public long AccountOperationId { get; init; }
-    public int BusinessId { get; init; }
-    public long BranchId { get; init; }
-    public short AccountOperationTypeId { get; init; }
-    public long EmployeeId { get; init; }
-    public long AccountOperationOrder { get; init; }
-    public string Title { get; init; }
-    public bool Canceled { get; init; }
-    public bool Completed { get; init; }
-    public DateTimeOffset CreatedAt { get; init; }
-    public DateTimeOffset UpdatedAt { get; init; }
+    public long AccountOperationId { get; set; }
+    public int BusinessId { get; set; }
+    public long BranchId { get; set; }
+    public short AccountOperationTypeId { get; set; }
+    public long EmployeeId { get; set; }
+    public long AccountOperationOrder { get; set; }
+    public string Title { get; set; }
+    public bool Canceled { get; set; }
+    public bool Completed { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 }

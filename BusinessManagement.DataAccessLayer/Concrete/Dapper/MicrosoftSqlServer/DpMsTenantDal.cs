@@ -90,7 +90,7 @@ public class DpMsTenantDal : ITenantDal
         return connection.Query<Tenant>(sql, new { @AccountId = accountId }).SingleOrDefault();
     }
 
-    public IEnumerable<Tenant> GetByBusinessId(int businessId)
+    public List<Tenant> GetByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -240,7 +240,7 @@ public class DpMsTenantDal : ITenantDal
         return connection.Query<TenantExt>(sql, new { @TenantId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<TenantExt> GetExtsByBusinessId(int businessId)
+    public List<TenantExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

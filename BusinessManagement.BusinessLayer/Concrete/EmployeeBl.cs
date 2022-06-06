@@ -5,6 +5,7 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
@@ -74,6 +75,39 @@ public class EmployeeBl : IEmployeeBl
         var employeeDto = _mapper.Map<EmployeeDto>(employee);
 
         return new SuccessDataResult<EmployeeDto>(employeeDto, Messages.EmployeeListedById);
+    }
+
+    public IDataResult<EmployeeExtDto> GetExtByAccountId(long accountId)
+    {
+        EmployeeExt employeeExt = _employeeDal.GetExtByAccountId(accountId);
+        if (employeeExt is null)
+            return new ErrorDataResult<EmployeeExtDto>(Messages.EmployeeNotFound);
+
+        var employeeExtDto = _mapper.Map<EmployeeExtDto>(employeeExt);
+
+        return new SuccessDataResult<EmployeeExtDto>(employeeExtDto, Messages.EmployeeExtListedByAccountId);
+    }
+
+    public IDataResult<EmployeeExtDto> GetExtById(long id)
+    {
+        EmployeeExt employeeExt = _employeeDal.GetExtById(id);
+        if (employeeExt is null)
+            return new ErrorDataResult<EmployeeExtDto>(Messages.EmployeeNotFound);
+
+        var employeeExtDto = _mapper.Map<EmployeeExtDto>(employeeExt);
+
+        return new SuccessDataResult<EmployeeExtDto>(employeeExtDto, Messages.EmployeeExtListedById);
+    }
+
+    public IDataResult<List<EmployeeExtDto>> GetExtsByBusinessId(int businessId)
+    {
+        List<EmployeeExt> employeeExts = _employeeDal.GetExtsByBusinessId(businessId);
+        if (!employeeExts.Any())
+            return new ErrorDataResult<List<EmployeeExtDto>>(Messages.EmployeesNotFound);
+
+        var employeeExtDtos = _mapper.Map<List<EmployeeExtDto>>(employeeExts);
+
+        return new SuccessDataResult<List<EmployeeExtDto>>(employeeExtDtos, Messages.EmployeeExtsListedByBusinessId);
     }
 
     public IResult Update(EmployeeDto employeeDto)

@@ -5,6 +5,7 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
@@ -81,15 +82,15 @@ public class BranchBl : IBranchBl
         return new SuccessDataResult<BranchCodeDto>(branchCodeDto, Messages.BranchOrderAndCodeGenerated);
     }
 
-    public IDataResult<IEnumerable<BranchDto>> GetByBusinessId(int businessId)
+    public IDataResult<List<BranchDto>> GetByBusinessId(int businessId)
     {
-        IEnumerable<Branch> branchs = _branchDal.GetByBusinessId(businessId);
+        List<Branch> branchs = _branchDal.GetByBusinessId(businessId);
         if (!branchs.Any())
-            return new ErrorDataResult<IEnumerable<BranchDto>>(Messages.BranchesNotFound);
+            return new ErrorDataResult<List<BranchDto>>(Messages.BranchesNotFound);
 
-        var branchDtos = _mapper.Map<IEnumerable<BranchDto>>(branchs);
+        var branchDtos = _mapper.Map<List<BranchDto>>(branchs);
 
-        return new SuccessDataResult<IEnumerable<BranchDto>>(branchDtos, Messages.BranchsListedByBusinessId);
+        return new SuccessDataResult<List<BranchDto>>(branchDtos, Messages.BranchsListedByBusinessId);
     }
 
     public IDataResult<BranchDto> GetById(long id)
@@ -101,6 +102,28 @@ public class BranchBl : IBranchBl
         var branchDto = _mapper.Map<BranchDto>(branch);
 
         return new SuccessDataResult<BranchDto>(branchDto, Messages.BranchListedById);
+    }
+
+    public IDataResult<BranchExtDto> GetExtById(long id)
+    {
+        BranchExt branchExt = _branchDal.GetExtById(id);
+        if (branchExt is null)
+            return new ErrorDataResult<BranchExtDto>(Messages.BranchNotFound);
+
+        var branchExtDto = _mapper.Map<BranchExtDto>(branchExt);
+
+        return new SuccessDataResult<BranchExtDto>(branchExtDto, Messages.BranchExtListedById);
+    }
+
+    public IDataResult<List<BranchExtDto>> GetExtsByBusinessId(int businessId)
+    {
+        List<BranchExt> branchExts = _branchDal.GetExtsByBusinessId(businessId);
+        if (!branchExts.Any())
+            return new ErrorDataResult<List<BranchExtDto>>(Messages.BranchesNotFound);
+
+        var branchExtDtos = _mapper.Map<List<BranchExtDto>>(branchExts);
+
+        return new SuccessDataResult<List<BranchExtDto>>(branchExtDtos, Messages.BranchExtsListedByBusinessId);
     }
 
     public IResult Update(BranchDto branchDto)

@@ -22,15 +22,15 @@ public class CurrencyBl : ICurrencyBl
         _mapper = mapper;
     }
 
-    public IDataResult<IEnumerable<CurrencyDto>> GetAll()
+    public IDataResult<List<CurrencyDto>> GetAll()
     {
-        IEnumerable<Currency> currencies = _currencyDal.GetAll();
+        List<Currency> currencies = _currencyDal.GetAll();
         if (!currencies.Any())
-            return new ErrorDataResult<IEnumerable<CurrencyDto>>(Messages.CurrenciesNotFound);
+            return new ErrorDataResult<List<CurrencyDto>>(Messages.CurrenciesNotFound);
 
-        var currencyDtos = _mapper.Map<IEnumerable<CurrencyDto>>(currencies);
+        var currencyDtos = _mapper.Map<List<CurrencyDto>>(currencies);
 
-        return new SuccessDataResult<IEnumerable<CurrencyDto>>(currencyDtos, Messages.CurrenciesListed);
+        return new SuccessDataResult<List<CurrencyDto>>(currencyDtos, Messages.CurrenciesListed);
     }
 
     public IDataResult<CurrencyDto> GetByCurrencyName(string currencyName)

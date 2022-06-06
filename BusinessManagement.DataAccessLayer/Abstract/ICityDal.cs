@@ -4,5 +4,5 @@ namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface ICityDal
 {
-    IEnumerable<City> GetAll();
+    List<City> GetAll();
 }

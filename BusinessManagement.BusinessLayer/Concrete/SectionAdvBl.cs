@@ -7,13 +7,14 @@ using BusinessManagement.BusinessLayer.Utilities.Security.Cryptography;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
-public class SectionExtBl : ISectionExtBl
+public class SectionAdvBl : ISectionAdvBl
 {
+    private readonly IApartmentAdvBl _apartmentAdvBl;
     private readonly IApartmentBl _apartmentBl;
-    private readonly IApartmentExtBl _apartmentExtBl;
     private readonly IFlatBl _flatBl;
     private readonly IFullAddressBl _fullAddressBl;
     private readonly IKeyService _keyService;
@@ -21,9 +22,9 @@ public class SectionExtBl : ISectionExtBl
     private readonly ISectionBl _sectionBl;
     private readonly ISectionDal _sectionDal;
 
-    public SectionExtBl(
+    public SectionAdvBl(
+        IApartmentAdvBl apartmentAdvBl,
         IApartmentBl apartmentBl,
-        IApartmentExtBl apartmentExtBl,
         IFlatBl flatBl,
         IFullAddressBl fullAddressBl,
         IKeyService keyService,
@@ -32,8 +33,8 @@ public class SectionExtBl : ISectionExtBl
         ISectionDal sectionDal
     )
     {
+        _apartmentAdvBl = apartmentAdvBl;
         _apartmentBl = apartmentBl;
-        _apartmentExtBl = apartmentExtBl;
         _fullAddressBl = fullAddressBl;
         _flatBl = flatBl;
         _keyService = keyService;
@@ -43,7 +44,7 @@ public class SectionExtBl : ISectionExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult AddExt(SectionExtDto sectionExtDto)
+    public IResult Add(SectionExtDto sectionExtDto)
     {
         // Sitenin adresi eklenir.
         FullAddressDto fullAddressDto = new()
@@ -59,7 +60,9 @@ public class SectionExtBl : ISectionExtBl
             return addFullAddressResult;
 
         // Eşsiz bir site kodu oluşturmak için tüm siteler getirilir.
-        IEnumerable<SectionDto> sectionDtos = _sectionDal.GetAll();
+        List<Section> sections = _sectionDal.GetAll();
+
+        var sectionDtos = _mapper.Map<List<SectionDto>>(sections);
 
         // Site kodu üretilir.
         string sectionCode = _keyService.GenerateSectionCode(sectionDtos);
@@ -83,7 +86,7 @@ public class SectionExtBl : ISectionExtBl
     }
 
     [TransactionScopeAspect]
-    public IResult DeleteExt(int id)
+    public IResult Delete(int id)
     {
         // Site getirilir. FullAddressId'ye ulaşmak için gereklidir.
         var getSectionResult = _sectionBl.GetById(id);
@@ -98,7 +101,7 @@ public class SectionExtBl : ISectionExtBl
         // Sitedeki apartmanlar silinir.
         foreach (ApartmentDto apartmentDto in getApartmentsResult.Data)
         {
-            _apartmentExtBl.DeleteExt(apartmentDto.ApartmentId);
+            _apartmentAdvBl.Delete(apartmentDto.ApartmentId);
         }
 
         // Site silinir.
@@ -114,26 +117,8 @@ public class SectionExtBl : ISectionExtBl
         return new SuccessResult(Messages.SectionExtDeleted);
     }
 
-    public IDataResult<SectionExtDto> GetExtById(int id)
-    {
-        SectionExtDto sectionExtDto = _sectionDal.GetExtById(id);
-        if (sectionExtDto is null)
-            return new ErrorDataResult<SectionExtDto>(Messages.SectionNotFound);
-
-        return new SuccessDataResult<SectionExtDto>(sectionExtDto, Messages.SectionExtListedById);
-    }
-
-    public IDataResult<IEnumerable<SectionExtDto>> GetExtsByBusinessId(int businessId)
-    {
-        IEnumerable<SectionExtDto> sectionExtDtos = _sectionDal.GetExtsByBusinessId(businessId);
-        if (!sectionExtDtos.Any())
-            return new ErrorDataResult<IEnumerable<SectionExtDto>>(Messages.SectionsNotFound);
-
-        return new SuccessDataResult<IEnumerable<SectionExtDto>>(sectionExtDtos, Messages.SectionExtsListedByBusinessId);
-    }
-
     [TransactionScopeAspect]
-    public IResult UpdateExt(SectionExtDto sectionExtDto)
+    public IResult Update(SectionExtDto sectionExtDto)
     {
         // Site adresi güncellenir.
         FullAddressDto fullAddressDto = new()

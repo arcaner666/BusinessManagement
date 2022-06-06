@@ -5,6 +5,7 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
@@ -51,15 +52,15 @@ public class ApartmentBl : IApartmentBl
         return new SuccessResult(Messages.ApartmentDeleted);
     }
 
-    public IDataResult<IEnumerable<ApartmentDto>> GetByBusinessId(int businessId)
+    public IDataResult<List<ApartmentDto>> GetByBusinessId(int businessId)
     {
-        IEnumerable<Apartment> apartments = _apartmentDal.GetByBusinessId(businessId);
+        List<Apartment> apartments = _apartmentDal.GetByBusinessId(businessId);
         if (!apartments.Any())
-            return new ErrorDataResult<IEnumerable<ApartmentDto>>(Messages.ApartmentsNotFound);
+            return new ErrorDataResult<List<ApartmentDto>>(Messages.ApartmentsNotFound);
 
-        var apartmentDtos = _mapper.Map<IEnumerable<ApartmentDto>>(apartments);
+        var apartmentDtos = _mapper.Map<List<ApartmentDto>>(apartments);
 
-        return new SuccessDataResult<IEnumerable<ApartmentDto>>(apartmentDtos, Messages.ApartmentsListedByBusinessId);
+        return new SuccessDataResult<List<ApartmentDto>>(apartmentDtos, Messages.ApartmentsListedByBusinessId);
     }
 
     public IDataResult<ApartmentDto> GetById(long id)
@@ -73,15 +74,37 @@ public class ApartmentBl : IApartmentBl
         return new SuccessDataResult<ApartmentDto>(apartmentDto, Messages.ApartmentListedById);
     }
 
-    public IDataResult<IEnumerable<ApartmentDto>> GetBySectionId(int sectionId)
+    public IDataResult<List<ApartmentDto>> GetBySectionId(int sectionId)
     {
-        IEnumerable<Apartment> apartments = _apartmentDal.GetBySectionId(sectionId);
+        List<Apartment> apartments = _apartmentDal.GetBySectionId(sectionId);
         if (!apartments.Any())
-            return new ErrorDataResult<IEnumerable<ApartmentDto>>(Messages.ApartmentsNotFound);
+            return new ErrorDataResult<List<ApartmentDto>>(Messages.ApartmentsNotFound);
 
-        var apartmentDtos = _mapper.Map<IEnumerable<ApartmentDto>>(apartments);
+        var apartmentDtos = _mapper.Map<List<ApartmentDto>>(apartments);
 
-        return new SuccessDataResult<IEnumerable<ApartmentDto>>(apartmentDtos, Messages.ApartmentsListedBySectionId);
+        return new SuccessDataResult<List<ApartmentDto>>(apartmentDtos, Messages.ApartmentsListedBySectionId);
+    }
+
+    public IDataResult<ApartmentExtDto> GetExtById(long id)
+    {
+        ApartmentExt apartmentExt = _apartmentDal.GetExtById(id);
+        if (apartmentExt is null)
+            return new ErrorDataResult<ApartmentExtDto>(Messages.ApartmentNotFound);
+
+        var apartmentExtDto = _mapper.Map<ApartmentExtDto>(apartmentExt);
+
+        return new SuccessDataResult<ApartmentExtDto>(apartmentExtDto, Messages.ApartmentExtListedById);
+    }
+
+    public IDataResult<List<ApartmentExtDto>> GetExtsByBusinessId(int businessId)
+    {
+        List<ApartmentExt> apartmentExts = _apartmentDal.GetExtsByBusinessId(businessId);
+        if (!apartmentExts.Any())
+            return new ErrorDataResult<List<ApartmentExtDto>>(Messages.ApartmentsNotFound);
+
+        var apartmentExtDtos = _mapper.Map<List<ApartmentExtDto>>(apartmentExts);
+
+        return new SuccessDataResult<List<ApartmentExtDto>>(apartmentExtDtos, Messages.ApartmentExtsListedByBusinessId);
     }
 
     public IResult Update(ApartmentDto apartmentDto)

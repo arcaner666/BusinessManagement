@@ -3,12 +3,12 @@ using BusinessManagement.BusinessLayer.Abstract;
 using BusinessManagement.BusinessLayer.Constants;
 using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
-using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
-public record AccountExtBl : IAccountExtBl
+public record AccountAdvBl : IAccountAdvBl
 {
     private readonly IAccountBl _accountBl;
     private readonly IAccountDal _accountDal;
@@ -16,7 +16,7 @@ public record AccountExtBl : IAccountExtBl
     private readonly IBranchBl _branchBl;
     private readonly IMapper _mapper;
 
-    public AccountExtBl(
+    public AccountAdvBl(
         IAccountBl accountBl,
         IAccountDal accountDal,
         IAccountGroupBl accountGroupBl,
@@ -31,7 +31,7 @@ public record AccountExtBl : IAccountExtBl
         _mapper = mapper;
     }
 
-    public IResult AddExt(AccountExtDto accountExtDto)
+    public IResult Add(AccountExtDto accountExtDto)
     {
         AccountDto accountDto = new()
         {
@@ -51,7 +51,7 @@ public record AccountExtBl : IAccountExtBl
         return new SuccessResult(Messages.AccountExtAdded);
     }
 
-    public IResult DeleteExt(long id)
+    public IResult Delete(long id)
     {
         var deleteAccountResult = _accountBl.Delete(id);
         if (!deleteAccountResult.Success)
@@ -106,34 +106,7 @@ public record AccountExtBl : IAccountExtBl
         return new SuccessDataResult<AccountCodeDto>(accountCodeDto, Messages.AccountOrderAndCodeGenerated);
     }
 
-    public IDataResult<AccountExtDto> GetExtById(long id)
-    {
-        AccountExtDto accountExtDto = _accountDal.GetExtById(id);
-        if (accountExtDto is null)
-            return new ErrorDataResult<AccountExtDto>(Messages.AccountNotFound);
-
-        return new SuccessDataResult<AccountExtDto>(accountExtDto, Messages.AccountExtListedById);
-    }
-
-    public IDataResult<IEnumerable<AccountExtDto>> GetExtsByBusinessId(int businessId)
-    {
-        IEnumerable<AccountExtDto> accountExtDtos = _accountDal.GetExtsByBusinessId(businessId);
-        if (!accountExtDtos.Any())
-            return new ErrorDataResult<IEnumerable<AccountExtDto>>(Messages.AccountsNotFound);
-
-        return new SuccessDataResult<IEnumerable<AccountExtDto>>(accountExtDtos, Messages.AccountExtsListedByBusinessId);
-    }
-
-    public IDataResult<IEnumerable<AccountExtDto>> GetExtsByBusinessIdAndAccountGroupCodes(AccountGetByAccountGroupCodesDto accountGetByAccountGroupCodesDto)
-    {
-        IEnumerable<AccountExtDto> accountExtDtos = _accountDal.GetExtsByBusinessIdAndAccountGroupCodes(accountGetByAccountGroupCodesDto.BusinessId, accountGetByAccountGroupCodesDto.AccountGroupCodes);
-        if (!accountExtDtos.Any())
-            return new ErrorDataResult<IEnumerable<AccountExtDto>>(Messages.AccountsNotFound);
-
-        return new SuccessDataResult<IEnumerable<AccountExtDto>>(accountExtDtos, Messages.AccountExtsListedByBusinessId);
-    }
-
-    public IResult UpdateExt(AccountExtDto accountExtDto)
+    public IResult Update(AccountExtDto accountExtDto)
     {
         AccountDto accountDto = new()
         {

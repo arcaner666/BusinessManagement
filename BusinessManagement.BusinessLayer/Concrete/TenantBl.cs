@@ -5,6 +5,7 @@ using BusinessManagement.BusinessLayer.Utilities.Results;
 using BusinessManagement.DataAccessLayer.Abstract;
 using BusinessManagement.Entities.DatabaseModels;
 using BusinessManagement.Entities.DTOs;
+using BusinessManagement.Entities.ExtendedDatabaseModels;
 
 namespace BusinessManagement.BusinessLayer.Concrete;
 
@@ -62,15 +63,15 @@ public class TenantBl : ITenantBl
         return new SuccessDataResult<TenantDto>(tenantDto, Messages.TenantListedByAccountId);
     }
 
-    public IDataResult<IEnumerable<TenantDto>> GetByBusinessId(int businessId)
+    public IDataResult<List<TenantDto>> GetByBusinessId(int businessId)
     {
-        IEnumerable<Tenant> tenants = _tenantDal.GetByBusinessId(businessId);
+        List<Tenant> tenants = _tenantDal.GetByBusinessId(businessId);
         if (!tenants.Any())
-            return new ErrorDataResult<IEnumerable<TenantDto>>(Messages.TenantsNotFound);
+            return new ErrorDataResult<List<TenantDto>>(Messages.TenantsNotFound);
 
-        var tenantDtos = _mapper.Map<IEnumerable<TenantDto>>(tenants);
+        var tenantDtos = _mapper.Map<List<TenantDto>>(tenants);
 
-        return new SuccessDataResult<IEnumerable<TenantDto>>(tenantDtos, Messages.TenantsListedByBusinessId);
+        return new SuccessDataResult<List<TenantDto>>(tenantDtos, Messages.TenantsListedByBusinessId);
     }
 
     public IDataResult<TenantDto> GetById(long id)
@@ -82,6 +83,39 @@ public class TenantBl : ITenantBl
         var tenantDto = _mapper.Map<TenantDto>(tenant);
 
         return new SuccessDataResult<TenantDto>(tenantDto, Messages.TenantListedById);
+    }
+
+    public IDataResult<TenantExtDto> GetExtByAccountId(long accountId)
+    {
+        TenantExt tenantExt = _tenantDal.GetExtByAccountId(accountId);
+        if (tenantExt is null)
+            return new ErrorDataResult<TenantExtDto>(Messages.TenantNotFound);
+
+        var tenantExtDto = _mapper.Map<TenantExtDto>(tenantExt);
+
+        return new SuccessDataResult<TenantExtDto>(tenantExtDto, Messages.TenantExtListedByAccountId);
+    }
+
+    public IDataResult<TenantExtDto> GetExtById(long id)
+    {
+        TenantExt tenantExt = _tenantDal.GetExtById(id);
+        if (tenantExt is null)
+            return new ErrorDataResult<TenantExtDto>(Messages.TenantNotFound);
+
+        var tenantExtDto = _mapper.Map<TenantExtDto>(tenantExt);
+
+        return new SuccessDataResult<TenantExtDto>(tenantExtDto, Messages.TenantExtListedById);
+    }
+
+    public IDataResult<List<TenantExtDto>> GetExtsByBusinessId(int businessId)
+    {
+        List<TenantExt> tenantExts = _tenantDal.GetExtsByBusinessId(businessId);
+        if (!tenantExts.Any())
+            return new ErrorDataResult<List<TenantExtDto>>(Messages.TenantsNotFound);
+        
+        var tenantExtDtos = _mapper.Map<List<TenantExtDto>>(tenantExts);
+
+        return new SuccessDataResult<List<TenantExtDto>>(tenantExtDtos, Messages.TenantExtsListedByBusinessId);
     }
 
     public IResult Update(TenantDto tenantDto)

@@ -4,5 +4,5 @@ namespace BusinessManagement.DataAccessLayer.Abstract;
 
 public interface IEmployeeTypeDal
 {
-    IEnumerable<EmployeeType> GetAll();
+    List<EmployeeType> GetAll();
 }

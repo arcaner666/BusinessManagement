@@ -1,8 +1,8 @@
 ﻿namespace BusinessManagement.Entities.DTOs;
 
-public record CityDto
+public class CityDto
 {
-    public short CityId { get; init; }
-    public int PlateCode { get; init; }
-    public string CityName { get; init; }
+    public short CityId { get; set; }
+    public int PlateCode { get; set; }
+    public string CityName { get; set; }
 }

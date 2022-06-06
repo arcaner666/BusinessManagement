@@ -13,7 +13,7 @@ public class DpMsDistrictDal : IDistrictDal
         _context = context;
     }
 
-    public IEnumerable<District> GetAll()
+    public List<District> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -24,7 +24,7 @@ public class DpMsDistrictDal : IDistrictDal
         return connection.Query<District>(sql).ToList();
     }
 
-    public IEnumerable<District> GetByCityId(short cityId)
+    public List<District> GetByCityId(short cityId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

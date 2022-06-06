@@ -51,7 +51,7 @@ public class DpMsFlatDal : IFlatDal
         connection.Execute(sql, new { @FlatId = id });
     }
 
-    public IEnumerable<Flat> GetByApartmentId(long apartmentId)
+    public List<Flat> GetByApartmentId(long apartmentId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"
@@ -139,7 +139,7 @@ public class DpMsFlatDal : IFlatDal
         return connection.Query<FlatExt>(sql, new { @FlatId = id }).SingleOrDefault();
     }
 
-    public IEnumerable<FlatExt> GetExtsByBusinessId(int businessId)
+    public List<FlatExt> GetExtsByBusinessId(int businessId)
     {
         using var connection = _context.CreateConnection();
         var sql = "SELECT"

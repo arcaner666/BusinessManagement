@@ -73,6 +73,8 @@ public class MappingProfile : Profile
         CreateMap<SystemUser, SystemUserDto>().ReverseMap();
         CreateMap<SystemUserClaim, SystemUserClaimDto>();
         CreateMap<SystemUserClaim, SystemUserClaimDto>().ReverseMap();
+        CreateMap<SystemUserClaimExt, SystemUserClaimExtDto>();
+        CreateMap<SystemUserClaimExt, SystemUserClaimExtDto>().ReverseMap();
         CreateMap<Tenant, TenantDto>();
         CreateMap<Tenant, TenantDto>().ReverseMap();
         CreateMap<TenantExt, TenantExtDto>();
